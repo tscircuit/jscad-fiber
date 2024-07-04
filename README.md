@@ -1,10 +1,7 @@
 # jscad-fiber
 
 Create JSCad components with React.
-intersect(
-    sphere({ radius: 4 }),
-    cube({ size: 7 })
-  )
+
 ```tsx
 import { JSCad3dView } from "jscad-fiber/viewer"
 
