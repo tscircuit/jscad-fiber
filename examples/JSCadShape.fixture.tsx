@@ -4,6 +4,7 @@ import * as jscad from "@jscad/modeling"
 import * as THREE from "three"
 // @ts-ignore
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls"
+import convertCSGToThreeGeom from "../lib/convert-csg-to-three-geom"
 
 const { createJSCADRoot } = createJSCADRenderer(jscad)
 
@@ -21,13 +22,13 @@ export default function JSCadShapeFixture() {
 
   React.useEffect(() => {
     if (containerRef.current) {
-      const container: any[] = []
-      const root = createJSCADRoot(container)
+      const jscadGeoms: any[] = []
+      const root = createJSCADRoot(jscadGeoms)
       root.render(<Scene />)
 
       // Here, you would typically use the container to render the 3D shape
       // For this example, we'll just log the result
-      console.log("JSCad objects:", container)
+      console.log("JSCad objects:", jscadGeoms)
 
       const scene = new THREE.Scene()
       const camera = new THREE.PerspectiveCamera(
@@ -54,12 +55,20 @@ export default function JSCadShapeFixture() {
       directionalLight3.position.set(-100, 100, 100)
       scene.add(directionalLight3)
 
-      const geometry = new THREE.BoxGeometry(1, 1, 1)
-      const material = new THREE.MeshPhongMaterial({ color: 0x00ff00 })
-      const cube = new THREE.Mesh(geometry, material)
-      scene.add(cube)
+      for (const csg of jscadGeoms) {
+        const geometry = convertCSGToThreeGeom(csg)
+        console.log(geometry)
+        const material = new THREE.MeshStandardMaterial({
+          color: 0xffffff,
+          wireframe: true,
+        })
+        const cube = new THREE.Mesh(geometry, material)
+        scene.add(cube)
+      }
 
-      camera.position.z = 5
+      camera.position.x = 20
+      camera.position.y = 20
+      camera.position.z = 20
 
       const renderer = new THREE.WebGLRenderer()
       renderer.setSize(window.innerWidth, window.innerHeight)

@@ -31,7 +31,6 @@ export default function convertCSGToThreeGeom(csg) {
   }
   geo.computeVertexNormals()
 
-  //console.log(geo);
   const positions = {}
   for (let i = 0; i < geo.attributes.position.count; i++) {
     const pArray = geo.attributes.position.array
