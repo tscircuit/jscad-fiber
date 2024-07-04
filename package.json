@@ -1,0 +1,21 @@
+{
+  "name": "jscad-fiber",
+  "type": "module",
+  "main": "./dist/index.js",
+  "scripts": {
+    "start": "cosmos"
+  },
+  "devDependencies": {
+    "@jscad/modeling": "^2.12.2",
+    "@types/react-reconciler": "^0.28.8",
+    "@vitejs/plugin-react": "^4.3.1",
+    "react": "^18.3.1",
+    "react-cosmos": "^6.1.1",
+    "react-cosmos-plugin-vite": "^6.1.1",
+    "react-dom": "^18.3.1",
+    "react-reconciler": "^0.29.2",
+    "typescript": "^5.5.3",
+    "vite": "^5.3.3",
+    "vite-tsconfig-paths": "^4.3.2"
+  }
+}
