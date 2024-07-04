@@ -14,6 +14,7 @@
     "react-cosmos-plugin-vite": "^6.1.1",
     "react-dom": "^18.3.1",
     "react-reconciler": "^0.29.2",
+    "three": "^0.166.1",
     "typescript": "^5.5.3",
     "vite": "^5.3.3",
     "vite-tsconfig-paths": "^4.3.2"
