@@ -1,5 +1,8 @@
 # jscad-fiber
 
+[View examples](https://tscircuit.github.io/jscad-fiber/)
+
+This package allows you to create 3d CAD objects with React and jscad.
 
 ## Usage
 
