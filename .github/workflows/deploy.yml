@@ -14,6 +14,9 @@ jobs:
         with:
           node-version: "20"
       - run: npm ci
+      - run: |
+          git config --local user.email "actions@github.com"
+          git config --local user.name "GitHub Actions"
       - run: npm run deploy
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
