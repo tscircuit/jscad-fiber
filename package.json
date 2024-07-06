@@ -3,13 +3,17 @@
   "type": "module",
   "main": "./dist/index.js",
   "scripts": {
-    "start": "cosmos"
+    "start": "cosmos",
+    "build": "cosmos-export",
+    "predeploy": "BUILD_FOR_GH_PAGES=1 npm run build",
+    "deploy": "gh-pages -d dist"
   },
   "devDependencies": {
     "@jscad/modeling": "^2.12.2",
     "@types/react-reconciler": "^0.28.8",
     "@types/three": "^0.166.0",
     "@vitejs/plugin-react": "^4.3.1",
+    "gh-pages": "^5.0.0",
     "react": "^18.3.1",
     "react-cosmos": "^6.1.1",
     "react-cosmos-plugin-vite": "^6.1.1",
