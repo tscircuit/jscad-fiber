@@ -5,8 +5,7 @@
   "scripts": {
     "start": "cosmos",
     "build": "cosmos-export",
-    "predeploy": "BUILD_FOR_GH_PAGES=1 npm run build",
-    "deploy": "gh-pages -d cosmos-export"
+    "predeploy": "BUILD_FOR_GH_PAGES=1 npm run build"
   },
   "devDependencies": {
     "@jscad/modeling": "^2.12.2",
