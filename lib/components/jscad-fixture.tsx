@@ -1,30 +1,27 @@
 import React from "react"
-import { createJSCADRenderer, Cube, Sphere } from "../lib"
+import { createJSCADRenderer, Cube, Sphere } from "../../lib"
 import * as jscad from "@jscad/modeling"
 import * as THREE from "three"
 // @ts-ignore
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls"
-import convertCSGToThreeGeom from "../lib/convert-csg-to-three-geom"
+import convertCSGToThreeGeom from "../../lib/convert-csg-to-three-geom"
 
-const { createJSCADRoot } = createJSCADRenderer(jscad)
+const { createJSCADRoot } = createJSCADRenderer(jscad as any)
 
-function Scene() {
-  return (
-    <>
-      <Cube size={10} />
-      <Sphere radius={5} />
-    </>
-  )
-}
-
-export default function JSCadShapeFixture() {
+export function JsCadFixture({
+  children,
+  wireframe,
+}: {
+  children: any
+  wireframe?: boolean
+}) {
   const containerRef = React.useRef<HTMLDivElement>(null)
 
   React.useEffect(() => {
     if (containerRef.current) {
       const jscadGeoms: any[] = []
       const root = createJSCADRoot(jscadGeoms)
-      root.render(<Scene />)
+      root.render(children)
 
       // Here, you would typically use the container to render the 3D shape
       // For this example, we'll just log the result
@@ -60,7 +57,7 @@ export default function JSCadShapeFixture() {
         console.log(geometry)
         const material = new THREE.MeshStandardMaterial({
           color: 0xffffff,
-          wireframe: true,
+          wireframe,
         })
         const cube = new THREE.Mesh(geometry, material)
         scene.add(cube)
