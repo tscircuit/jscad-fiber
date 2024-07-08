@@ -1,4 +1,4 @@
-name: Format Check
+name: Type Check
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
     branches: [main]
 
 jobs:
-  format-check:
+  type-check:
     runs-on: ubuntu-latest
 
     steps:
