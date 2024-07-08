@@ -2,9 +2,40 @@ import ReactReconciler from "react-reconciler"
 import React from "react"
 import type { JSCADModule, JSCADPrimitive } from "./jscad-primitives"
 import { createHostConfig } from "./create-host-config"
-import { Cube, Sphere, type CubeProps, type SphereProps } from "./jscad-fns"
+import {
+  Cube,
+  Sphere,
+  GeodesicSphere,
+  Cuboid,
+  RoundedCuboid,
+  Ellipsoid,
+  Cylinder,
+  RoundedCylinder,
+  CylinderElliptic,
+  Torus,
+  type CubeProps,
+  type SphereProps,
+  type CuboidProps,
+  type RoundedCuboidProps,
+  type GeodesicSphereProps,
+  type EllipsoidProps,
+  type CylinderProps,
+  type RoundedCylinderProps,
+  type CylinderEllipticProps,
+  type TorusProps
+} from "./jscad-fns"
 
-type Props = CubeProps | SphereProps
+type Props =
+  CubeProps |
+  SphereProps |
+  GeodesicSphereProps |
+  CuboidProps |
+  RoundedCuboidProps |
+  EllipsoidProps |
+  CylinderProps |
+  RoundedCylinderProps |
+  CylinderEllipticProps |
+  TorusProps
 
 // Create a function that returns the reconciler and root creation function
 function createJSCADRenderer(jscad: JSCADModule) {
@@ -24,7 +55,7 @@ function createJSCADRenderer(jscad: JSCADModule) {
     )
     return {
       render(element: React.ReactElement) {
-        reconciler.updateContainer(element, root, null, () => {})
+        reconciler.updateContainer(element, root, null, () => { })
       },
     }
   }
@@ -37,9 +68,32 @@ function Scene() {
     <>
       <Cube size={[10, 10, 10]} />
       <Sphere radius={5} />
+      <Sphere radius={5} segments={64} />
+      <GeodesicSphere radius={5} frequency={5} />
+      <Cuboid size={[10, 10, 10]} />
+      <RoundedCuboid size={[10, 10, 10]} roundRadius={5} />
+      <Ellipsoid radius={[5, 5, 5]} />
+      <Cylinder radius={5} height={10} />
+      <RoundedCylinder radius={5} height={10} roundRadius={2} />
+      <CylinderElliptic radius={5} height={10} startRadius={[2, 2]} endRadius={[3, 3]} />
+      <Torus radius={5} segments={32} tube={10} />
     </>
   )
 }
 
 // Export the creation function and components
-export { createJSCADRenderer, Cube, Sphere, Scene }
+// Export the creation function and components
+export {
+  createJSCADRenderer,
+  Cube,
+  Sphere,
+  GeodesicSphere,
+  Cuboid,
+  RoundedCuboid,
+  Ellipsoid,
+  Cylinder,
+  RoundedCylinder,
+  CylinderElliptic,
+  Torus,
+  Scene
+}
