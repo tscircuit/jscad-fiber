@@ -32,6 +32,52 @@ export function createHostConfig(jscad: JSCADModule) {
         case "sphere":
           return jscad.primitives.sphere({
             radius: (props as SphereProps).radius,
+            segments: (props as SphereProps).segments,
+          })
+        case "cuboid":
+          return jscad.primitives.cuboid({
+            size: (props as CuboidProps).size,
+          })
+        case "roundedCuboid":
+          return jscad.primitives.roundedCuboid({
+            size: (props as RoundedCuboidProps).size,
+            roundRadius: (props as RoundedCuboidProps).roundRadius,
+          })
+        case "geodesicSphere":
+          return jscad.primitives.geodesicSphere({
+            radius: (props as GeodesicSphereProps).radius,
+            frequency: (props as GeodesicSphereProps).frequency,
+          })
+        case "ellipsoid":
+          return jscad.primitives.ellipsoid({
+            radius: (props as EllipsoidProps).radius,
+          })
+        case "cylinder":
+          return jscad.primitives.cylinder({
+            radius: (props as CylinderProps).radius,
+            height: (props as CylinderProps).height,
+            startRadius: (props as CylinderProps).startRadius,
+            endRadius: (props as CylinderProps).endRadius,
+          })
+        case "roundedCylinder":
+          return jscad.primitives.roundedCylinder({
+            radius: (props as RoundedCylinderProps).radius,
+            height: (props as RoundedCylinderProps).height,
+            roundRadius: (props as RoundedCylinderProps).roundRadius,
+          })
+        case "cylinderElliptic":
+          return jscad.primitives.cylinderElliptic({
+            radius: (props as CylinderEllipticProps).radius,
+            height: (props as CylinderEllipticProps).height,
+            startRadius: (props as CylinderEllipticProps).startRadius,
+            endRadius: (props as CylinderEllipticProps).endRadius,
+            startAngle: (props as CylinderEllipticProps).startAngle,
+            endAngle: (props as CylinderEllipticProps).endAngle,
+          })
+        case "torus":
+          return jscad.primitives.torus({
+            radius: (props as TorusProps).radius,
+            tube: (props as TorusProps).tube,
           })
         default:
           throw new Error(`Unknown element type: ${type}`)
@@ -88,7 +134,7 @@ export function createHostConfig(jscad: JSCADModule) {
     prepareForCommit() {
       return null
     },
-    resetAfterCommit() {},
+    resetAfterCommit() { },
     getPublicInstance(instance: JSCADPrimitive) {
       return instance
     },
@@ -101,18 +147,18 @@ export function createHostConfig(jscad: JSCADModule) {
     shouldSetTextContent() {
       return false
     },
-    clearContainer() {},
+    clearContainer() { },
     scheduleTimeout: setTimeout,
     cancelTimeout: clearTimeout,
     noTimeout: -1,
     isPrimaryRenderer: true,
     getCurrentEventPriority: () => 99,
     getInstanceFromNode: () => null,
-    beforeActiveInstanceBlur: () => {},
-    afterActiveInstanceBlur: () => {},
-    prepareScopeUpdate: () => {},
+    beforeActiveInstanceBlur: () => { },
+    afterActiveInstanceBlur: () => { },
+    prepareScopeUpdate: () => { },
     getInstanceFromScope: () => null,
-    detachDeletedInstance: () => {},
+    detachDeletedInstance: () => { },
   }
   return hostConfig
 }
