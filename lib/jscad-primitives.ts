@@ -1,6 +1,9 @@
 // Define a type for the JSCAD module structure we expect
 export interface JSCADModule {
   primitives: {
+    polygon: (options: {
+      points: [number, number][]
+    }) => any
     cube: (options: {
       size: number | [number, number, number]
     }) => any
@@ -50,6 +53,7 @@ export type JSCADPrimitive =
   | ReturnType<JSCADModule["primitives"]["roundedCylinder"]>
   | ReturnType<JSCADModule["primitives"]["cylinderElliptic"]>
   | ReturnType<JSCADModule["primitives"]["torus"]>
+  | ReturnType<JSCADModule["primitives"]["polygon"]>
 export type JSCADOperation =
   | JSCADModule["booleans"]["union"]
   | JSCADModule["booleans"]["subtract"]

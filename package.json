@@ -5,7 +5,9 @@
   "scripts": {
     "start": "cosmos",
     "build": "cosmos-export",
-    "predeploy": "BUILD_FOR_GH_PAGES=1 npm run build"
+    "predeploy": "BUILD_FOR_GH_PAGES=1 npm run build",
+    "format": "biome format . --write",
+    "format:check": "biome format . --check"
   },
   "devDependencies": {
     "@jscad/modeling": "^2.12.2",
