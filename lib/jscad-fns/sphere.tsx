@@ -1,7 +1,8 @@
-export interface SphereProps {
+export type SphereProps = {
   radius: number
+  segments?: number
 }
 
-export function Sphere({ radius }: SphereProps) {
-  return <sphere radius={radius} />
+export function Sphere({ radius, segments }: SphereProps) {
+  return <sphere radius={radius} segments={segments || 32} />
 }
