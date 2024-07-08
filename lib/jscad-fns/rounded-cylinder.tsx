@@ -7,7 +7,13 @@ export type RoundedCylinderProps = {
 export function RoundedCylinder({
   radius,
   height,
-  roundRadius
+  roundRadius,
 }: RoundedCylinderProps) {
-  return <roundedCylinder radius={radius} height={height} roundRadius={roundRadius} />
+  return (
+    <roundedCylinder
+      radius={radius}
+      height={height}
+      roundRadius={roundRadius}
+    />
+  )
 }

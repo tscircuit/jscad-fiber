@@ -39,7 +39,7 @@ export function createHostConfig(jscad: JSCADModule) {
       props: Props,
       rootContainerInstance: any,
       hostContext: any,
-      internalInstanceHandle: any
+      internalInstanceHandle: any,
     ) {
       switch (type) {
         case "cube":
@@ -125,7 +125,7 @@ export function createHostConfig(jscad: JSCADModule) {
 
     removeChildFromContainer(
       container: JSCADPrimitive[],
-      child: JSCADPrimitive
+      child: JSCADPrimitive,
     ) {
       const index = container.indexOf(child)
       if (index !== -1) container.splice(index, 1)
@@ -140,7 +140,7 @@ export function createHostConfig(jscad: JSCADModule) {
       updatePayload: any,
       type: string,
       oldProps: Props,
-      newProps: Props
+      newProps: Props,
     ) {
       // Re-create the instance with new props
       return this.createInstance(type, newProps, instance, {}, null)

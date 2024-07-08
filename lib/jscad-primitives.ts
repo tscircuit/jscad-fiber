@@ -8,31 +8,46 @@ export interface JSCADModule {
       size: number | [number, number, number]
     }) => any
     sphere: (options: {
-      radius: number, segments?: number
+      radius: number
+      segments?: number
     }) => any
     geodesicSphere: (options: {
-      radius: number, frequency: number
+      radius: number
+      frequency: number
     }) => any
     cuboid: (options: {
       size: number | [number, number, number]
     }) => any
     roundedCuboid: (options: {
-      size: number | [number, number, number], roundRadius: number
+      size: number | [number, number, number]
+      roundRadius: number
     }) => any
     ellipsoid: (options: {
       radius: [number, number, number]
     }) => any
     cylinder: (options: {
-      radius: number, height: number, startRadius?: number, endRadius?: number
+      radius: number
+      height: number
+      startRadius?: number
+      endRadius?: number
     }) => any
     roundedCylinder: (options: {
-      radius: number, height: number, roundRadius: number
+      radius: number
+      height: number
+      roundRadius: number
     }) => any
     cylinderElliptic: (options: {
-      radius: number, height: number, startRadius?: number[], endRadius?: number[], startAngle?: number, endAngle?: number
+      radius: number
+      height: number
+      startRadius?: number[]
+      endRadius?: number[]
+      startAngle?: number
+      endAngle?: number
     }) => any
     torus: (options: {
-      radius: number, tube: number, segments?: number
+      radius: number
+      tube: number
+      segments?: number
     }) => any
   }
   booleans: {
