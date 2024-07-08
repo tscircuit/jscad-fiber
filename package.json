@@ -7,7 +7,7 @@
     "build": "cosmos-export",
     "predeploy": "BUILD_FOR_GH_PAGES=1 npm run build",
     "format": "biome format . --write",
-    "format:check": "biome format . --check"
+    "format:check": "biome format ."
   },
   "devDependencies": {
     "@biomejs/biome": "^1.8.3",
