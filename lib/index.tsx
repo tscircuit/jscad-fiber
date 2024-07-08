@@ -22,20 +22,20 @@ import {
   type CylinderProps,
   type RoundedCylinderProps,
   type CylinderEllipticProps,
-  type TorusProps
+  type TorusProps,
 } from "./jscad-fns"
 
 type Props =
-  CubeProps |
-  SphereProps |
-  GeodesicSphereProps |
-  CuboidProps |
-  RoundedCuboidProps |
-  EllipsoidProps |
-  CylinderProps |
-  RoundedCylinderProps |
-  CylinderEllipticProps |
-  TorusProps
+  | CubeProps
+  | SphereProps
+  | GeodesicSphereProps
+  | CuboidProps
+  | RoundedCuboidProps
+  | EllipsoidProps
+  | CylinderProps
+  | RoundedCylinderProps
+  | CylinderEllipticProps
+  | TorusProps
 
 // Create a function that returns the reconciler and root creation function
 function createJSCADRenderer(jscad: JSCADModule) {
@@ -51,11 +51,11 @@ function createJSCADRenderer(jscad: JSCADModule) {
       null,
       "",
       (error) => console.error(error),
-      null
+      null,
     )
     return {
       render(element: React.ReactElement) {
-        reconciler.updateContainer(element, root, null, () => { })
+        reconciler.updateContainer(element, root, null, () => {})
       },
     }
   }
@@ -75,7 +75,12 @@ function Scene() {
       <Ellipsoid radius={[5, 5, 5]} />
       <Cylinder radius={5} height={10} />
       <RoundedCylinder radius={5} height={10} roundRadius={2} />
-      <CylinderElliptic radius={5} height={10} startRadius={[2, 2]} endRadius={[3, 3]} />
+      <CylinderElliptic
+        radius={5}
+        height={10}
+        startRadius={[2, 2]}
+        endRadius={[3, 3]}
+      />
       <Torus radius={5} segments={32} tube={10} />
     </>
   )
@@ -95,5 +100,5 @@ export {
   RoundedCylinder,
   CylinderElliptic,
   Torus,
-  Scene
+  Scene,
 }

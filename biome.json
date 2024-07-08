@@ -7,6 +7,9 @@
     "enabled": true,
     "indentStyle": "space"
   },
+  "files": {
+    "ignore": ["cosmos-export"]
+  },
   "javascript": {
     "formatter": {
       "jsxQuoteStyle": "double",

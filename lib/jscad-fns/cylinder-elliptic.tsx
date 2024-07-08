@@ -13,14 +13,16 @@ export function CylinderElliptic({
   endRadius,
   segments = 32,
   startAngle = 0,
-  endAngle = Math.PI * 2
+  endAngle = Math.PI * 2,
 }: CylinderEllipticProps) {
-  return <cylinderElliptic
-    height={height}
-    startRadius={startRadius}
-    endRadius={endRadius}
-    segments={segments}
-    startAngle={startAngle}
-    endAngle={endAngle}
-  />
+  return (
+    <cylinderElliptic
+      height={height}
+      startRadius={startRadius}
+      endRadius={endRadius}
+      segments={segments}
+      startAngle={startAngle}
+      endAngle={endAngle}
+    />
+  )
 }

@@ -17,13 +17,15 @@ export function Torus({
   outerRotation,
   startAngle = 0,
 }: TorusProps) {
-  return <torus
-    innerRadius={innerRadius}
-    outerRadius={outerRadius}
-    innerSegments={innerSegments}
-    outerSegments={outerSegments}
-    innerRotation={innerRotation}
-    outerRotation={outerRotation}
-    startAngle={startAngle}
-  />
+  return (
+    <torus
+      innerRadius={innerRadius}
+      outerRadius={outerRadius}
+      innerSegments={innerSegments}
+      outerSegments={outerSegments}
+      innerRotation={innerRotation}
+      outerRotation={outerRotation}
+      startAngle={startAngle}
+    />
+  )
 }
