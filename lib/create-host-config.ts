@@ -1,3 +1,18 @@
+import type ReactReconciler from "react-reconciler"
+import type {
+  CuboidProps,
+  CylinderEllipticProps,
+  CylinderProps,
+  EllipsoidProps,
+  GeodesicSphereProps,
+  RoundedCuboidProps,
+  RoundedCylinderProps,
+  SphereProps,
+  TorusProps,
+} from "./jscad-fns"
+import type { JSCADModule, JSCADPrimitive } from "./jscad-primitives"
+import type { PolygonProps } from "./jscad-fns/polygon"
+
 export function createHostConfig(jscad: JSCADModule) {
   const hostConfig: ReactReconciler.HostConfig<
     string, // Type
@@ -79,6 +94,10 @@ export function createHostConfig(jscad: JSCADModule) {
             radius: (props as TorusProps).radius,
             tube: (props as TorusProps).tube,
           })
+        case "jscadpolygon":
+          return jscad.primitives.polygon({
+            points: (props as PolygonProps).points,
+          })
         default:
           throw new Error(`Unknown element type: ${type}`)
       }
@@ -134,7 +153,7 @@ export function createHostConfig(jscad: JSCADModule) {
     prepareForCommit() {
       return null
     },
-    resetAfterCommit() { },
+    resetAfterCommit() {},
     getPublicInstance(instance: JSCADPrimitive) {
       return instance
     },
@@ -147,18 +166,18 @@ export function createHostConfig(jscad: JSCADModule) {
     shouldSetTextContent() {
       return false
     },
-    clearContainer() { },
+    clearContainer() {},
     scheduleTimeout: setTimeout,
     cancelTimeout: clearTimeout,
     noTimeout: -1,
     isPrimaryRenderer: true,
     getCurrentEventPriority: () => 99,
     getInstanceFromNode: () => null,
-    beforeActiveInstanceBlur: () => { },
-    afterActiveInstanceBlur: () => { },
-    prepareScopeUpdate: () => { },
+    beforeActiveInstanceBlur: () => {},
+    afterActiveInstanceBlur: () => {},
+    prepareScopeUpdate: () => {},
     getInstanceFromScope: () => null,
-    detachDeletedInstance: () => { },
+    detachDeletedInstance: () => {},
   }
   return hostConfig
 }
