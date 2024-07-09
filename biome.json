@@ -28,6 +28,9 @@
       "suspicious": {
         "noExplicitAny": "off"
       },
+      "complexity": {
+        "noForEach": "off"
+      },
       "style": {
         "noNonNullAssertion": "off",
         "useFilenamingConvention": {
