@@ -43,7 +43,7 @@ export interface JSCADModule {
         twistAngle?: number
         twistSteps?: number
       },
-      geometry: any
+      geometry: any,
     ) => any
   }
 }

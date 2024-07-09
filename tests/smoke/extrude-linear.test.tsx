@@ -15,6 +15,6 @@ it("should not error when rendering an extrudeLinear", () => {
           [-2, 2],
         ]}
       />
-    </extrudeLinear>
+    </extrudeLinear>,
   )
 })
