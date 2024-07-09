@@ -9,11 +9,162 @@ import type {
   RoundedCylinderProps,
   SphereProps,
   TorusProps,
+  PolygonProps,
+  ExtrudeLinearProps,
 } from "./jscad-fns"
 import type { JSCADModule, JSCADPrimitive } from "./jscad-primitives"
-import type { PolygonProps } from "./jscad-fns/polygon"
+
+const ex = {
+  sides: [
+    [
+      [-2, 2],
+      [-2, -1],
+    ],
+    [
+      [-2, -1],
+      [2, -1],
+    ],
+    [
+      [2, -1],
+      [2.5, 2],
+    ],
+    [
+      [2.5, 2],
+      [1, 1],
+    ],
+    [
+      [1, 1],
+      [0, 2],
+    ],
+    [
+      [0, 2],
+      [-1, 1],
+    ],
+    [
+      [-1, 1],
+      [-2, 2],
+    ],
+  ],
+  transforms: [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
+}
 
 export function createHostConfig(jscad: JSCADModule) {
+  const createInstance = (
+    type: string | Function,
+    props: any,
+    rootContainerInstance: any,
+    hostContext: any,
+    internalInstanceHandle: any
+  ) => {
+    const renderChildren = (children: any) => {
+      if (Array.isArray(children)) {
+        // TODO union all children together
+        throw new Error("Unioning multiple children is not yet supported")
+      }
+      if (children) {
+        // Single child
+        return createInstance(
+          children.type,
+          children.props,
+          [],
+          hostContext,
+          internalInstanceHandle
+        )
+      }
+      return null
+    }
+
+    if (typeof type === "function") {
+      const element = type(props)
+      return createInstance(
+        element.type,
+        element.props,
+        rootContainerInstance,
+        hostContext,
+        internalInstanceHandle
+      )
+    }
+
+    switch (type) {
+      case "cube":
+        return jscad.primitives.cube({ size: (props as CubeProps).size })
+      case "sphere":
+        return jscad.primitives.sphere({
+          radius: (props as SphereProps).radius,
+          segments: (props as SphereProps).segments,
+        })
+      case "cuboid":
+        return jscad.primitives.cuboid({
+          size: (props as CuboidProps).size,
+        })
+      case "roundedCuboid":
+        return jscad.primitives.roundedCuboid({
+          size: (props as RoundedCuboidProps).size,
+          roundRadius: (props as RoundedCuboidProps).roundRadius,
+        })
+      case "geodesicSphere":
+        return jscad.primitives.geodesicSphere({
+          radius: (props as GeodesicSphereProps).radius,
+          frequency: (props as GeodesicSphereProps).frequency,
+        })
+      case "ellipsoid":
+        return jscad.primitives.ellipsoid({
+          radius: (props as EllipsoidProps).radius,
+        })
+      case "cylinder":
+        return jscad.primitives.cylinder({
+          radius: (props as CylinderProps).radius,
+          height: (props as CylinderProps).height,
+          startRadius: (props as CylinderProps).startRadius,
+          endRadius: (props as CylinderProps).endRadius,
+        })
+      case "roundedCylinder":
+        return jscad.primitives.roundedCylinder({
+          radius: (props as RoundedCylinderProps).radius,
+          height: (props as RoundedCylinderProps).height,
+          roundRadius: (props as RoundedCylinderProps).roundRadius,
+        })
+      case "cylinderElliptic":
+        return jscad.primitives.cylinderElliptic({
+          radius: (props as CylinderEllipticProps).radius,
+          height: (props as CylinderEllipticProps).height,
+          startRadius: (props as CylinderEllipticProps).startRadius,
+          endRadius: (props as CylinderEllipticProps).endRadius,
+          startAngle: (props as CylinderEllipticProps).startAngle,
+          endAngle: (props as CylinderEllipticProps).endAngle,
+        })
+      case "torus":
+        return jscad.primitives.torus({
+          radius: (props as TorusProps).radius,
+          tube: (props as TorusProps).tube,
+        })
+      case "jscadPolygon":
+        return jscad.primitives.polygon({
+          points: (props as PolygonProps).points,
+        })
+      // biome-ignore lint/suspicious/noFallthroughSwitchClause: <explanation>
+      case "extrudeLinear": {
+        const { children, ...extrudeProps } = props as ExtrudeLinearProps
+
+        const childrenGeometry = renderChildren(children)
+
+        const extrudedGeometry = jscad.extrusions.extrudeLinear(
+          {
+            height: extrudeProps.height,
+            // twistAngle: extrudeProps.twistAngle,
+            // twistSteps: extrudeProps.twistSteps,
+          },
+          childrenGeometry
+        )
+
+        return extrudedGeometry
+      }
+
+      default:
+        throw new Error(`Unknown element type: ${type}`)
+    }
+  }
+
   const hostConfig: ReactReconciler.HostConfig<
     string, // Type
     Props, // Props
@@ -34,89 +185,22 @@ export function createHostConfig(jscad: JSCADModule) {
     supportsPersistence: false,
     supportsHydration: false,
 
-    createInstance(
-      type: string,
-      props: Props,
-      rootContainerInstance: any,
-      hostContext: any,
-      internalInstanceHandle: any,
-    ) {
-      switch (type) {
-        case "cube":
-          return jscad.primitives.cube({ size: (props as CubeProps).size })
-        case "sphere":
-          return jscad.primitives.sphere({
-            radius: (props as SphereProps).radius,
-            segments: (props as SphereProps).segments,
-          })
-        case "cuboid":
-          return jscad.primitives.cuboid({
-            size: (props as CuboidProps).size,
-          })
-        case "roundedCuboid":
-          return jscad.primitives.roundedCuboid({
-            size: (props as RoundedCuboidProps).size,
-            roundRadius: (props as RoundedCuboidProps).roundRadius,
-          })
-        case "geodesicSphere":
-          return jscad.primitives.geodesicSphere({
-            radius: (props as GeodesicSphereProps).radius,
-            frequency: (props as GeodesicSphereProps).frequency,
-          })
-        case "ellipsoid":
-          return jscad.primitives.ellipsoid({
-            radius: (props as EllipsoidProps).radius,
-          })
-        case "cylinder":
-          return jscad.primitives.cylinder({
-            radius: (props as CylinderProps).radius,
-            height: (props as CylinderProps).height,
-            startRadius: (props as CylinderProps).startRadius,
-            endRadius: (props as CylinderProps).endRadius,
-          })
-        case "roundedCylinder":
-          return jscad.primitives.roundedCylinder({
-            radius: (props as RoundedCylinderProps).radius,
-            height: (props as RoundedCylinderProps).height,
-            roundRadius: (props as RoundedCylinderProps).roundRadius,
-          })
-        case "cylinderElliptic":
-          return jscad.primitives.cylinderElliptic({
-            radius: (props as CylinderEllipticProps).radius,
-            height: (props as CylinderEllipticProps).height,
-            startRadius: (props as CylinderEllipticProps).startRadius,
-            endRadius: (props as CylinderEllipticProps).endRadius,
-            startAngle: (props as CylinderEllipticProps).startAngle,
-            endAngle: (props as CylinderEllipticProps).endAngle,
-          })
-        case "torus":
-          return jscad.primitives.torus({
-            radius: (props as TorusProps).radius,
-            tube: (props as TorusProps).tube,
-          })
-        case "jscadpolygon":
-          return jscad.primitives.polygon({
-            points: (props as PolygonProps).points,
-          })
-        default:
-          throw new Error(`Unknown element type: ${type}`)
-      }
-    },
+    createInstance: createInstance,
 
     createTextInstance() {
       throw new Error("Text elements are not supported in JSCAD")
     },
 
     appendInitialChild(parentInstance: JSCADPrimitive, child: JSCADPrimitive) {
-      return jscad.booleans.union(parentInstance, child) as JSCADPrimitive
+      return parentInstance
     },
 
     appendChild(parentInstance: JSCADPrimitive, child: JSCADPrimitive) {
-      return jscad.booleans.union(parentInstance, child) as JSCADPrimitive
+      return parentInstance
     },
 
     removeChild(parentInstance: JSCADPrimitive, child: JSCADPrimitive) {
-      return jscad.booleans.subtract(parentInstance, child) as JSCADPrimitive
+      return parentInstance
     },
 
     appendChildToContainer(container: JSCADPrimitive[], child: JSCADPrimitive) {
@@ -125,7 +209,7 @@ export function createHostConfig(jscad: JSCADModule) {
 
     removeChildFromContainer(
       container: JSCADPrimitive[],
-      child: JSCADPrimitive,
+      child: JSCADPrimitive
     ) {
       const index = container.indexOf(child)
       if (index !== -1) container.splice(index, 1)
@@ -140,10 +224,10 @@ export function createHostConfig(jscad: JSCADModule) {
       updatePayload: any,
       type: string,
       oldProps: Props,
-      newProps: Props,
+      newProps: Props
     ) {
       // Re-create the instance with new props
-      return this.createInstance(type, newProps, instance, {}, null)
+      return createInstance(type, newProps, instance, {}, null)
     },
 
     finalizeInitialChildren() {

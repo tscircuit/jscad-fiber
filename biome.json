@@ -29,7 +29,8 @@
         "noExplicitAny": "off"
       },
       "complexity": {
-        "noForEach": "off"
+        "noForEach": "warn",
+        "noBannedTypes": "warn"
       },
       "style": {
         "noNonNullAssertion": "off",

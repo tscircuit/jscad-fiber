@@ -23,16 +23,12 @@ export function JsCadFixture({
       const root = createJSCADRoot(jscadGeoms)
       root.render(children)
 
-      // Here, you would typically use the container to render the 3D shape
-      // For this example, we'll just log the result
-      console.log("JSCad objects:", jscadGeoms)
-
       const scene = new THREE.Scene()
       const camera = new THREE.PerspectiveCamera(
         75,
         window.innerWidth / window.innerHeight,
         0.1,
-        1000,
+        1000
       )
 
       // Add ambient light

@@ -9,8 +9,6 @@ import {
 } from "three"
 
 export default function convertCSGToThreeGeom(csg): BufferGeometry {
-  console.log("csg", csg)
-
   if (csg.polygons) {
     // 3D shape
     const vertices = []
@@ -34,7 +32,7 @@ export default function convertCSGToThreeGeom(csg): BufferGeometry {
     const geo = new BufferGeometry()
     geo.setAttribute(
       "position",
-      new BufferAttribute(new Float32Array(vertices), 3),
+      new BufferAttribute(new Float32Array(vertices), 3)
     )
     geo.setIndex(indices)
     if (csg.transforms) {
