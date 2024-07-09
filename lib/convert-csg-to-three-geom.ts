@@ -2,12 +2,13 @@ import {
   BufferGeometry,
   BufferAttribute,
   Vector3,
+  Vector2,
   Matrix4,
   Shape,
   ShapeGeometry,
 } from "three"
 
-export default function convertCSGToThreeGeom(csg) {
+export default function convertCSGToThreeGeom(csg): BufferGeometry {
   console.log("csg", csg)
 
   if (csg.polygons) {
@@ -49,23 +50,22 @@ export default function convertCSGToThreeGeom(csg) {
     geo.attributes.normal.needsUpdate = true
     return geo
   } else if (csg.sides) {
-    // 2D shape
-    const shape = new Shape()
+    const points = csg.sides.map((side) => new Vector2(side[0][0], side[0][1]))
 
-    // Move to the first point
-    const firstPoint = csg.sides[0][0]
-    shape.moveTo(firstPoint[0], firstPoint[1])
+    const geometry = new BufferGeometry().setFromPoints(points)
 
-    // Draw lines to subsequent points
-    for (let i = 1; i < csg.sides.length; i++) {
-      const point = csg.sides[i][0]
-      shape.lineTo(point[0], point[1])
-    }
+    // // 2D shape
+    // const shape = new Shape()
 
-    // Close the shape
-    shape.closePath()
+    // // Move to the first point
+    // const firstPoint = csg.sides[0][0]
+    // shape.moveTo(firstPoint[0], firstPoint[1])
 
-    const geometry = new ShapeGeometry(shape)
+    // // Draw lines to subsequent points
+    // for (let i = 1; i < csg.sides.length; i++) {
+    //   const point = csg.sides[i][0]
+    //   shape.lineTo(point[0], point[1])
+    // }
 
     if (csg.transforms) {
       const transforms = new Matrix4()

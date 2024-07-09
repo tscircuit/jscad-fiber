@@ -54,26 +54,30 @@ export function JsCadFixture({
 
       for (const csg of jscadGeoms) {
         const geometry = convertCSGToThreeGeom(csg)
-        console.log(geometry)
 
         let material
         if (csg.sides) {
           // 2D shape
-          material = new THREE.MeshBasicMaterial({
+          // material = new THREE.MeshBasicMaterial({
+          //   color: 0xffffff,
+          //   side: THREE.DoubleSide,
+          //   wireframe: wireframe,
+          // })
+          const material = new THREE.LineBasicMaterial({
             color: 0xffffff,
-            side: THREE.DoubleSide,
-            wireframe: wireframe,
+            linewidth: 2, // Note: linewidth > 1 only works in WebGL 2
           })
+          const lineLoop = new THREE.LineLoop(geometry, material)
+          scene.add(lineLoop)
         } else {
           // 3D shape
           material = new THREE.MeshStandardMaterial({
             color: 0xffffff,
             wireframe: wireframe,
           })
+          const mesh = new THREE.Mesh(geometry, material)
+          scene.add(mesh)
         }
-
-        const mesh = new THREE.Mesh(geometry, material)
-        scene.add(mesh)
       }
 
       camera.position.x = 20
