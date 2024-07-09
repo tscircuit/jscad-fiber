@@ -3,5 +3,5 @@ export type PolygonProps = {
 }
 
 export function Polygon({ points }: PolygonProps) {
-  return <jscadpolygon points={points} />
+  return <jscadPolygon points={points} />
 }

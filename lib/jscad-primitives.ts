@@ -1,30 +1,16 @@
 // Define a type for the JSCAD module structure we expect
 export interface JSCADModule {
   primitives: {
-    polygon: (options: {
-      points: [number, number][]
-    }) => any
-    cube: (options: {
-      size: number | [number, number, number]
-    }) => any
-    sphere: (options: {
-      radius: number
-      segments?: number
-    }) => any
-    geodesicSphere: (options: {
-      radius: number
-      frequency: number
-    }) => any
-    cuboid: (options: {
-      size: number | [number, number, number]
-    }) => any
+    polygon: (options: { points: [number, number][] }) => any
+    cube: (options: { size: number | [number, number, number] }) => any
+    sphere: (options: { radius: number; segments?: number }) => any
+    geodesicSphere: (options: { radius: number; frequency: number }) => any
+    cuboid: (options: { size: number | [number, number, number] }) => any
     roundedCuboid: (options: {
       size: number | [number, number, number]
       roundRadius: number
     }) => any
-    ellipsoid: (options: {
-      radius: [number, number, number]
-    }) => any
+    ellipsoid: (options: { radius: [number, number, number] }) => any
     cylinder: (options: {
       radius: number
       height: number
@@ -44,15 +30,21 @@ export interface JSCADModule {
       startAngle?: number
       endAngle?: number
     }) => any
-    torus: (options: {
-      radius: number
-      tube: number
-      segments?: number
-    }) => any
+    torus: (options: { radius: number; tube: number; segments?: number }) => any
   }
   booleans: {
     union: (a: any, b: any) => any
     subtract: (a: any, b: any) => any
+  }
+  extrusions: {
+    extrudeLinear: (
+      options: {
+        height: number
+        twistAngle?: number
+        twistSteps?: number
+      },
+      geometry: any,
+    ) => any
   }
 }
 
@@ -69,6 +61,8 @@ export type JSCADPrimitive =
   | ReturnType<JSCADModule["primitives"]["cylinderElliptic"]>
   | ReturnType<JSCADModule["primitives"]["torus"]>
   | ReturnType<JSCADModule["primitives"]["polygon"]>
+  | ReturnType<JSCADModule["extrusions"]["extrudeLinear"]>
+
 export type JSCADOperation =
   | JSCADModule["booleans"]["union"]
   | JSCADModule["booleans"]["subtract"]

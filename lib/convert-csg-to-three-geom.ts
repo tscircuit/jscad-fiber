@@ -9,8 +9,6 @@ import {
 } from "three"
 
 export default function convertCSGToThreeGeom(csg): BufferGeometry {
-  console.log("csg", csg)
-
   if (csg.polygons) {
     // 3D shape
     const vertices = []
