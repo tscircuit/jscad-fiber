@@ -2,7 +2,7 @@ import { JsCadFixture } from "../lib/components/jscad-fixture"
 import { Polygon } from "../lib/jscad-fns/polygon"
 
 export default () => (
-  <JsCadFixture wireframe>
+  <JsCadFixture>
     <Polygon
       points={[
         [-2, -1],
