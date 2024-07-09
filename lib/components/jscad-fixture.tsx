@@ -32,7 +32,7 @@ export function JsCadFixture({
         75,
         window.innerWidth / window.innerHeight,
         0.1,
-        1000,
+        1000
       )
 
       // Add ambient light
@@ -55,12 +55,25 @@ export function JsCadFixture({
       for (const csg of jscadGeoms) {
         const geometry = convertCSGToThreeGeom(csg)
         console.log(geometry)
-        const material = new THREE.MeshStandardMaterial({
-          color: 0xffffff,
-          wireframe,
-        })
-        const cube = new THREE.Mesh(geometry, material)
-        scene.add(cube)
+
+        let material
+        if (csg.sides) {
+          // 2D shape
+          material = new THREE.MeshBasicMaterial({
+            color: 0xffffff,
+            side: THREE.DoubleSide,
+            wireframe: wireframe,
+          })
+        } else {
+          // 3D shape
+          material = new THREE.MeshStandardMaterial({
+            color: 0xffffff,
+            wireframe: wireframe,
+          })
+        }
+
+        const mesh = new THREE.Mesh(geometry, material)
+        scene.add(mesh)
       }
 
       camera.position.x = 20
