@@ -11,6 +11,10 @@ import type {
   TorusProps,
   PolygonProps,
   ExtrudeLinearProps,
+  ExtrudeHelicalProps,
+  ExtrudeRotateProps,
+  ExtrudeRectangularProps,
+  ProjectProps,
 } from "./jscad-fns"
 import type { JSCADModule, JSCADPrimitive } from "./jscad-primitives"
 
@@ -159,6 +163,71 @@ export function createHostConfig(jscad: JSCADModule) {
 
         return extrudedGeometry
       }
+      case "extrudeHelical": {
+        const { children, ...extrudeProps } = props as ExtrudeHelicalProps
+
+        const childrenGeometry = renderChildren(children)
+
+        const extrudedGeometry = jscad.extrusions.extrudeHelical(
+          {
+
+            angle: extrudeProps.angle,
+            pitch: extrudeProps.pitch,
+            segmetsPerRotation: extrudeProps.segmetsPerRotation,
+            // startAngle: extrudeProps.startAngle,
+            // height: extrudeProps.height,
+            // endOffset: extrudeProps.endOffset,
+          },
+          childrenGeometry,
+        )
+
+        return extrudedGeometry
+      }
+      case "extrudeRotate": {
+        const { children, ...extrudeProps } = props as ExtrudeRotateProps
+
+        const childrenGeometry = renderChildren(children)
+
+        const extrudedGeometry = jscad.extrusions.extrudeRotate(
+          {
+            angle: extrudeProps.angle,
+            segments: extrudeProps.segments,
+          },
+          childrenGeometry,
+        )
+
+        return extrudedGeometry
+      }
+      case "extrudeRectangular": {
+        const { children, ...extrudeProps } = props as ExtrudeRectangularProps
+
+        const childrenGeometry = renderChildren(children)
+
+        const extrudedGeometry = jscad.extrusions.extrudeRectangular(
+          {
+            size: extrudeProps.size,
+            height: extrudeProps.height,
+          },
+          childrenGeometry,
+        )
+
+        return extrudedGeometry
+      }
+      case "project": {
+        const { children, ...projectProps } = props as ProjectProps
+
+        const childrenGeometry = renderChildren(children)
+
+        const projectedGeometry = jscad.extrusions.project(
+          {
+            axis: projectProps.axis,
+            origin: projectProps.origin,
+          },
+          childrenGeometry,
+        )
+
+        return projectedGeometry
+      }
 
       default:
         throw new Error(`Unknown element type: ${type}`)
@@ -237,7 +306,7 @@ export function createHostConfig(jscad: JSCADModule) {
     prepareForCommit() {
       return null
     },
-    resetAfterCommit() {},
+    resetAfterCommit() { },
     getPublicInstance(instance: JSCADPrimitive) {
       return instance
     },
@@ -250,18 +319,18 @@ export function createHostConfig(jscad: JSCADModule) {
     shouldSetTextContent() {
       return false
     },
-    clearContainer() {},
+    clearContainer() { },
     scheduleTimeout: setTimeout,
     cancelTimeout: clearTimeout,
     noTimeout: -1,
     isPrimaryRenderer: true,
     getCurrentEventPriority: () => 99,
     getInstanceFromNode: () => null,
-    beforeActiveInstanceBlur: () => {},
-    afterActiveInstanceBlur: () => {},
-    prepareScopeUpdate: () => {},
+    beforeActiveInstanceBlur: () => { },
+    afterActiveInstanceBlur: () => { },
+    prepareScopeUpdate: () => { },
     getInstanceFromScope: () => null,
-    detachDeletedInstance: () => {},
+    detachDeletedInstance: () => { },
   }
   return hostConfig
 }

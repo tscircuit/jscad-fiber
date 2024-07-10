@@ -55,7 +55,7 @@ function createJSCADRenderer(jscad: JSCADModule) {
     )
     return {
       render(element: React.ReactElement) {
-        reconciler.updateContainer(element, root, null, () => {})
+        reconciler.updateContainer(element, root, null, () => { })
       },
     }
   }

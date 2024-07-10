@@ -36,6 +36,24 @@ export interface JSCADModule {
     union: (a: any, b: any) => any
     subtract: (a: any, b: any) => any
   }
+  maths: {
+    slice: {
+      fromPoints: (points: Array<[number, number]>) => any
+      transform: (matrix: any, slice: any) => any
+    }
+    bezier: {
+      create: (points: number[]) => any
+      valueAt: (t: number, curve: any) => number
+    }
+    mat4: {
+      create: () => any
+      fromTranslation: (out: any, v: [number, number, number]) => any
+      fromScaling: (out: any, v: [number, number, number]) => any
+    }
+  }
+  transforms: {
+    translate: (vector: [number, number, number], object: any) => any
+  }
   extrusions: {
     extrudeLinear: (
       options: {
@@ -44,7 +62,40 @@ export interface JSCADModule {
         twistSteps?: number
       },
       geometry: any,
-    ) => any
+    ) => any,
+    extrudeHelical: (
+      options: {
+        angle: number
+        pitch?: number
+        segmetsPerRotation?: number
+        startAngle?: number
+        height?: number
+        endOffset?: number
+      },
+      geometry: any,
+    ) => any,
+    extrudeRotate: (
+      options: {
+        angle: number
+        startAngle?: number
+        segments?: number
+      },
+      geometry: any,
+    ) => any,
+    extrudeRectangular: (
+      options: {
+        size: number
+        height: number
+      },
+      geometry: any,
+    ) => any,
+    project: (
+      options: {
+        axis: [number, number, number]
+        origin: [number, number, number]
+      },
+      geometry: any,
+    ) => any,
   }
 }
 
@@ -62,6 +113,10 @@ export type JSCADPrimitive =
   | ReturnType<JSCADModule["primitives"]["torus"]>
   | ReturnType<JSCADModule["primitives"]["polygon"]>
   | ReturnType<JSCADModule["extrusions"]["extrudeLinear"]>
+  | ReturnType<JSCADModule["extrusions"]["extrudeHelical"]>
+  | ReturnType<JSCADModule["extrusions"]["extrudeRotate"]>
+  | ReturnType<JSCADModule["extrusions"]["extrudeRectangular"]>
+  | ReturnType<JSCADModule["extrusions"]["project"]>
 
 export type JSCADOperation =
   | JSCADModule["booleans"]["union"]

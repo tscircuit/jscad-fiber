@@ -3,6 +3,10 @@ import type * as FN from "./jscad-fns"
 declare global {
   namespace JSX {
     interface IntrinsicElements {
+      project: FN.ProjectProps
+      extrudeRectangular: FN.ExtrudeRectangularProps
+      extrudeRotate: FN.ExtrudeRotateProps
+      extrudeHelical: FN.ExtrudeHelicalProps
       extrudeLinear: FN.ExtrudeLinearProps
       cube: FN.CubeProps
       sphere: FN.SphereProps
