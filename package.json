@@ -5,7 +5,7 @@
   "scripts": {
     "start": "cosmos",
     "build": "cosmos-export",
-    "predeploy": "BUILD_FOR_GH_PAGES=1 npm run build",
+    "predeploy": "BUILD_FOR_GH_PAGES=1 npm run build && touch ./cosmos-export/.nojekyll",
     "format": "biome format . --write",
     "format:check": "biome format ."
   },
