@@ -168,10 +168,7 @@ export function createHostConfig(jscad: JSCADModule) {
         // Assert that color is an array
         const color = colorizeProps.color as unknown as [number, number, number]
 
-        const colorizedGeometry = jscad.colors.colorize(
-          color,
-          childrenGeometry,
-        )
+        const colorizedGeometry = jscad.colors.colorize(color, childrenGeometry)
 
         return colorizedGeometry
       }
