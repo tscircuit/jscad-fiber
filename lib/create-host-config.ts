@@ -168,12 +168,13 @@ export function createHostConfig(jscad: JSCADModule) {
         // Assert that color is an array
         const color = colorizeProps.color as unknown as [number, number, number]
 
-        const colorizedGeometry = jscad.colors.colorize(
-          color,
-          childrenGeometry,
-        )
+        const colorizedGeometry = jscad.colors.colorize(color, childrenGeometry)
 
-        colorizedGeometry.color = [colorizedGeometry.color[0], colorizedGeometry.color[1], colorizedGeometry.color[2]]
+        colorizedGeometry.color = [
+          colorizedGeometry.color[0],
+          colorizedGeometry.color[1],
+          colorizedGeometry.color[2],
+        ]
 
         return colorizedGeometry
       }
@@ -255,7 +256,7 @@ export function createHostConfig(jscad: JSCADModule) {
     prepareForCommit() {
       return null
     },
-    resetAfterCommit() { },
+    resetAfterCommit() {},
     getPublicInstance(instance: JSCADPrimitive) {
       return instance
     },
@@ -268,18 +269,18 @@ export function createHostConfig(jscad: JSCADModule) {
     shouldSetTextContent() {
       return false
     },
-    clearContainer() { },
+    clearContainer() {},
     scheduleTimeout: setTimeout,
     cancelTimeout: clearTimeout,
     noTimeout: -1,
     isPrimaryRenderer: true,
     getCurrentEventPriority: () => 99,
     getInstanceFromNode: () => null,
-    beforeActiveInstanceBlur: () => { },
-    afterActiveInstanceBlur: () => { },
-    prepareScopeUpdate: () => { },
+    beforeActiveInstanceBlur: () => {},
+    afterActiveInstanceBlur: () => {},
+    prepareScopeUpdate: () => {},
     getInstanceFromScope: () => null,
-    detachDeletedInstance: () => { },
+    detachDeletedInstance: () => {},
   }
   return hostConfig
 }

@@ -30,7 +30,7 @@ export default function convertCSGToThreeGeom(csg): BufferGeometry {
         idx++
       })
       const first = polygon.vertices[0].index
-      for (let i = 2;i < polygon.vertices.length;i++) {
+      for (let i = 2; i < polygon.vertices.length; i++) {
         const second = polygon.vertices[i - 1].index
         const third = polygon.vertices[i].index
         indices.push(first, second, third)
@@ -38,13 +38,19 @@ export default function convertCSGToThreeGeom(csg): BufferGeometry {
     })
 
     const geo = new BufferGeometry()
-    geo.setAttribute("position", new BufferAttribute(new Float32Array(vertices), 3))
+    geo.setAttribute(
+      "position",
+      new BufferAttribute(new Float32Array(vertices), 3),
+    )
     geo.setIndex(indices)
 
     // Add color attribute
     if (colors.length > 0) {
       console.log("Applying colors:", colors.slice(0, 9)) // Log first 3 vertices' colors
-      geo.setAttribute("color", new BufferAttribute(new Float32Array(colors), 3))
+      geo.setAttribute(
+        "color",
+        new BufferAttribute(new Float32Array(colors), 3),
+      )
     }
 
     if (csg.transforms) {
