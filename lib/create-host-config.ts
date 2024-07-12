@@ -169,7 +169,7 @@ export function createHostConfig(jscad: JSCADModule) {
         const color = colorizeProps.color as unknown as [number, number, number]
 
         const colorizedGeometry = jscad.colors.colorize(
-          [color[0], color[1], color[2]],
+          color,
           childrenGeometry,
         )
 
