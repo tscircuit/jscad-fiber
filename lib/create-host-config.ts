@@ -11,6 +11,8 @@ import type {
   TorusProps,
   PolygonProps,
   ExtrudeLinearProps,
+  ColorizeProps,
+  CubeProps,
 } from "./jscad-fns"
 import type { JSCADModule, JSCADPrimitive } from "./jscad-primitives"
 
@@ -58,11 +60,9 @@ export function createHostConfig(jscad: JSCADModule) {
   ) => {
     const renderChildren = (children: any) => {
       if (Array.isArray(children)) {
-        // TODO union all children together
         throw new Error("Unioning multiple children is not yet supported")
       }
       if (children) {
-        // Single child
         return createInstance(
           children.type,
           children.props,
@@ -74,6 +74,7 @@ export function createHostConfig(jscad: JSCADModule) {
       return null
     }
 
+    // Handle function components
     if (typeof type === "function") {
       const element = type(props)
       return createInstance(
@@ -158,6 +159,18 @@ export function createHostConfig(jscad: JSCADModule) {
         )
 
         return extrudedGeometry
+      }
+      case "colorize": {
+        const { children, ...colorizeProps } = props as ColorizeProps
+
+        const childrenGeometry = renderChildren(children)
+
+        // Assert that color is an array
+        const color = colorizeProps.color as unknown as [number, number, number]
+
+        const colorizedGeometry = jscad.colors.colorize(color, childrenGeometry)
+
+        return colorizedGeometry
       }
 
       default:
