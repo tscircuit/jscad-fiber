@@ -47,12 +47,7 @@ export interface JSCADModule {
     ) => any
   }
   colors: {
-    colorize: (
-      options: {
-        color: [number, number, number]
-      },
-      geometry: any,
-    ) => any
+    colorize: (options: [number, number, number], geometry: any) => any
   }
 }
 
