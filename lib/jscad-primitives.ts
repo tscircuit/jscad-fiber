@@ -45,7 +45,7 @@ export interface JSCADModule {
       },
       geometry: any,
     ) => any
-  },
+  }
   colors: {
     colorize: (
       options: {
@@ -53,7 +53,7 @@ export interface JSCADModule {
       },
       geometry: any,
     ) => any
-  },
+  }
 }
 
 // Define types for JSCAD objects and operations
