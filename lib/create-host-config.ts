@@ -11,6 +11,8 @@ import type {
   TorusProps,
   PolygonProps,
   ExtrudeLinearProps,
+  ColorizeProps,
+  CubeProps,
 } from "./jscad-fns"
 import type { JSCADModule, JSCADPrimitive } from "./jscad-primitives"
 
@@ -58,11 +60,9 @@ export function createHostConfig(jscad: JSCADModule) {
   ) => {
     const renderChildren = (children: any) => {
       if (Array.isArray(children)) {
-        // TODO union all children together
         throw new Error("Unioning multiple children is not yet supported")
       }
       if (children) {
-        // Single child
         return createInstance(
           children.type,
           children.props,
@@ -74,14 +74,15 @@ export function createHostConfig(jscad: JSCADModule) {
       return null
     }
 
-    if (typeof type === "function") {
+    // Handle function components
+    if (typeof type === 'function') {
       const element = type(props)
       return createInstance(
         element.type,
         element.props,
         rootContainerInstance,
         hostContext,
-        internalInstanceHandle,
+        internalInstanceHandle
       )
     }
 
@@ -158,6 +159,23 @@ export function createHostConfig(jscad: JSCADModule) {
         )
 
         return extrudedGeometry
+      }
+      case "colorize": {
+        const { children, ...colorizeProps } = props as ColorizeProps
+
+        const childrenGeometry = renderChildren(children)
+
+        // Assert that color is an array
+        const color = colorizeProps.color as unknown as [number, number, number]
+
+        const colorizedGeometry = jscad.colors.colorize(
+          {
+            color: color,
+          },
+          childrenGeometry,
+        )
+
+        return colorizedGeometry
       }
 
       default:
@@ -237,7 +255,7 @@ export function createHostConfig(jscad: JSCADModule) {
     prepareForCommit() {
       return null
     },
-    resetAfterCommit() {},
+    resetAfterCommit() { },
     getPublicInstance(instance: JSCADPrimitive) {
       return instance
     },
@@ -250,18 +268,18 @@ export function createHostConfig(jscad: JSCADModule) {
     shouldSetTextContent() {
       return false
     },
-    clearContainer() {},
+    clearContainer() { },
     scheduleTimeout: setTimeout,
     cancelTimeout: clearTimeout,
     noTimeout: -1,
     isPrimaryRenderer: true,
     getCurrentEventPriority: () => 99,
     getInstanceFromNode: () => null,
-    beforeActiveInstanceBlur: () => {},
-    afterActiveInstanceBlur: () => {},
-    prepareScopeUpdate: () => {},
+    beforeActiveInstanceBlur: () => { },
+    afterActiveInstanceBlur: () => { },
+    prepareScopeUpdate: () => { },
     getInstanceFromScope: () => null,
-    detachDeletedInstance: () => {},
+    detachDeletedInstance: () => { },
   }
   return hostConfig
 }

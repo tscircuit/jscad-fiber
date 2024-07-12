@@ -13,6 +13,7 @@ import {
   RoundedCylinder,
   CylinderElliptic,
   Torus,
+  Colorize,
   type CubeProps,
   type SphereProps,
   type CuboidProps,
@@ -23,6 +24,7 @@ import {
   type RoundedCylinderProps,
   type CylinderEllipticProps,
   type TorusProps,
+  type ColorizeProps,
 } from "./jscad-fns"
 
 type Props =
@@ -36,6 +38,7 @@ type Props =
   | RoundedCylinderProps
   | CylinderEllipticProps
   | TorusProps
+  | ColorizeProps
 
 // Create a function that returns the reconciler and root creation function
 function createJSCADRenderer(jscad: JSCADModule) {
@@ -55,7 +58,7 @@ function createJSCADRenderer(jscad: JSCADModule) {
     )
     return {
       render(element: React.ReactElement) {
-        reconciler.updateContainer(element, root, null, () => {})
+        reconciler.updateContainer(element, root, null, () => { })
       },
     }
   }
@@ -82,6 +85,9 @@ function Scene() {
         endRadius={[3, 3]}
       />
       <Torus radius={5} segments={32} tube={10} />
+      <Colorize color={[1, 0, 0]}>
+        <Cube size={[10, 10, 10]} />
+      </Colorize>
     </>
   )
 }
@@ -100,5 +106,6 @@ export {
   RoundedCylinder,
   CylinderElliptic,
   Torus,
+  Colorize,
   Scene,
 }
