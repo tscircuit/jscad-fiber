@@ -2,15 +2,13 @@
   "name": "jscad-fiber",
   "version": "0.0.7",
   "type": "module",
-  "files": [
-    "dist"
-  ],
+  "files": ["dist"],
   "main": "./dist/index.cjs",
   "scripts": {
     "start": "cosmos",
     "build:lib": "tsup ./lib/index.tsx --dts --sourcemap",
     "build:cosmos": "cosmos-export",
-    "predeploy": "BUILD_FOR_GH_PAGES=1 npm run build && touch ./cosmos-export/.nojekyll",
+    "predeploy": "BUILD_FOR_GH_PAGES=1 npm run build:cosmos && touch ./cosmos-export/.nojekyll",
     "format": "biome format . --write",
     "format:check": "biome format ."
   },
