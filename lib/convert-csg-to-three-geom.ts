@@ -46,7 +46,6 @@ export default function convertCSGToThreeGeom(csg): BufferGeometry {
 
     // Add color attribute
     if (colors.length > 0) {
-      console.log("Applying colors:", colors.slice(0, 9)) // Log first 3 vertices' colors
       geo.setAttribute(
         "color",
         new BufferAttribute(new Float32Array(colors), 3),
