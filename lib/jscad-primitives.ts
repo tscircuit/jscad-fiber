@@ -23,14 +23,22 @@ export interface JSCADModule {
       roundRadius: number
     }) => any
     cylinderElliptic: (options: {
-      radius: number
+      radius?: number
       height: number
       startRadius?: number[]
       endRadius?: number[]
       startAngle?: number
       endAngle?: number
     }) => any
-    torus: (options: { radius: number; tube: number; segments?: number }) => any
+    torus: (options: {
+      innerRadius: number
+      outerRadius: number
+      innerSegments?: number
+      outerSegments?: number
+      innerRotation?: number
+      outerRotation?: number
+      startAngle?: number
+    }) => any
   }
   booleans: {
     union: (a: any, b: any) => any
@@ -97,6 +105,9 @@ export interface JSCADModule {
       geometry: any,
     ) => any,
   }
+  colors: {
+    colorize: (options: [number, number, number], geometry: any) => any
+  }
 }
 
 // Define types for JSCAD objects and operations
@@ -117,6 +128,7 @@ export type JSCADPrimitive =
   | ReturnType<JSCADModule["extrusions"]["extrudeRotate"]>
   | ReturnType<JSCADModule["extrusions"]["extrudeRectangular"]>
   | ReturnType<JSCADModule["extrusions"]["project"]>
+  | ReturnType<JSCADModule["colors"]["colorize"]>
 
 export type JSCADOperation =
   | JSCADModule["booleans"]["union"]

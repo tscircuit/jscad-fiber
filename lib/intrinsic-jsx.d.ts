@@ -8,17 +8,18 @@ declare global {
       extrudeRotate: FN.ExtrudeRotateProps
       extrudeHelical: FN.ExtrudeHelicalProps
       extrudeLinear: FN.ExtrudeLinearProps
-      cube: FN.CubeProps
-      sphere: FN.SphereProps
-      cuboid: FN.CuboidProps
       roundedCuboid: FN.RoundedCuboidProps
       geodesicSphere: FN.GeodesicSphereProps
-      ellipsoid: FN.EllipsoidProps
-      cylinder: FN.CylinderProps
       roundedCylinder: FN.RoundedCylinderProps
       cylinderElliptic: FN.CylinderEllipticProps
-      torus: FN.TorusProps
       jscadPolygon: FN.PolygonProps
+      colorize: FN.ColorizeProps
+      sphere: FN.SphereProps
+      cuboid: FN.CuboidProps
+      ellipsoid: FN.EllipsoidProps
+      cylinder: FN.CylinderProps
+      cube: FN.CubeProps
+      torus: FN.TorusProps
     }
   }
 }

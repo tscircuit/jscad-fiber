@@ -2,8 +2,7 @@ import React from "react"
 import { createJSCADRenderer, Cube, Sphere } from "../../lib"
 import * as jscad from "@jscad/modeling"
 import * as THREE from "three"
-// @ts-ignore
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls"
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js"
 import convertCSGToThreeGeom from "../../lib/convert-csg-to-three-geom"
 
 const { createJSCADRoot } = createJSCADRenderer(jscad as any)

@@ -11,46 +11,10 @@ import type {
   TorusProps,
   PolygonProps,
   ExtrudeLinearProps,
-  ExtrudeHelicalProps,
-  ExtrudeRotateProps,
-  ExtrudeRectangularProps,
-  ProjectProps,
+  ColorizeProps,
+  CubeProps,
 } from "./jscad-fns"
 import type { JSCADModule, JSCADPrimitive } from "./jscad-primitives"
-
-const ex = {
-  sides: [
-    [
-      [-2, 2],
-      [-2, -1],
-    ],
-    [
-      [-2, -1],
-      [2, -1],
-    ],
-    [
-      [2, -1],
-      [2.5, 2],
-    ],
-    [
-      [2.5, 2],
-      [1, 1],
-    ],
-    [
-      [1, 1],
-      [0, 2],
-    ],
-    [
-      [0, 2],
-      [-1, 1],
-    ],
-    [
-      [-1, 1],
-      [-2, 2],
-    ],
-  ],
-  transforms: [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
-}
 
 export function createHostConfig(jscad: JSCADModule) {
   const createInstance = (
@@ -62,11 +26,9 @@ export function createHostConfig(jscad: JSCADModule) {
   ) => {
     const renderChildren = (children: any) => {
       if (Array.isArray(children)) {
-        // TODO union all children together
         throw new Error("Unioning multiple children is not yet supported")
       }
       if (children) {
-        // Single child
         return createInstance(
           children.type,
           children.props,
@@ -78,6 +40,7 @@ export function createHostConfig(jscad: JSCADModule) {
       return null
     }
 
+    // Handle function components
     if (typeof type === "function") {
       const element = type(props)
       return createInstance(
@@ -119,8 +82,6 @@ export function createHostConfig(jscad: JSCADModule) {
         return jscad.primitives.cylinder({
           radius: (props as CylinderProps).radius,
           height: (props as CylinderProps).height,
-          startRadius: (props as CylinderProps).startRadius,
-          endRadius: (props as CylinderProps).endRadius,
         })
       case "roundedCylinder":
         return jscad.primitives.roundedCylinder({
@@ -139,8 +100,13 @@ export function createHostConfig(jscad: JSCADModule) {
         })
       case "torus":
         return jscad.primitives.torus({
-          radius: (props as TorusProps).radius,
-          tube: (props as TorusProps).tube,
+          innerRadius: (props as TorusProps).innerRadius,
+          outerRadius: (props as TorusProps).outerRadius,
+          innerSegments: (props as TorusProps).innerSegments,
+          outerSegments: (props as TorusProps).outerSegments,
+          innerRotation: (props as TorusProps).innerRotation,
+          outerRotation: (props as TorusProps).outerRotation,
+          startAngle: (props as TorusProps).startAngle,
         })
       case "jscadPolygon":
         return jscad.primitives.polygon({
@@ -163,70 +129,17 @@ export function createHostConfig(jscad: JSCADModule) {
 
         return extrudedGeometry
       }
-      case "extrudeHelical": {
-        const { children, ...extrudeProps } = props as ExtrudeHelicalProps
+      case "colorize": {
+        const { children, ...colorizeProps } = props as ColorizeProps
 
         const childrenGeometry = renderChildren(children)
 
-        const extrudedGeometry = jscad.extrusions.extrudeHelical(
-          {
+        // Assert that color is an array
+        const color = colorizeProps.color as unknown as [number, number, number]
 
-            angle: extrudeProps.angle,
-            pitch: extrudeProps.pitch,
-            segmetsPerRotation: extrudeProps.segmetsPerRotation,
-            // startAngle: extrudeProps.startAngle,
-            // height: extrudeProps.height,
-            // endOffset: extrudeProps.endOffset,
-          },
-          childrenGeometry,
-        )
+        const colorizedGeometry = jscad.colors.colorize(color, childrenGeometry)
 
-        return extrudedGeometry
-      }
-      case "extrudeRotate": {
-        const { children, ...extrudeProps } = props as ExtrudeRotateProps
-
-        const childrenGeometry = renderChildren(children)
-
-        const extrudedGeometry = jscad.extrusions.extrudeRotate(
-          {
-            angle: extrudeProps.angle,
-            segments: extrudeProps.segments,
-          },
-          childrenGeometry,
-        )
-
-        return extrudedGeometry
-      }
-      case "extrudeRectangular": {
-        const { children, ...extrudeProps } = props as ExtrudeRectangularProps
-
-        const childrenGeometry = renderChildren(children)
-
-        const extrudedGeometry = jscad.extrusions.extrudeRectangular(
-          {
-            size: extrudeProps.size,
-            height: extrudeProps.height,
-          },
-          childrenGeometry,
-        )
-
-        return extrudedGeometry
-      }
-      case "project": {
-        const { children, ...projectProps } = props as ProjectProps
-
-        const childrenGeometry = renderChildren(children)
-
-        const projectedGeometry = jscad.extrusions.project(
-          {
-            axis: projectProps.axis,
-            origin: projectProps.origin,
-          },
-          childrenGeometry,
-        )
-
-        return projectedGeometry
+        return colorizedGeometry
       }
 
       default:
@@ -236,7 +149,7 @@ export function createHostConfig(jscad: JSCADModule) {
 
   const hostConfig: ReactReconciler.HostConfig<
     string, // Type
-    Props, // Props
+    any, // Props
     JSCADPrimitive, // Container
     JSCADPrimitive, // Instance
     never, // TextInstance
@@ -249,6 +162,7 @@ export function createHostConfig(jscad: JSCADModule) {
     number, // TimeoutHandle
     number // NoTimeout
   > = {
+    // @ts-ignore
     now: Date.now,
     supportsMutation: true,
     supportsPersistence: false,
@@ -292,8 +206,8 @@ export function createHostConfig(jscad: JSCADModule) {
       instance: JSCADPrimitive,
       updatePayload: any,
       type: string,
-      oldProps: Props,
-      newProps: Props,
+      oldProps: any,
+      newProps: any,
     ) {
       // Re-create the instance with new props
       return createInstance(type, newProps, instance, {}, null)
@@ -306,7 +220,7 @@ export function createHostConfig(jscad: JSCADModule) {
     prepareForCommit() {
       return null
     },
-    resetAfterCommit() { },
+    resetAfterCommit() {},
     getPublicInstance(instance: JSCADPrimitive) {
       return instance
     },
@@ -319,18 +233,18 @@ export function createHostConfig(jscad: JSCADModule) {
     shouldSetTextContent() {
       return false
     },
-    clearContainer() { },
+    clearContainer() {},
     scheduleTimeout: setTimeout,
     cancelTimeout: clearTimeout,
     noTimeout: -1,
     isPrimaryRenderer: true,
     getCurrentEventPriority: () => 99,
     getInstanceFromNode: () => null,
-    beforeActiveInstanceBlur: () => { },
-    afterActiveInstanceBlur: () => { },
-    prepareScopeUpdate: () => { },
+    beforeActiveInstanceBlur: () => {},
+    afterActiveInstanceBlur: () => {},
+    prepareScopeUpdate: () => {},
     getInstanceFromScope: () => null,
-    detachDeletedInstance: () => { },
+    detachDeletedInstance: () => {},
   }
   return hostConfig
 }
