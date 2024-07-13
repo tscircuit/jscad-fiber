@@ -1,5 +1,6 @@
 export type CylinderEllipticProps = {
   height: number
+  radius?: number
   startRadius: [number, number]
   endRadius: [number, number]
   segments?: number

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import {
   BufferGeometry,
   BufferAttribute,
@@ -32,7 +33,7 @@ export default function convertCSGToThreeGeom(csg): BufferGeometry {
     const geo = new BufferGeometry()
     geo.setAttribute(
       "position",
-      new BufferAttribute(new Float32Array(vertices), 3),
+      new BufferAttribute(new Float32Array(vertices), 3)
     )
     geo.setIndex(indices)
     if (csg.transforms) {

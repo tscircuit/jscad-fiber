@@ -16,47 +16,13 @@ import type {
 } from "./jscad-fns"
 import type { JSCADModule, JSCADPrimitive } from "./jscad-primitives"
 
-const ex = {
-  sides: [
-    [
-      [-2, 2],
-      [-2, -1],
-    ],
-    [
-      [-2, -1],
-      [2, -1],
-    ],
-    [
-      [2, -1],
-      [2.5, 2],
-    ],
-    [
-      [2.5, 2],
-      [1, 1],
-    ],
-    [
-      [1, 1],
-      [0, 2],
-    ],
-    [
-      [0, 2],
-      [-1, 1],
-    ],
-    [
-      [-1, 1],
-      [-2, 2],
-    ],
-  ],
-  transforms: [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
-}
-
 export function createHostConfig(jscad: JSCADModule) {
   const createInstance = (
     type: string | Function,
     props: any,
     rootContainerInstance: any,
     hostContext: any,
-    internalInstanceHandle: any,
+    internalInstanceHandle: any
   ) => {
     const renderChildren = (children: any) => {
       if (Array.isArray(children)) {
@@ -68,7 +34,7 @@ export function createHostConfig(jscad: JSCADModule) {
           children.props,
           [],
           hostContext,
-          internalInstanceHandle,
+          internalInstanceHandle
         )
       }
       return null
@@ -82,7 +48,7 @@ export function createHostConfig(jscad: JSCADModule) {
         element.props,
         rootContainerInstance,
         hostContext,
-        internalInstanceHandle,
+        internalInstanceHandle
       )
     }
 
@@ -116,8 +82,6 @@ export function createHostConfig(jscad: JSCADModule) {
         return jscad.primitives.cylinder({
           radius: (props as CylinderProps).radius,
           height: (props as CylinderProps).height,
-          startRadius: (props as CylinderProps).startRadius,
-          endRadius: (props as CylinderProps).endRadius,
         })
       case "roundedCylinder":
         return jscad.primitives.roundedCylinder({
@@ -136,8 +100,13 @@ export function createHostConfig(jscad: JSCADModule) {
         })
       case "torus":
         return jscad.primitives.torus({
-          radius: (props as TorusProps).radius,
-          tube: (props as TorusProps).tube,
+          innerRadius: (props as TorusProps).innerRadius,
+          outerRadius: (props as TorusProps).outerRadius,
+          innerSegments: (props as TorusProps).innerSegments,
+          outerSegments: (props as TorusProps).outerSegments,
+          innerRotation: (props as TorusProps).innerRotation,
+          outerRotation: (props as TorusProps).outerRotation,
+          startAngle: (props as TorusProps).startAngle,
         })
       case "jscadPolygon":
         return jscad.primitives.polygon({
@@ -155,7 +124,7 @@ export function createHostConfig(jscad: JSCADModule) {
             // twistAngle: extrudeProps.twistAngle,
             // twistSteps: extrudeProps.twistSteps,
           },
-          childrenGeometry,
+          childrenGeometry
         )
 
         return extrudedGeometry
@@ -180,7 +149,7 @@ export function createHostConfig(jscad: JSCADModule) {
 
   const hostConfig: ReactReconciler.HostConfig<
     string, // Type
-    Props, // Props
+    any, // Props
     JSCADPrimitive, // Container
     JSCADPrimitive, // Instance
     never, // TextInstance
@@ -193,6 +162,7 @@ export function createHostConfig(jscad: JSCADModule) {
     number, // TimeoutHandle
     number // NoTimeout
   > = {
+    // @ts-ignore
     now: Date.now,
     supportsMutation: true,
     supportsPersistence: false,
@@ -222,7 +192,7 @@ export function createHostConfig(jscad: JSCADModule) {
 
     removeChildFromContainer(
       container: JSCADPrimitive[],
-      child: JSCADPrimitive,
+      child: JSCADPrimitive
     ) {
       const index = container.indexOf(child)
       if (index !== -1) container.splice(index, 1)
@@ -236,8 +206,8 @@ export function createHostConfig(jscad: JSCADModule) {
       instance: JSCADPrimitive,
       updatePayload: any,
       type: string,
-      oldProps: Props,
-      newProps: Props,
+      oldProps: any,
+      newProps: any
     ) {
       // Re-create the instance with new props
       return createInstance(type, newProps, instance, {}, null)

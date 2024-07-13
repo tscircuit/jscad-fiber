@@ -2,7 +2,9 @@
   "name": "jscad-fiber",
   "version": "0.0.1",
   "type": "module",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "main": "./dist/index.cjs",
   "scripts": {
     "start": "cosmos",
@@ -15,6 +17,7 @@
   "devDependencies": {
     "@biomejs/biome": "^1.8.3",
     "@jscad/modeling": "^2.12.2",
+    "@types/bun": "^1.1.6",
     "@types/react-reconciler": "^0.28.8",
     "@types/three": "^0.166.0",
     "@vitejs/plugin-react": "^4.3.1",
