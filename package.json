@@ -1,10 +1,13 @@
 {
   "name": "jscad-fiber",
+  "version": "0.0.1",
   "type": "module",
-  "main": "./dist/index.js",
+  "files": ["dist"],
+  "main": "./dist/index.cjs",
   "scripts": {
     "start": "cosmos",
-    "build": "cosmos-export",
+    "build:lib": "tsup ./lib/index.tsx --dts --sourcemap",
+    "build:cosmos": "cosmos-export",
     "predeploy": "BUILD_FOR_GH_PAGES=1 npm run build && touch ./cosmos-export/.nojekyll",
     "format": "biome format . --write",
     "format:check": "biome format ."
@@ -12,6 +15,7 @@
   "devDependencies": {
     "@biomejs/biome": "^1.8.3",
     "@jscad/modeling": "^2.12.2",
+    "@types/bun": "^1.1.6",
     "@types/react-reconciler": "^0.28.8",
     "@types/three": "^0.166.0",
     "@vitejs/plugin-react": "^4.3.1",
@@ -22,6 +26,7 @@
     "react-dom": "^18.3.1",
     "react-reconciler": "^0.29.2",
     "three": "^0.166.1",
+    "tsup": "^8.1.0",
     "typescript": "^5.5.3",
     "vite": "^5.3.3",
     "vite-tsconfig-paths": "^4.3.2"
