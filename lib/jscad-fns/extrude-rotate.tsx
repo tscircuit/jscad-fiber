@@ -12,11 +12,7 @@ export function ExtrudeRotate({
   children,
 }: ExtrudeRotateProps) {
   return (
-    <extrudeRotate
-      angle={angle}
-      startAngle={startAngle}
-      segments={segments}
-    >
+    <extrudeRotate angle={angle} startAngle={startAngle} segments={segments}>
       {children}
     </extrudeRotate>
   )

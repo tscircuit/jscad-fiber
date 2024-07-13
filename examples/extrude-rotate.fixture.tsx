@@ -4,10 +4,7 @@ import { Polygon } from "../lib/jscad-fns/polygon"
 
 export default () => (
   <JsCadFixture>
-    <ExtrudeRotate
-      angle={Math.PI}
-      segments={24}
-    >
+    <ExtrudeRotate angle={Math.PI} segments={24}>
       <Polygon
         points={[
           [-2, -1],
@@ -16,7 +13,7 @@ export default () => (
           [1, 1],
           [0, 2],
           [-1, 1],
-          [-2, 2]
+          [-2, 2],
         ]}
       />
     </ExtrudeRotate>

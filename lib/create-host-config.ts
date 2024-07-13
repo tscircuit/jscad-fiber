@@ -1,18 +1,22 @@
 import type ReactReconciler from "react-reconciler"
 import type {
+  ColorizeProps,
+  CubeProps,
   CuboidProps,
   CylinderEllipticProps,
   CylinderProps,
   EllipsoidProps,
+  ExtrudeHelicalProps,
+  ExtrudeLinearProps,
+  ExtrudeRectangularProps,
+  ExtrudeRotateProps,
   GeodesicSphereProps,
+  PolygonProps,
+  ProjectProps,
   RoundedCuboidProps,
   RoundedCylinderProps,
   SphereProps,
   TorusProps,
-  PolygonProps,
-  ExtrudeLinearProps,
-  ColorizeProps,
-  CubeProps,
 } from "./jscad-fns"
 import type { JSCADModule, JSCADPrimitive } from "./jscad-primitives"
 
@@ -108,10 +112,11 @@ export function createHostConfig(jscad: JSCADModule) {
           outerRotation: (props as TorusProps).outerRotation,
           startAngle: (props as TorusProps).startAngle,
         })
-      case "jscadPolygon":
+      case "jscadPolygon": {
         return jscad.primitives.polygon({
           points: (props as PolygonProps).points,
         })
+      }
       // biome-ignore lint/suspicious/noFallthroughSwitchClause: <explanation>
       case "extrudeLinear": {
         const { children, ...extrudeProps } = props as ExtrudeLinearProps
@@ -128,6 +133,71 @@ export function createHostConfig(jscad: JSCADModule) {
         )
 
         return extrudedGeometry
+      }
+      case "extrudeRotate": {
+        const { children, ...extrudeProps } = props as ExtrudeRotateProps
+
+        const childrenGeometry = renderChildren(children)
+
+        const extrudedGeometry = jscad.extrusions.extrudeRotate(
+          {
+            angle: extrudeProps.angle,
+            // twistAngle: extrudeProps.twistAngle,
+            // twistSteps: extrudeProps.twistSteps,
+          },
+          childrenGeometry,
+        )
+
+        return extrudedGeometry
+      }
+      case "extrudeRectangular": {
+        const { children, ...extrudeProps } = props as ExtrudeRectangularProps
+
+        const childrenGeometry = renderChildren(children)
+
+        const extrudedGeometry = jscad.extrusions.extrudeRectangular(
+          {
+            size: extrudeProps.size,
+            height: extrudeProps.height,
+          },
+          childrenGeometry,
+        )
+
+        return extrudedGeometry
+      }
+      case "extrudeHelical": {
+        const { children, ...extrudeProps } = props as ExtrudeHelicalProps
+
+        const childrenGeometry = renderChildren(children)
+
+        const extrudedGeometry = jscad.extrusions.extrudeHelical(
+          {
+            height: extrudeProps.height,
+            angle: extrudeProps.angle,
+            startAngle: extrudeProps.startAngle || 0,
+            pitch: extrudeProps.pitch || 0,
+            endOffset: extrudeProps.endOffset || 0,
+            segmetsPerRotation: extrudeProps.segmetsPerRotation || 32,
+          },
+          childrenGeometry,
+        )
+
+        return extrudedGeometry
+      }
+      case "project": {
+        const { children, ...projectProps } = props as ProjectProps
+
+        const childrenGeometry = renderChildren(children)
+
+        const projectedGeometry = jscad.extrusions.project(
+          {
+            axis: projectProps.axis,
+            origin: projectProps.origin,
+          },
+          childrenGeometry,
+        )
+
+        return projectedGeometry
       }
       case "colorize": {
         const { children, ...colorizeProps } = props as ColorizeProps

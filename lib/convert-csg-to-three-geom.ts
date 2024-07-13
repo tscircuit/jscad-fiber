@@ -9,7 +9,6 @@ import {
 } from "three"
 
 export default function convertCSGToThreeGeom(csg): BufferGeometry {
-
   if (csg.polygons) {
     // 3D shape
     const vertices = []
@@ -61,7 +60,41 @@ export default function convertCSGToThreeGeom(csg): BufferGeometry {
 
     return geo
   } else if (csg.sides) {
-    // ... (2D shape handling remains the same)
+    // 2D shape
+    const vertices = []
+    const colors = []
+
+    csg.sides.forEach((side) => {
+      vertices.push(side[0][0], side[0][1], 0) // Add z-coordinate as 0
+      // Add color for each vertex
+      if (csg.color && csg.color.length >= 3) {
+        colors.push(csg.color[0], csg.color[1], csg.color[2])
+      } else {
+        colors.push(1, 1, 1) // Default to white if no color
+      }
+    })
+
+    const geo = new BufferGeometry()
+    geo.setAttribute(
+      "position",
+      new BufferAttribute(new Float32Array(vertices), 3),
+    )
+
+    // Add color attribute
+    if (colors.length > 0) {
+      geo.setAttribute(
+        "color",
+        new BufferAttribute(new Float32Array(colors), 3),
+      )
+    }
+
+    if (csg.transforms) {
+      const transforms = new Matrix4()
+      transforms.set(...csg.transforms).transpose()
+      geo.applyMatrix4(transforms)
+    }
+
+    return geo
   } else {
     console.error("Invalid CSG object: neither polygons nor sides found")
     return new BufferGeometry()
