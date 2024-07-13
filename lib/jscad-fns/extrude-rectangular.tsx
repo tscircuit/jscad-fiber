@@ -10,10 +10,7 @@ export function ExtrudeRectangular({
   children,
 }: ExtrudeRectangularProps) {
   return (
-    <extrudeRectangular
-      size={size}
-      height={height}
-    >
+    <extrudeRectangular size={size} height={height}>
       {children}
     </extrudeRectangular>
   )

@@ -4,10 +4,7 @@ import { Polygon } from "../lib/jscad-fns/polygon"
 
 export default () => (
   <JsCadFixture>
-    <Project
-      axis={[0, 0, 1]}
-      origin={[0, 0, 0]}
-    >
+    <Project axis={[0, 0, 1]} origin={[0, 0, 0]}>
       <Polygon
         points={[
           [-2, -1],
@@ -21,4 +18,4 @@ export default () => (
       />
     </Project>
   </JsCadFixture>
-) 
+)

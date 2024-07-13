@@ -70,7 +70,7 @@ export interface JSCADModule {
         twistSteps?: number
       },
       geometry: any,
-    ) => any,
+    ) => any
     extrudeHelical: (
       options: {
         angle: number
@@ -81,7 +81,7 @@ export interface JSCADModule {
         endOffset?: number
       },
       geometry: any,
-    ) => any,
+    ) => any
     extrudeRotate: (
       options: {
         angle: number
@@ -89,21 +89,21 @@ export interface JSCADModule {
         segments?: number
       },
       geometry: any,
-    ) => any,
+    ) => any
     extrudeRectangular: (
       options: {
         size: number
         height: number
       },
       geometry: any,
-    ) => any,
+    ) => any
     project: (
       options: {
         axis: [number, number, number]
         origin: [number, number, number]
       },
       geometry: any,
-    ) => any,
+    ) => any
   }
   colors: {
     colorize: (options: [number, number, number], geometry: any) => any
