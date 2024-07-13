@@ -8,7 +8,7 @@
     "indentStyle": "space"
   },
   "files": {
-    "ignore": ["cosmos-export"]
+    "ignore": ["cosmos-export", "dist"]
   },
   "javascript": {
     "formatter": {

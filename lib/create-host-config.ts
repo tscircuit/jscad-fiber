@@ -22,7 +22,7 @@ export function createHostConfig(jscad: JSCADModule) {
     props: any,
     rootContainerInstance: any,
     hostContext: any,
-    internalInstanceHandle: any
+    internalInstanceHandle: any,
   ) => {
     const renderChildren = (children: any) => {
       if (Array.isArray(children)) {
@@ -34,7 +34,7 @@ export function createHostConfig(jscad: JSCADModule) {
           children.props,
           [],
           hostContext,
-          internalInstanceHandle
+          internalInstanceHandle,
         )
       }
       return null
@@ -48,7 +48,7 @@ export function createHostConfig(jscad: JSCADModule) {
         element.props,
         rootContainerInstance,
         hostContext,
-        internalInstanceHandle
+        internalInstanceHandle,
       )
     }
 
@@ -124,7 +124,7 @@ export function createHostConfig(jscad: JSCADModule) {
             // twistAngle: extrudeProps.twistAngle,
             // twistSteps: extrudeProps.twistSteps,
           },
-          childrenGeometry
+          childrenGeometry,
         )
 
         return extrudedGeometry
@@ -192,7 +192,7 @@ export function createHostConfig(jscad: JSCADModule) {
 
     removeChildFromContainer(
       container: JSCADPrimitive[],
-      child: JSCADPrimitive
+      child: JSCADPrimitive,
     ) {
       const index = container.indexOf(child)
       if (index !== -1) container.splice(index, 1)
@@ -207,7 +207,7 @@ export function createHostConfig(jscad: JSCADModule) {
       updatePayload: any,
       type: string,
       oldProps: any,
-      newProps: any
+      newProps: any,
     ) {
       // Re-create the instance with new props
       return createInstance(type, newProps, instance, {}, null)

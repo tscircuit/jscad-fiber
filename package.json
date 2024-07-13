@@ -2,9 +2,7 @@
   "name": "jscad-fiber",
   "version": "0.0.1",
   "type": "module",
-  "files": [
-    "dist"
-  ],
+  "files": ["dist"],
   "main": "./dist/index.cjs",
   "scripts": {
     "start": "cosmos",

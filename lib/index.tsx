@@ -18,7 +18,7 @@ export function createJSCADRenderer(jscad: JSCADModule) {
       null,
       "",
       (error) => console.error(error),
-      null
+      null,
     )
     return {
       render(element: React.ReactElement) {
