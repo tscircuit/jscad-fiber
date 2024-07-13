@@ -7,9 +7,9 @@ export * from "./components/jscad-fixture"
 // Create a function that returns the reconciler and root creation function
 export function createJSCADRenderer(jscad: JSCADModule) {
   const hostConfig = createHostConfig(jscad)
-  const reconciler = ReactReconciler(hostConfig)
 
   function createJSCADRoot(container: JSCADPrimitive[]) {
+    const reconciler = ReactReconciler(hostConfig)
     const root = reconciler.createContainer(
       container,
       0,

@@ -14,7 +14,7 @@ export function Torus({
   innerSegments = 32,
   outerSegments = 32,
   innerRotation = 0,
-  outerRotation,
+  outerRotation = 1,
   startAngle = 0,
 }: TorusProps) {
   return (
