@@ -10,7 +10,7 @@
     "start": "cosmos",
     "build:lib": "tsup ./lib/index.tsx --dts --sourcemap",
     "build:cosmos": "cosmos-export",
-    "predeploy": "BUILD_FOR_GH_PAGES=1 npm run build && touch ./cosmos-export/.nojekyll",
+    "predeploy": "BUILD_FOR_GH_PAGES=1 npm run build:cosmos && touch ./cosmos-export/.nojekyll",
     "format": "biome format . --write",
     "format:check": "biome format ."
   },
