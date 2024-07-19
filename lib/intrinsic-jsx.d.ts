@@ -20,6 +20,7 @@ declare global {
       cylinder: FN.CylinderProps
       cube: FN.CubeProps
       torus: FN.TorusProps
+      custom: FN.CustomProps
     }
   }
 }
