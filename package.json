@@ -2,7 +2,9 @@
   "name": "jscad-fiber",
   "version": "0.0.16",
   "type": "module",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "main": "./dist/index.cjs",
   "scripts": {
     "start": "cosmos",
@@ -14,6 +16,7 @@
   },
   "peerDependencies": {
     "@jscad/modeling": "*",
+    "@react-three/fiber": "*",
     "react": "*",
     "three": "*"
   },
@@ -23,6 +26,8 @@
   "devDependencies": {
     "@biomejs/biome": "^1.8.3",
     "@jscad/modeling": "^2.12.2",
+    "@react-three/drei": "^9.108.4",
+    "@react-three/fiber": "^8.16.8",
     "@types/bun": "^1.1.6",
     "@types/react-reconciler": "^0.28.8",
     "@types/three": "^0.166.0",
