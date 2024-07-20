@@ -28,3 +28,10 @@ export default () => (
   </JSCad3dView/>
 )
 ```
+
+## Why?
+
+jscad allows you to create detailed 3d objects using boolean operations. This
+is how modern CAD tools create precise 3d models. jscad-fiber is used to
+create the 3d electronics library for [tscircuit](https://github.com/tscircuit/tscircuit) called
+[jscad-electronics](https://github.com/tscircuit/jscad-electronics)
