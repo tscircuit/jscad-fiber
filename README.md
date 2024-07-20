@@ -1,4 +1,4 @@
-# 🧊 jscad-fiber
+# jscad-fiber
 
 [View examples](https://tscircuit.github.io/jscad-fiber/)
 
