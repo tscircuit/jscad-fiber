@@ -1,6 +1,6 @@
 {
   "name": "jscad-fiber",
-  "version": "0.0.12",
+  "version": "0.0.14",
   "type": "module",
   "files": ["dist"],
   "main": "./dist/index.cjs",
