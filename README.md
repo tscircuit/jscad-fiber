@@ -7,7 +7,7 @@ This package allows you to create 3d CAD objects with React and jscad.
 ## Usage
 
 > [!NOTE]
-> Go to the `examples` directory to see examples of usage.
+> Go to the [`examples` directory](./examples) to see examples of usage.
 
 Create JSCad components with React.
 
