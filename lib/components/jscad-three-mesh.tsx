@@ -5,12 +5,11 @@ export function JSCadThreeMesh({
 }: {
   children: any
 }) {
-
-  const mesh = useJSCADRenderer(children);
+  const mesh = useJSCADRenderer(children)
 
   if (!mesh) {
-    return null;
+    return null
   }
 
-  return <primitive object={mesh} />;
+  return <primitive object={mesh} />
 }

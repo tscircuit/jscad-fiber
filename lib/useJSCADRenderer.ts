@@ -1,5 +1,5 @@
 import ReactReconciler from "react-reconciler"
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react"
 import * as jscad from "@jscad/modeling"
 import { createHostConfig } from "./create-host-config"
 import convertCSGToThreeGeom from "./convert-csg-to-three-geom"
@@ -11,10 +11,7 @@ const reconciler = ReactReconciler(hostConfig)
 /**
  * React Hook that initalizes the JSCAD root to render 3D objects
  */
-export function useJSCADRenderer(
-  children
-) {
-
+export function useJSCADRenderer(children) {
   const container = useMemo<any[]>(() => [], [])
 
   const root = useMemo(() => {
@@ -32,12 +29,12 @@ export function useJSCADRenderer(
     return root
   }, [container])
 
-  const [mesh, setMesh] = useState<THREE.Scene | null>(null);
+  const [mesh, setMesh] = useState<THREE.Scene | null>(null)
 
   useEffect(() => {
     reconciler.updateContainer(children, root, null, () => {})
 
-    const scene = new THREE.Scene();
+    const scene = new THREE.Scene()
 
     container.map((csg) => {
       const geometry = convertCSGToThreeGeom(csg)
@@ -59,10 +56,10 @@ export function useJSCADRenderer(
         const mesh = new THREE.Mesh(geometry, material)
         scene.add(mesh)
       }
-    });
+    })
 
-    setMesh(scene);
+    setMesh(scene)
   }, [reconciler, children])
 
-  return mesh;
+  return mesh
 }
