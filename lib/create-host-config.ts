@@ -19,7 +19,7 @@ import type {
   TorusProps,
 } from "./jscad-fns"
 import type { JSCADModule, JSCADPrimitive } from "./jscad-primitives"
-import type { Geom3 } from "@jscad/modeling/src/geometries/types";
+import type { Geom3 } from "@jscad/modeling/src/geometries/types"
 
 export function createHostConfig(jscad: JSCADModule) {
   const createInstance = (
@@ -214,9 +214,9 @@ export function createHostConfig(jscad: JSCADModule) {
       }
 
       case "custom": {
-        const { geometry } = props as { geometry: Geom3 };
+        const { geometry } = props as { geometry: Geom3 }
 
-        return geometry;
+        return geometry
       }
 
       default:
