@@ -24,7 +24,7 @@ import type { Geom3 } from "@jscad/modeling/src/geometries/types"
 
 export function createHostConfig(jscad: JSCADModule) {
   const createInstance = (
-    type: string | Function,
+    type: string | ((props: any) => any),
     props: any,
     rootContainerInstance: any,
     hostContext: any,
@@ -119,7 +119,7 @@ export function createHostConfig(jscad: JSCADModule) {
           points: (props as PolygonProps).points,
         })
       }
-      // biome-ignore lint/suspicious/noFallthroughSwitchClause: <explanation>
+
       case "extrudeLinear": {
         const { children, ...extrudeProps } = props as ExtrudeLinearProps
 
@@ -258,7 +258,7 @@ export function createHostConfig(jscad: JSCADModule) {
     never, // SuspenseInstance
     never, // HydratableInstance
     JSCADPrimitive, // PublicInstance
-    {}, // HostContext
+    object, // HostContext
     boolean, // UpdatePayload
     never, // ChildSet
     number, // TimeoutHandle

@@ -93,7 +93,7 @@ export function JsCadFixture({
       }
       animate()
     }
-  }, [])
+  }, [children, wireframe])
 
   return (
     <div ref={containerRef} style={{ width: "100%", minHeight: "400px" }} />

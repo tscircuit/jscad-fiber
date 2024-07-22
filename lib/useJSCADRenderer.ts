@@ -32,7 +32,7 @@ export function useJSCADRenderer(children) {
   const [mesh, setMesh] = useState<THREE.Scene | null>(null)
 
   useEffect(() => {
-    reconciler.updateContainer(children, root, null, () => {})
+    reconciler.updateContainer(children, root, null, () => { })
 
     const scene = new THREE.Scene()
 
@@ -59,7 +59,7 @@ export function useJSCADRenderer(children) {
     })
 
     setMesh(scene)
-  }, [reconciler, children])
+  }, [children, root, container])
 
   return mesh
 }

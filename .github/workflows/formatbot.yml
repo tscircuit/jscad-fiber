@@ -29,7 +29,7 @@ jobs:
       run: npm install @biomejs/biome@${{ steps.get-biome-version.outputs.BIOME_VERSION }}
 
     - name: Run formatter
-      run: npx @biomejs/biome check --apply-unsafe .
+      run: npx @biomejs/biome check --write --unsafe .
 
     - name: Commit changes
       uses: stefanzweifel/git-auto-commit-action@v4
