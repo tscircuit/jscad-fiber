@@ -1,14 +1,14 @@
-import { Custom } from "../lib";
-import { JsCadFixture } from "../lib/components/jscad-fixture";
-import { primitives, booleans } from "@jscad/modeling";
+import { Custom } from "../lib"
+import { JsCadFixture } from "../lib/components/jscad-fixture"
+import { primitives, booleans } from "@jscad/modeling"
 
-const cube = primitives.cube({ size: 10 });
-const sphere = primitives.sphere({ radius: 6, segments: 32 });
+const cube = primitives.cube({ size: 10 })
+const sphere = primitives.sphere({ radius: 6, segments: 32 })
 
-const intersected = booleans.subtract(cube, sphere);
+const intersected = booleans.subtract(cube, sphere)
 
 export default () => (
   <JsCadFixture>
     <Custom geometry={intersected} />
   </JsCadFixture>
-);
+)
