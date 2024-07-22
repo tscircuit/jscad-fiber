@@ -23,7 +23,7 @@ jobs:
 
     - name: Get @biomejs/biome version
       id: get-biome-version
-      run: echo "BIOME_VERSION=$(node -p "require('./package.json').dependencies['@biomejs/biome']")" >> $GITHUB_OUTPUT
+      run: echo "BIOME_VERSION=$(node -p "require('./package.json').devDependencies['@biomejs/biome']")" >> $GITHUB_OUTPUT
 
     - name: Install @biomejs/biome
       run: npm install @biomejs/biome@${{ steps.get-biome-version.outputs.BIOME_VERSION }}
