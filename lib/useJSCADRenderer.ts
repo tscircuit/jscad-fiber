@@ -1,9 +1,9 @@
-import ReactReconciler from "react-reconciler"
-import { useEffect, useMemo, useState } from "react"
 import * as jscad from "@jscad/modeling"
-import { createHostConfig } from "./create-host-config"
-import convertCSGToThreeGeom from "./convert-csg-to-three-geom"
+import { useEffect, useMemo, useState } from "react"
+import ReactReconciler from "react-reconciler"
 import * as THREE from "three"
+import convertCSGToThreeGeom from "./convert-csg-to-three-geom"
+import { createHostConfig } from "./create-host-config"
 
 const hostConfig = createHostConfig(jscad as any)
 const reconciler = ReactReconciler(hostConfig)
@@ -59,7 +59,7 @@ export function useJSCADRenderer(children) {
     })
 
     setMesh(scene)
-  }, [reconciler, children])
+  }, [children, root, container])
 
   return mesh
 }

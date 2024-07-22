@@ -1,6 +1,6 @@
 import ReactReconciler from "react-reconciler"
-import type { JSCADModule, JSCADPrimitive } from "./jscad-primitives"
 import { createHostConfig } from "./create-host-config"
+import type { JSCADModule, JSCADPrimitive } from "./jscad-primitives"
 export * from "./jscad-fns"
 export * from "./components/jscad-fixture"
 export * from "./components/jscad-three-mesh"

@@ -1,3 +1,4 @@
+import type { Geom3 } from "@jscad/modeling/src/geometries/types"
 import type ReactReconciler from "react-reconciler"
 import type {
   ColorizeProps,
@@ -17,13 +18,14 @@ import type {
   RoundedCylinderProps,
   SphereProps,
   TorusProps,
+  UnionProps,
 } from "./jscad-fns"
+import type { TranslateProps } from "./jscad-fns/translate"
 import type { JSCADModule, JSCADPrimitive } from "./jscad-primitives"
-import type { Geom3 } from "@jscad/modeling/src/geometries/types"
 
 export function createHostConfig(jscad: JSCADModule) {
   const createInstance = (
-    type: string | Function,
+    type: string | ((props: any) => any),
     props: any,
     rootContainerInstance: any,
     hostContext: any,
@@ -118,7 +120,7 @@ export function createHostConfig(jscad: JSCADModule) {
           points: (props as PolygonProps).points,
         })
       }
-      // biome-ignore lint/suspicious/noFallthroughSwitchClause: <explanation>
+
       case "extrudeLinear": {
         const { children, ...extrudeProps } = props as ExtrudeLinearProps
 
@@ -219,6 +221,30 @@ export function createHostConfig(jscad: JSCADModule) {
         return geometry
       }
 
+      case "union": {
+        const { children } = props as UnionProps
+        if (!Array.isArray(children) || children.length < 2) {
+          throw new Error("Union must have at least two children")
+        }
+
+        const geometries = children.map((child) =>
+          createInstance(
+            child.type,
+            child.props,
+            rootContainerInstance,
+            hostContext,
+            internalInstanceHandle,
+          ),
+        )
+        return geometries.reduce((acc, curr) => jscad.booleans.union(acc, curr))
+      }
+
+      case "translate": {
+        const { args, children } = props as TranslateProps
+        const childGeometry = renderChildren(children)
+        return jscad.transforms.translate(args, childGeometry)
+      }
+
       default:
         throw new Error(`Unknown element type: ${type}`)
     }
@@ -233,7 +259,7 @@ export function createHostConfig(jscad: JSCADModule) {
     never, // SuspenseInstance
     never, // HydratableInstance
     JSCADPrimitive, // PublicInstance
-    {}, // HostContext
+    object, // HostContext
     boolean, // UpdatePayload
     never, // ChildSet
     number, // TimeoutHandle
