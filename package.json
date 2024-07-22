@@ -1,6 +1,6 @@
 {
   "name": "jscad-fiber",
-  "version": "0.0.22",
+  "version": "0.0.24",
   "type": "module",
   "files": [
     "dist"
