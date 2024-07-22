@@ -22,7 +22,7 @@ declare global {
       torus: FN.TorusProps
       custom: FN.CustomProps
       union: FN.UnionProps
-      translate: { args: [number, number, number]; children: React.ReactNode }
+      translate: FN.TranslateProps
     }
   }
 }
