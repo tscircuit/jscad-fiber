@@ -129,6 +129,7 @@ export type JSCADPrimitive =
   | ReturnType<JSCADModule["extrusions"]["extrudeRectangular"]>
   | ReturnType<JSCADModule["extrusions"]["project"]>
   | ReturnType<JSCADModule["colors"]["colorize"]>
+  | ReturnType<JSCADModule["booleans"]["union"]>
 
 export type JSCADOperation =
   | JSCADModule["booleans"]["union"]
