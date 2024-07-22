@@ -11,5 +11,6 @@ export function JSCadThreeMesh({
     return null
   }
 
+  //@ts-ignore
   return <primitive object={mesh} />
 }
