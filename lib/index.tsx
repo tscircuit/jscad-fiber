@@ -3,6 +3,7 @@ import type { JSCADModule, JSCADPrimitive } from "./jscad-primitives"
 import { createHostConfig } from "./create-host-config"
 export * from "./jscad-fns"
 export * from "./components/jscad-fixture"
+export * from "./components/jscad-three-mesh"
 
 // Create a function that returns the reconciler and root creation function
 export function createJSCADRenderer(jscad: JSCADModule) {
