@@ -1,3 +1,4 @@
+import type { Geom3 } from "@jscad/modeling/src/geometries/types"
 import type ReactReconciler from "react-reconciler"
 import type {
   ColorizeProps,
@@ -20,7 +21,6 @@ import type {
   UnionProps,
 } from "./jscad-fns"
 import type { JSCADModule, JSCADPrimitive } from "./jscad-primitives"
-import type { Geom3 } from "@jscad/modeling/src/geometries/types"
 
 export function createHostConfig(jscad: JSCADModule) {
   const createInstance = (
@@ -226,14 +226,14 @@ export function createHostConfig(jscad: JSCADModule) {
           throw new Error("Union must have at least two children")
         }
 
-        const geometries = children.map(child =>
+        const geometries = children.map((child) =>
           createInstance(
             child.type,
             child.props,
             rootContainerInstance,
             hostContext,
-            internalInstanceHandle
-          )
+            internalInstanceHandle,
+          ),
         )
         return geometries.reduce((acc, curr) => jscad.booleans.union(acc, curr))
       }
@@ -322,7 +322,7 @@ export function createHostConfig(jscad: JSCADModule) {
     prepareForCommit() {
       return null
     },
-    resetAfterCommit() { },
+    resetAfterCommit() {},
     getPublicInstance(instance: JSCADPrimitive) {
       return instance
     },
@@ -335,18 +335,18 @@ export function createHostConfig(jscad: JSCADModule) {
     shouldSetTextContent() {
       return false
     },
-    clearContainer() { },
+    clearContainer() {},
     scheduleTimeout: setTimeout,
     cancelTimeout: clearTimeout,
     noTimeout: -1,
     isPrimaryRenderer: true,
     getCurrentEventPriority: () => 99,
     getInstanceFromNode: () => null,
-    beforeActiveInstanceBlur: () => { },
-    afterActiveInstanceBlur: () => { },
-    prepareScopeUpdate: () => { },
+    beforeActiveInstanceBlur: () => {},
+    afterActiveInstanceBlur: () => {},
+    prepareScopeUpdate: () => {},
     getInstanceFromScope: () => null,
-    detachDeletedInstance: () => { },
+    detachDeletedInstance: () => {},
   }
   return hostConfig
 }

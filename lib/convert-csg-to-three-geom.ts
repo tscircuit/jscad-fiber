@@ -29,7 +29,7 @@ export default function convertCSGToThreeGeom(csg): BufferGeometry {
         idx++
       }
       const first = polygon.vertices[0].index
-      for (let i = 2;i < polygon.vertices.length;i++) {
+      for (let i = 2; i < polygon.vertices.length; i++) {
         const second = polygon.vertices[i - 1].index
         const third = polygon.vertices[i].index
         indices.push(first, second, third)
@@ -59,7 +59,8 @@ export default function convertCSGToThreeGeom(csg): BufferGeometry {
     geo.computeVertexNormals()
 
     return geo
-  } if (csg.sides) {
+  }
+  if (csg.sides) {
     // 2D shape
     const vertices = []
     const colors = []
