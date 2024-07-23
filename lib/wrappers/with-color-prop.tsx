@@ -5,7 +5,7 @@ interface ColorProps {
   color?: string
 }
 
-export function withColorProps<P extends object>(
+export function withColorProp<P extends object>(
   WrappedComponent: React.ComponentType<P>,
 ): React.ComponentType<P & ColorProps> {
   // Create a new component that includes the color prop
