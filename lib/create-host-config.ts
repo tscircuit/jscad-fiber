@@ -14,13 +14,13 @@ import type {
   GeodesicSphereProps,
   PolygonProps,
   ProjectProps,
+  RotateProps,
   RoundedCuboidProps,
   RoundedCylinderProps,
   SphereProps,
   TorusProps,
   UnionProps,
 } from "./jscad-fns"
-import type { TranslateProps } from "./jscad-fns/translate"
 import type { JSCADModule, JSCADPrimitive } from "./jscad-primitives"
 
 export function createHostConfig(jscad: JSCADModule) {
@@ -245,6 +245,16 @@ export function createHostConfig(jscad: JSCADModule) {
         return jscad.transforms.translate(args, childGeometry)
       }
 
+      case "rotate": {
+        const { children, ...rotateProps } = props as RotateProps
+
+        const childrenGeometry = renderChildren(children)
+
+        const rotateGeometry = jscad.transforms.rotate(rotateProps.angle, childrenGeometry)
+
+        return rotateGeometry
+      }
+
       default:
         throw new Error(`Unknown element type: ${type}`)
     }
@@ -323,7 +333,7 @@ export function createHostConfig(jscad: JSCADModule) {
     prepareForCommit() {
       return null
     },
-    resetAfterCommit() {},
+    resetAfterCommit() { },
     getPublicInstance(instance: JSCADPrimitive) {
       return instance
     },
@@ -336,18 +346,18 @@ export function createHostConfig(jscad: JSCADModule) {
     shouldSetTextContent() {
       return false
     },
-    clearContainer() {},
+    clearContainer() { },
     scheduleTimeout: setTimeout,
     cancelTimeout: clearTimeout,
     noTimeout: -1,
     isPrimaryRenderer: true,
     getCurrentEventPriority: () => 99,
     getInstanceFromNode: () => null,
-    beforeActiveInstanceBlur: () => {},
-    afterActiveInstanceBlur: () => {},
-    prepareScopeUpdate: () => {},
+    beforeActiveInstanceBlur: () => { },
+    afterActiveInstanceBlur: () => { },
+    prepareScopeUpdate: () => { },
     getInstanceFromScope: () => null,
-    detachDeletedInstance: () => {},
+    detachDeletedInstance: () => { },
   }
   return hostConfig
 }
