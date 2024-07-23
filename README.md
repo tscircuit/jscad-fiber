@@ -4,6 +4,8 @@
 
 This package allows you to create 3d CAD objects with React and jscad.
 
+![image](https://github.com/user-attachments/assets/a17e5e04-ba88-4b9b-9308-58121779463e)
+
 ## Usage
 
 > [!NOTE]
