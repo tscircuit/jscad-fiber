@@ -1,5 +1,5 @@
 export type RotateProps = {
-  angles: [number, number, number]
+  angles: Point3
   children: React.ReactNode
 }
 
