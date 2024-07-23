@@ -23,3 +23,7 @@ jobs:
 
       - name: Run format check
         run: npx tsc --noEmit
+
+      - name: Run build
+        run: npm run build:lib
+
