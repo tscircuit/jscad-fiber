@@ -14,13 +14,13 @@ import type {
   GeodesicSphereProps,
   PolygonProps,
   ProjectProps,
+  RotateProps,
   RoundedCuboidProps,
   RoundedCylinderProps,
   SphereProps,
   TorusProps,
   UnionProps,
 } from "./jscad-fns"
-import type { TranslateProps } from "./jscad-fns/translate"
 import type { JSCADModule, JSCADPrimitive } from "./jscad-primitives"
 
 export function createHostConfig(jscad: JSCADModule) {
@@ -243,6 +243,20 @@ export function createHostConfig(jscad: JSCADModule) {
         const { args, children } = props as JSX.IntrinsicElements["translate"]
         const childGeometry = renderChildren(children)
         return jscad.transforms.translate(args, childGeometry)
+      }
+
+      case "rotate": {
+        const { children, ...rotateProps } =
+          props as JSX.IntrinsicElements["rotate"]
+
+        const childrenGeometry = renderChildren(children)
+
+        const rotateGeometry = jscad.transforms.rotate(
+          rotateProps.angles,
+          childrenGeometry,
+        )
+
+        return rotateGeometry
       }
 
       default:

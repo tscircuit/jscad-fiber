@@ -1,3 +1,5 @@
+import type { Point3 } from "./jscad-fns"
+
 // Define a type for the JSCAD module structure we expect
 export interface JSCADModule {
   primitives: {
@@ -61,6 +63,7 @@ export interface JSCADModule {
   }
   transforms: {
     translate: (vector: [number, number, number], object: any) => any
+    rotate: (angles: Point3, object: any) => any
   }
   extrusions: {
     extrudeLinear: (
