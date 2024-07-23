@@ -61,6 +61,7 @@ export interface JSCADModule {
   }
   transforms: {
     translate: (vector: [number, number, number], object: any) => any
+    rotate: (angles: [number, number, number], object: any) => any
   }
   extrusions: {
     extrudeLinear: (

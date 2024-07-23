@@ -23,6 +23,7 @@ declare global {
       custom: FN.CustomProps
       union: FN.UnionProps
       translate: FN.TranslateProps
+      rotate: FN.RotateProps
     }
   }
 }

@@ -22,6 +22,7 @@ import type {
 } from "./jscad-fns"
 import type { JSCADModule, JSCADPrimitive } from "./jscad-primitives"
 import type { TranslateProps } from "./jscad-fns/translate"
+import type { RotateProps } from "./jscad-fns/rotate"
 
 export function createHostConfig(jscad: JSCADModule) {
   const createInstance = (
@@ -243,6 +244,12 @@ export function createHostConfig(jscad: JSCADModule) {
         const { args, children } = props as TranslateProps
         const childGeometry = renderChildren(children)
         return jscad.transforms.translate(args, childGeometry)
+      }
+
+      case "rotate": {
+        const { angles, children } = props as RotateProps
+        const childGeometry = renderChildren(children)
+        return jscad.transforms.rotate(angles, childGeometry)
       }
 
       default:
