@@ -20,7 +20,7 @@ import type {
   SphereProps,
   TorusProps,
   TranslateProps,
-  UnionProps
+  UnionProps,
 } from "./jscad-fns"
 import type { JSCADModule, JSCADPrimitive } from "./jscad-primitives"
 
@@ -330,7 +330,7 @@ export function createHostConfig(jscad: JSCADModule) {
     prepareForCommit() {
       return null
     },
-    resetAfterCommit() { },
+    resetAfterCommit() {},
     getPublicInstance(instance: JSCADPrimitive) {
       return instance
     },
@@ -343,18 +343,18 @@ export function createHostConfig(jscad: JSCADModule) {
     shouldSetTextContent() {
       return false
     },
-    clearContainer() { },
+    clearContainer() {},
     scheduleTimeout: setTimeout,
     cancelTimeout: clearTimeout,
     noTimeout: -1,
     isPrimaryRenderer: true,
     getCurrentEventPriority: () => 99,
     getInstanceFromNode: () => null,
-    beforeActiveInstanceBlur: () => { },
-    afterActiveInstanceBlur: () => { },
-    prepareScopeUpdate: () => { },
+    beforeActiveInstanceBlur: () => {},
+    afterActiveInstanceBlur: () => {},
+    prepareScopeUpdate: () => {},
     getInstanceFromScope: () => null,
-    detachDeletedInstance: () => { },
+    detachDeletedInstance: () => {},
   }
   return hostConfig
 }
