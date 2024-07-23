@@ -8,6 +8,7 @@
   "main": "./dist/index.cjs",
   "scripts": {
     "start": "cosmos",
+    "build": "npm run build:lib",
     "build:lib": "tsup ./lib/index.tsx --dts --sourcemap",
     "build:cosmos": "cosmos-export",
     "predeploy": "BUILD_FOR_GH_PAGES=1 npm run build:cosmos && touch ./cosmos-export/.nojekyll",

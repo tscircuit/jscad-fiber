@@ -1,7 +1,6 @@
-import { Color } from "color"
 import { Translate } from "../jscad-fns/translate"
 
-interface CenterProps {
+export interface CenterProps {
   center?: { x: number; y: number; z: number } | [number, number, number]
   offset?: { x: number; y: number; z: number } | [number, number, number]
 }
