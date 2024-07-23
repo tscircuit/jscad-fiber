@@ -1,5 +1,5 @@
-import { Colorize, Translate } from "../jscad-fns"
 import { Color } from "color"
+import { Colorize, Translate } from "../jscad-fns"
 
 interface CenterProps {
   center?: { x: number; y: number; z: number } | [number, number, number]

@@ -1,5 +1,5 @@
-import { Colorize } from "../jscad-fns"
 import { Color } from "color"
+import { Colorize } from "../jscad-fns"
 
 interface ColorProps {
   color?: string
