@@ -14,15 +14,15 @@ import type {
   GeodesicSphereProps,
   PolygonProps,
   ProjectProps,
+  RotateProps,
   RoundedCuboidProps,
   RoundedCylinderProps,
   SphereProps,
   TorusProps,
-  UnionProps,
+  TranslateProps,
+  UnionProps
 } from "./jscad-fns"
 import type { JSCADModule, JSCADPrimitive } from "./jscad-primitives"
-import type { TranslateProps } from "./jscad-fns/translate"
-import type { RotateProps } from "./jscad-fns/rotate"
 
 export function createHostConfig(jscad: JSCADModule) {
   const createInstance = (
