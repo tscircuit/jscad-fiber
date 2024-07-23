@@ -5,9 +5,6 @@ export type RotateProps = {
   children: React.ReactNode
 }
 
-export function Rotate({
-  angle,
-  children,
-}: RotateProps) {
+export function Rotate({ angle, children }: RotateProps) {
   return <rotate angle={angle}>{children}</rotate>
 }
