@@ -7,6 +7,8 @@ on:
 jobs:
   publish:
     runs-on: ubuntu-latest
+    # Skip CI if commit message matches the pattern vX.X.X where X are numbers
+    if: "!matches(github.event.head_commit.message, '^v\\d+\\.\\d+\\.\\d+$')"
     steps:
       - uses: actions/checkout@v3
         with:
