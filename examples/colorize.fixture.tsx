@@ -3,7 +3,7 @@ import { Colorize, Cube } from "../lib/jscad-fns"
 
 export default () => (
   <JsCadFixture>
-    <Colorize color={[1, 0, 0]}>
+    <Colorize color={"red"}>
       <Cube size={10} />
     </Colorize>
   </JsCadFixture>

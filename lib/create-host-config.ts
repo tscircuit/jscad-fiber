@@ -240,7 +240,7 @@ export function createHostConfig(jscad: JSCADModule) {
       }
 
       case "translate": {
-        const { args, children } = props as TranslateProps
+        const { args, children } = props as JSX.IntrinsicElements["translate"]
         const childGeometry = renderChildren(children)
         return jscad.transforms.translate(args, childGeometry)
       }
