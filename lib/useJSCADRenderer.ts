@@ -59,7 +59,7 @@ export function useJSCADRenderer(children) {
     })
 
     setMesh(scene)
-  }, [reconciler, children])
+  }, [children, root, container])
 
   return mesh
 }

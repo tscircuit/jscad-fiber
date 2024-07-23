@@ -21,6 +21,8 @@ declare global {
       cube: FN.CubeProps
       torus: FN.TorusProps
       custom: FN.CustomProps
+      union: FN.UnionProps
+      translate: FN.TranslateProps
     }
   }
 }

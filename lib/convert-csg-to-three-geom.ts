@@ -16,8 +16,8 @@ export default function convertCSGToThreeGeom(csg): BufferGeometry {
     const colors = []
     let idx = 0
 
-    csg.polygons.forEach((polygon) => {
-      polygon.vertices.forEach((vertex) => {
+    for (const polygon of csg.polygons) {
+      for (const vertex of polygon.vertices) {
         vertex.index = idx
         vertices.push(vertex[0], vertex[1], vertex[2])
         // Add color for each vertex
@@ -27,14 +27,14 @@ export default function convertCSGToThreeGeom(csg): BufferGeometry {
           colors.push(1, 1, 1) // Default to white if no color
         }
         idx++
-      })
+      }
       const first = polygon.vertices[0].index
       for (let i = 2; i < polygon.vertices.length; i++) {
         const second = polygon.vertices[i - 1].index
         const third = polygon.vertices[i].index
         indices.push(first, second, third)
       }
-    })
+    }
 
     const geo = new BufferGeometry()
     geo.setAttribute(
@@ -65,7 +65,7 @@ export default function convertCSGToThreeGeom(csg): BufferGeometry {
     const vertices = []
     const colors = []
 
-    csg.sides.forEach((side) => {
+    for (const side of csg.sides) {
       vertices.push(side[0][0], side[0][1], 0) // Add z-coordinate as 0
       // Add color for each vertex
       if (csg.color && csg.color.length >= 3) {
@@ -73,7 +73,7 @@ export default function convertCSGToThreeGeom(csg): BufferGeometry {
       } else {
         colors.push(1, 1, 1) // Default to white if no color
       }
-    })
+    }
 
     const geo = new BufferGeometry()
     geo.setAttribute(
