@@ -22,7 +22,7 @@ declare global {
       torus: FN.TorusProps
       custom: FN.CustomProps
       union: FN.UnionProps
-      rotate: FN.RotateProps
+      rotate: { angles: [number, number, number]; children: any }
       translate: { args: [number, number, number]; children: any }
     }
   }

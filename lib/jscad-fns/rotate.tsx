@@ -1,10 +1,13 @@
 import type { Point3 } from "./translate"
 
 export type RotateProps = {
-  angle: Point3
+  angles: Point3
   children: React.ReactNode
 }
 
-export function Rotate({ angle, children }: RotateProps) {
-  return <rotate angle={angle}>{children}</rotate>
+export function Rotate({ angles, children }: RotateProps) {
+  if (!Array.isArray(angles)) {
+    angles = [angles.x, angles.y, angles.z]
+  }
+  return <rotate angles={angles}>{children}</rotate>
 }
