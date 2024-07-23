@@ -21,6 +21,7 @@
     "three": "*"
   },
   "dependencies": {
+    "color": "^4.2.3",
     "react-reconciler": "^0.29.2"
   },
   "devDependencies": {

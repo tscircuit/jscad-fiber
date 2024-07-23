@@ -1,3 +1,4 @@
+import type { Geom3 } from "@jscad/modeling/src/geometries/types"
 import type ReactReconciler from "react-reconciler"
 import type {
   ColorizeProps,
@@ -19,7 +20,6 @@ import type {
   TorusProps,
 } from "./jscad-fns"
 import type { JSCADModule, JSCADPrimitive } from "./jscad-primitives"
-import type { Geom3 } from "@jscad/modeling/src/geometries/types"
 
 export function createHostConfig(jscad: JSCADModule) {
   const createInstance = (

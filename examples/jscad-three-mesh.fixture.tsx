@@ -1,7 +1,7 @@
-import { Canvas } from "@react-three/fiber"
 import { OrbitControls } from "@react-three/drei"
-import { JSCadThreeMesh } from "../lib/components/jscad-three-mesh"
+import { Canvas } from "@react-three/fiber"
 import { Cube } from "../lib"
+import { JSCadThreeMesh } from "../lib/components/jscad-three-mesh"
 
 export default () => (
   <div

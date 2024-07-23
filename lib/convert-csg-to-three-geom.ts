@@ -1,11 +1,11 @@
 // @ts-nocheck
 import {
-  BufferGeometry,
   BufferAttribute,
-  Vector3,
-  Vector2,
-  Matrix4,
+  BufferGeometry,
   Color,
+  Matrix4,
+  Vector2,
+  Vector3,
 } from "three"
 
 export default function convertCSGToThreeGeom(csg): BufferGeometry {
@@ -59,7 +59,8 @@ export default function convertCSGToThreeGeom(csg): BufferGeometry {
     geo.computeVertexNormals()
 
     return geo
-  } else if (csg.sides) {
+  }
+  if (csg.sides) {
     // 2D shape
     const vertices = []
     const colors = []
@@ -95,8 +96,7 @@ export default function convertCSGToThreeGeom(csg): BufferGeometry {
     }
 
     return geo
-  } else {
-    console.error("Invalid CSG object: neither polygons nor sides found")
-    return new BufferGeometry()
   }
+  console.error("Invalid CSG object: neither polygons nor sides found")
+  return new BufferGeometry()
 }
