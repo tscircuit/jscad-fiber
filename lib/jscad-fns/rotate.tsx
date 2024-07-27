@@ -15,5 +15,9 @@ export function Rotate({ rotation, angles, children }: RotateProps) {
 
   const finalRotation = rotation || angles
 
-  return <rotate angles={finalRotation as [number, number, number]}>{children}</rotate>
+  return (
+    <rotate angles={finalRotation as [number, number, number]}>
+      {children}
+    </rotate>
+  )
 }
