@@ -4,7 +4,7 @@ import { Rotate } from "../lib/jscad-fns"
 
 export default () => (
   <JsCadFixture>
-    <Rotate rotation={[0, 0, Math.PI]}>
+    <Rotate angles={[0, 0, Math.PI]}>
       <Polygon
         points={[
           [-2, -1],
