@@ -31,6 +31,12 @@ jobs:
     - name: Run formatter
       run: npx @biomejs/biome check --write --unsafe .
 
+    - name: Restore lock files
+      run: |
+        git checkout -- *lock.json || true
+        git checkout -- *.lock || true
+        git checkout -- *.lockb || true
+
     - name: Commit changes
       uses: stefanzweifel/git-auto-commit-action@v4
       with:
