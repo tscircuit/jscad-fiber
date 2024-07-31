@@ -115,6 +115,9 @@ export interface JSCADModule {
     hull: (options: {
       geometries: any
     }) => any
+    hullChain: (options: {
+      geometries: any
+    }) => any
   }
 }
 

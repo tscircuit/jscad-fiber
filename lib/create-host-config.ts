@@ -13,6 +13,7 @@ import type {
   ExtrudeRectangularProps,
   ExtrudeRotateProps,
   GeodesicSphereProps,
+  HullChainProps,
   HullProps,
   PolygonProps,
   ProjectProps,
@@ -280,6 +281,26 @@ export function createHostConfig(jscad: JSCADModule) {
         return jscad.hulls.hull(geometries)
       }
 
+      case "hullChain": {
+        const { children } = props as HullChainProps
+
+        if (!Array.isArray(children) || children.length < 2) {
+          throw new Error("HullChain must have at least two children")
+        }
+
+        const geometries: any = children.map((child) =>
+          createInstance(
+            child.type,
+            child.props,
+            rootContainerInstance,
+            hostContext,
+            internalInstanceHandle,
+          ),
+        )
+
+        return jscad.hulls.hullChain(geometries)
+      }
+
       default:
         throw new Error(`Unknown element type: ${type}`)
     }
@@ -366,7 +387,7 @@ export function createHostConfig(jscad: JSCADModule) {
     prepareForCommit() {
       return null
     },
-    resetAfterCommit() {},
+    resetAfterCommit() { },
     getPublicInstance(instance: JSCADPrimitive) {
       return instance
     },
@@ -379,18 +400,18 @@ export function createHostConfig(jscad: JSCADModule) {
     shouldSetTextContent() {
       return false
     },
-    clearContainer() {},
+    clearContainer() { },
     scheduleTimeout: setTimeout,
     cancelTimeout: clearTimeout,
     noTimeout: -1,
     isPrimaryRenderer: true,
     getCurrentEventPriority: () => 99,
     getInstanceFromNode: () => null,
-    beforeActiveInstanceBlur: () => {},
-    afterActiveInstanceBlur: () => {},
-    prepareScopeUpdate: () => {},
+    beforeActiveInstanceBlur: () => { },
+    afterActiveInstanceBlur: () => { },
+    prepareScopeUpdate: () => { },
     getInstanceFromScope: () => null,
-    detachDeletedInstance: () => {},
+    detachDeletedInstance: () => { },
   }
   return hostConfig
 }
