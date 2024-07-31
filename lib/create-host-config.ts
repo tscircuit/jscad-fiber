@@ -333,7 +333,15 @@ export function createHostConfig(jscad: JSCADModule) {
       newProps: any,
     ) {
       // Re-create the instance with new props
-      return createInstance(type, newProps, instance, {}, null)
+      const newInstance = createInstance(type, newProps, instance, {}, null)
+
+      // Clear properties of the old instance
+      for (const key in instance) {
+        delete instance[key]
+      }
+
+      // Assign new properties to the old instance
+      Object.assign(instance, newInstance)
     },
 
     finalizeInitialChildren() {
