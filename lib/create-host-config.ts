@@ -15,6 +15,7 @@ import type {
   GeodesicSphereProps,
   PolygonProps,
   ProjectProps,
+  RectangleProps,
   RoundedCuboidProps,
   RoundedCylinderProps,
   SphereProps,
@@ -257,6 +258,12 @@ export function createHostConfig(jscad: JSCADModule) {
         )
 
         return rotateGeometry
+      }
+
+      case "rectangle": {
+        const { size } = props as RectangleProps
+
+        return jscad.primitives.rectangle({ size })
       }
 
       case "circle": {
