@@ -1,3 +1,4 @@
+export * from "./circle"
 export * from "./colorize"
 export * from "./cube"
 export * from "./cuboid"

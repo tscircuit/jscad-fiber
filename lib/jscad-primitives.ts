@@ -41,6 +41,7 @@ export interface JSCADModule {
       outerRotation?: number
       startAngle?: number
     }) => any
+    circle: (options: { radius: number }) => any
   }
   booleans: {
     union: (a: any, b: any) => any

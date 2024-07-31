@@ -1,6 +1,7 @@
 import type { Geom3 } from "@jscad/modeling/src/geometries/types"
 import type ReactReconciler from "react-reconciler"
 import type {
+  CircleProps,
   ColorizeProps,
   CubeProps,
   CuboidProps,
@@ -14,7 +15,6 @@ import type {
   GeodesicSphereProps,
   PolygonProps,
   ProjectProps,
-  RotateProps,
   RoundedCuboidProps,
   RoundedCylinderProps,
   SphereProps,
@@ -257,6 +257,12 @@ export function createHostConfig(jscad: JSCADModule) {
         )
 
         return rotateGeometry
+      }
+
+      case "circle": {
+        const { radius } = props as CircleProps
+
+        return jscad.primitives.circle({ radius })
       }
 
       default:
