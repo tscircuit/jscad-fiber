@@ -25,6 +25,7 @@ declare global {
       rectangle: FN.RectangleProps
       rotate: { angles: [number, number, number]; children: any }
       translate: { args: [number, number, number]; children: any }
+      circle: FN.CircleProps
     }
   }
 }

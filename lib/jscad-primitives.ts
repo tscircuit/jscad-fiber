@@ -44,6 +44,9 @@ export interface JSCADModule {
     rectangle: (options: {
       size: [number, number]
     }) => any
+    circle: (options: {
+      radius: number 
+    }) => any
   }
   booleans: {
     union: (a: any, b: any) => any
@@ -129,6 +132,8 @@ export type JSCADPrimitive =
   | ReturnType<JSCADModule["primitives"]["cylinderElliptic"]>
   | ReturnType<JSCADModule["primitives"]["torus"]>
   | ReturnType<JSCADModule["primitives"]["polygon"]>
+  | ReturnType<JSCADModule["primitives"]["circle"]>
+  | ReturnType<JSCADModule["primitives"]["rectangle"]>
   | ReturnType<JSCADModule["extrusions"]["extrudeLinear"]>
   | ReturnType<JSCADModule["extrusions"]["extrudeHelical"]>
   | ReturnType<JSCADModule["extrusions"]["extrudeRotate"]>
