@@ -264,6 +264,7 @@ export function createHostConfig(jscad: JSCADModule) {
         const { size } = props as RectangleProps
 
         return jscad.primitives.rectangle({ size })
+      }
 
       case "circle": {
         const { radius } = props as CircleProps
@@ -357,7 +358,7 @@ export function createHostConfig(jscad: JSCADModule) {
     prepareForCommit() {
       return null
     },
-    resetAfterCommit() {},
+    resetAfterCommit() { },
     getPublicInstance(instance: JSCADPrimitive) {
       return instance
     },
@@ -370,18 +371,18 @@ export function createHostConfig(jscad: JSCADModule) {
     shouldSetTextContent() {
       return false
     },
-    clearContainer() {},
+    clearContainer() { },
     scheduleTimeout: setTimeout,
     cancelTimeout: clearTimeout,
     noTimeout: -1,
     isPrimaryRenderer: true,
     getCurrentEventPriority: () => 99,
     getInstanceFromNode: () => null,
-    beforeActiveInstanceBlur: () => {},
-    afterActiveInstanceBlur: () => {},
-    prepareScopeUpdate: () => {},
+    beforeActiveInstanceBlur: () => { },
+    afterActiveInstanceBlur: () => { },
+    prepareScopeUpdate: () => { },
     getInstanceFromScope: () => null,
-    detachDeletedInstance: () => {},
+    detachDeletedInstance: () => { },
   }
   return hostConfig
 }
