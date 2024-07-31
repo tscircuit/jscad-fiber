@@ -2,6 +2,7 @@ import type { Geom3 } from "@jscad/modeling/src/geometries/types"
 import type ReactReconciler from "react-reconciler"
 import type { AnyConstructors } from "three/examples/jsm/nodes/Nodes.js"
 import type {
+  CircleProps,
   ColorizeProps,
   CubeProps,
   CuboidProps,
@@ -17,6 +18,7 @@ import type {
   HullProps,
   PolygonProps,
   ProjectProps,
+  RectangleProps,
   RoundedCuboidProps,
   RoundedCylinderProps,
   SphereProps,
@@ -299,6 +301,18 @@ export function createHostConfig(jscad: JSCADModule) {
         )
 
         return jscad.hulls.hullChain(geometries)
+      }
+
+      case "rectangle": {
+        const { size } = props as RectangleProps
+
+        return jscad.primitives.rectangle({ size })
+      }
+
+      case "circle": {
+        const { radius } = props as CircleProps
+
+        return jscad.primitives.circle({ radius })
       }
 
       default:
