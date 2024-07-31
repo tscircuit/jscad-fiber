@@ -41,6 +41,9 @@ export interface JSCADModule {
       outerRotation?: number
       startAngle?: number
     }) => any
+    rectangle: (options: {
+      size: [number, number]
+    }) => any
   }
   booleans: {
     union: (a: any, b: any) => any

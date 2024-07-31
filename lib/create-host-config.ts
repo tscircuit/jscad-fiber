@@ -14,12 +14,12 @@ import type {
   GeodesicSphereProps,
   PolygonProps,
   ProjectProps,
-  RotateProps,
+  RectangleProps,
   RoundedCuboidProps,
   RoundedCylinderProps,
   SphereProps,
   TorusProps,
-  UnionProps,
+  UnionProps
 } from "./jscad-fns"
 import type { JSCADModule, JSCADPrimitive } from "./jscad-primitives"
 
@@ -259,6 +259,14 @@ export function createHostConfig(jscad: JSCADModule) {
         return rotateGeometry
       }
 
+      case "rectangle": {
+        const { size } = props as RectangleProps
+
+        return jscad.primitives.rectangle({
+          size,
+        })
+      }
+
       default:
         throw new Error(`Unknown element type: ${type}`)
     }
@@ -345,7 +353,7 @@ export function createHostConfig(jscad: JSCADModule) {
     prepareForCommit() {
       return null
     },
-    resetAfterCommit() {},
+    resetAfterCommit() { },
     getPublicInstance(instance: JSCADPrimitive) {
       return instance
     },
@@ -358,18 +366,18 @@ export function createHostConfig(jscad: JSCADModule) {
     shouldSetTextContent() {
       return false
     },
-    clearContainer() {},
+    clearContainer() { },
     scheduleTimeout: setTimeout,
     cancelTimeout: clearTimeout,
     noTimeout: -1,
     isPrimaryRenderer: true,
     getCurrentEventPriority: () => 99,
     getInstanceFromNode: () => null,
-    beforeActiveInstanceBlur: () => {},
-    afterActiveInstanceBlur: () => {},
-    prepareScopeUpdate: () => {},
+    beforeActiveInstanceBlur: () => { },
+    afterActiveInstanceBlur: () => { },
+    prepareScopeUpdate: () => { },
     getInstanceFromScope: () => null,
-    detachDeletedInstance: () => {},
+    detachDeletedInstance: () => { },
   }
   return hostConfig
 }
