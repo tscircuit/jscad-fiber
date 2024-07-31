@@ -24,6 +24,7 @@ declare global {
       union: FN.UnionProps
       rotate: { angles: [number, number, number]; children: any }
       translate: { args: [number, number, number]; children: any }
+      circle: FN.CircleProps
     }
   }
 }

@@ -1,6 +1,7 @@
 import type { Geom3 } from "@jscad/modeling/src/geometries/types"
 import type ReactReconciler from "react-reconciler"
 import type {
+  CircleProps,
   ColorizeProps,
   CubeProps,
   CuboidProps,
@@ -14,12 +15,11 @@ import type {
   GeodesicSphereProps,
   PolygonProps,
   ProjectProps,
-  RotateProps,
   RoundedCuboidProps,
   RoundedCylinderProps,
   SphereProps,
   TorusProps,
-  UnionProps,
+  UnionProps
 } from "./jscad-fns"
 import type { JSCADModule, JSCADPrimitive } from "./jscad-primitives"
 
@@ -259,6 +259,12 @@ export function createHostConfig(jscad: JSCADModule) {
         return rotateGeometry
       }
 
+      case "circle": {
+        const { radius } = props as CircleProps
+
+        return jscad.primitives.circle({ radius })
+      }
+
       default:
         throw new Error(`Unknown element type: ${type}`)
     }
@@ -337,7 +343,7 @@ export function createHostConfig(jscad: JSCADModule) {
     prepareForCommit() {
       return null
     },
-    resetAfterCommit() {},
+    resetAfterCommit() { },
     getPublicInstance(instance: JSCADPrimitive) {
       return instance
     },
@@ -350,18 +356,18 @@ export function createHostConfig(jscad: JSCADModule) {
     shouldSetTextContent() {
       return false
     },
-    clearContainer() {},
+    clearContainer() { },
     scheduleTimeout: setTimeout,
     cancelTimeout: clearTimeout,
     noTimeout: -1,
     isPrimaryRenderer: true,
     getCurrentEventPriority: () => 99,
     getInstanceFromNode: () => null,
-    beforeActiveInstanceBlur: () => {},
-    afterActiveInstanceBlur: () => {},
-    prepareScopeUpdate: () => {},
+    beforeActiveInstanceBlur: () => { },
+    afterActiveInstanceBlur: () => { },
+    prepareScopeUpdate: () => { },
     getInstanceFromScope: () => null,
-    detachDeletedInstance: () => {},
+    detachDeletedInstance: () => { },
   }
   return hostConfig
 }
