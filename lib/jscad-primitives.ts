@@ -117,6 +117,14 @@ export interface JSCADModule {
   colors: {
     colorize: (options: [number, number, number], geometry: any) => any
   }
+  hulls: {
+    hull: (options: {
+      geometries: any
+    }) => any
+    hullChain: (options: {
+      geometries: any
+    }) => any
+  }
 }
 
 // Define types for JSCAD objects and operations
@@ -141,6 +149,7 @@ export type JSCADPrimitive =
   | ReturnType<JSCADModule["extrusions"]["project"]>
   | ReturnType<JSCADModule["colors"]["colorize"]>
   | ReturnType<JSCADModule["booleans"]["union"]>
+  | ReturnType<JSCADModule["hulls"]["hull"]>
 
 export type JSCADOperation =
   | JSCADModule["booleans"]["union"]

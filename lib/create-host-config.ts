@@ -1,5 +1,6 @@
 import type { Geom3 } from "@jscad/modeling/src/geometries/types"
 import type ReactReconciler from "react-reconciler"
+import type { AnyConstructors } from "three/examples/jsm/nodes/Nodes.js"
 import type {
   CircleProps,
   ColorizeProps,
@@ -13,6 +14,8 @@ import type {
   ExtrudeRectangularProps,
   ExtrudeRotateProps,
   GeodesicSphereProps,
+  HullChainProps,
+  HullProps,
   PolygonProps,
   ProjectProps,
   RectangleProps,
@@ -258,6 +261,46 @@ export function createHostConfig(jscad: JSCADModule) {
         )
 
         return rotateGeometry
+      }
+
+      case "hull": {
+        const { children } = props as HullProps
+
+        if (!Array.isArray(children) || children.length < 2) {
+          throw new Error("Hull must have at least two children")
+        }
+
+        const geometries: any = children.map((child) =>
+          createInstance(
+            child.type,
+            child.props,
+            rootContainerInstance,
+            hostContext,
+            internalInstanceHandle,
+          ),
+        )
+
+        return jscad.hulls.hull(geometries)
+      }
+
+      case "hullChain": {
+        const { children } = props as HullChainProps
+
+        if (!Array.isArray(children) || children.length < 2) {
+          throw new Error("HullChain must have at least two children")
+        }
+
+        const geometries: any = children.map((child) =>
+          createInstance(
+            child.type,
+            child.props,
+            rootContainerInstance,
+            hostContext,
+            internalInstanceHandle,
+          ),
+        )
+
+        return jscad.hulls.hullChain(geometries)
       }
 
       case "rectangle": {
