@@ -45,7 +45,7 @@ export interface JSCADModule {
       size: [number, number]
     }) => any
     circle: (options: {
-      radius: number 
+      radius: number
     }) => any
   }
   booleans: {
