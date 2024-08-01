@@ -1,7 +1,7 @@
 import { expect, test, mock } from "bun:test"
 import React from "react"
 import { createHookTester } from "../fixtures/create-hook-tester" // Adjust the import path as needed
-import { useRenderElementsToJscadPlan } from "lib/hooks/use-render-elements" // Adjust the import path
+import { useRenderElementsToJscadPlan } from "lib/hooks/use-render-elements-to-jscad-plan" // Adjust the import path
 
 // Mock JSCAD library
 const mockJscad = {
