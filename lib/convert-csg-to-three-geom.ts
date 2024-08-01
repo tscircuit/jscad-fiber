@@ -8,7 +8,7 @@ import {
   Vector3,
 } from "three"
 
-export default function convertCSGToThreeGeom(csg): BufferGeometry {
+export function convertCSGToThreeGeom(csg): BufferGeometry {
   if (csg.polygons) {
     // 3D shape
     const vertices = []
@@ -100,3 +100,5 @@ export default function convertCSGToThreeGeom(csg): BufferGeometry {
   console.error("Invalid CSG object: neither polygons nor sides found")
   return new BufferGeometry()
 }
+
+export default convertCSGToThreeGeom
