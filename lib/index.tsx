@@ -4,6 +4,7 @@ import type { JSCADModule, JSCADPrimitive } from "./jscad-primitives"
 export * from "./jscad-fns"
 export * from "./components/jscad-fixture"
 export * from "./components/jscad-three-mesh"
+export * from "./convert-csg-to-three-geom"
 
 // Create a function that returns the reconciler and root creation function
 export function createJSCADRenderer(jscad: JSCADModule) {
