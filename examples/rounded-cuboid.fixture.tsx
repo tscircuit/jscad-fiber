@@ -3,6 +3,6 @@ import { JsCadFixture } from "../lib/components/jscad-fixture"
 
 export default () => (
   <JsCadFixture>
-    <RoundedCuboid size={[15, 10, 10]} roundRadius={1} />
+    <RoundedCuboid size={[15, 10, 10]} roundRadius={1} center={[0, 0, 10]} />
   </JsCadFixture>
 )
