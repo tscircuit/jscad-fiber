@@ -66,7 +66,7 @@ export function createHookTester<T extends (...args: any[]) => any>(
     if (effects.length <= effectIndex) {
       effects.push(effect)
       const cleanup = effect()
-      cleanups.push(cleanup)
+      cleanups.push(cleanup as any)
     } else {
       const prevDeps = deps !== undefined ? deps : null
       const storedDeps = prevDeps === null ? null : [...prevDeps]
@@ -80,7 +80,7 @@ export function createHookTester<T extends (...args: any[]) => any>(
         }
         effects[effectIndex] = effect
         const cleanup = effect()
-        cleanups[effectIndex] = cleanup
+        cleanups[effectIndex] = cleanup as any
       }
     }
   }

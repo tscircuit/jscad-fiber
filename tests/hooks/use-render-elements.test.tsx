@@ -13,11 +13,6 @@ const mockJscad = {
   },
 }
 
-// // Mock React component that uses JSCAD primitives
-// const MockCube = ({ size }: { size: number }) => {
-//   return React.createElement("cube", { size })
-// }
-
 test("useRenderElementsToJscadPlan", async () => {
   const hookTester = createHookTester(useRenderElementsToJscadPlan)
   hookTester.overrideGlobals()
