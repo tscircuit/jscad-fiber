@@ -1,3 +1,6 @@
+import { withColorProp } from "lib/wrappers/with-color-prop"
+import { withOffsetProp } from "lib/wrappers/with-offset-prop"
+
 export type ExtrudeLinearProps = {
   height: number
   twistAngle?: number
@@ -5,19 +8,13 @@ export type ExtrudeLinearProps = {
   children: any
 }
 
-export function ExtrudeLinear({
+const ExtrudeLinearBase = ({
   height,
   twistAngle,
   twistSteps,
   children,
-}: ExtrudeLinearProps) {
-  return (
-    <extrudeLinear
-      height={height}
-      twistAngle={twistAngle}
-      twistSteps={twistSteps}
-    >
-      {children}
-    </extrudeLinear>
-  )
+}: ExtrudeLinearProps) => {
+  return <extrudeLinear height={height} twistAngle={twistAngle} twistSteps={twistSteps}>{children}</extrudeLinear>
 }
+
+export const ExtrudeLinear = withOffsetProp(withColorProp(ExtrudeLinearBase))
