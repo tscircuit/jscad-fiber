@@ -14,7 +14,15 @@ const ExtrudeLinearBase = ({
   twistSteps,
   children,
 }: ExtrudeLinearProps) => {
-  return <extrudeLinear height={height} twistAngle={twistAngle} twistSteps={twistSteps}>{children}</extrudeLinear>
+  return (
+    <extrudeLinear
+      height={height}
+      twistAngle={twistAngle}
+      twistSteps={twistSteps}
+    >
+      {children}
+    </extrudeLinear>
+  )
 }
 
 export const ExtrudeLinear = withOffsetProp(withColorProp(ExtrudeLinearBase))
