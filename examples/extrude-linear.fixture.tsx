@@ -4,7 +4,7 @@ import { Polygon } from "../lib/jscad-fns/polygon"
 
 export default () => (
   <JsCadFixture>
-    <ExtrudeLinear height={2}>
+    <ExtrudeLinear height={2} color="lightgreen" center={[0, 0, 4]}>
       <Polygon
         points={[
           [-2, -1],
