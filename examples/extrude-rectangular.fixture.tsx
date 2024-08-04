@@ -4,7 +4,12 @@ import { Polygon } from "../lib/jscad-fns/polygon"
 
 export default () => (
   <JsCadFixture>
-    <ExtrudeRectangular size={10} height={2}>
+    <ExtrudeRectangular
+      size={10}
+      height={2}
+      color="lightgreen"
+      center={[0, -10, 0]}
+    >
       <Polygon
         points={[
           [-2, -1],
