@@ -1,3 +1,6 @@
+import { withColorProp } from "lib/wrappers/with-color-prop"
+import { withOffsetProp } from "lib/wrappers/with-offset-prop"
+
 export type ExtrudeRotateProps = {
   angle: number
   startAngle?: number
@@ -5,15 +8,17 @@ export type ExtrudeRotateProps = {
   children: any
 }
 
-export function ExtrudeRotate({
+const ExtrudeRotateBase = ({
   angle,
   startAngle,
   segments,
   children,
-}: ExtrudeRotateProps) {
+}: ExtrudeRotateProps) => {
   return (
     <extrudeRotate angle={angle} startAngle={startAngle} segments={segments}>
       {children}
     </extrudeRotate>
   )
 }
+
+export const ExtrudeRotate = withOffsetProp(withColorProp(ExtrudeRotateBase))
