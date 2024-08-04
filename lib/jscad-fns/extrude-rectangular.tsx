@@ -19,4 +19,6 @@ const ExtrudeRectangularBase = ({
   )
 }
 
-export const ExtrudeRectangular = withOffsetProp(withColorProp(ExtrudeRectangularBase))
+export const ExtrudeRectangular = withOffsetProp(
+  withColorProp(ExtrudeRectangularBase),
+)
