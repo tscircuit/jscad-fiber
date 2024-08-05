@@ -1,9 +1,12 @@
-// Define prop types for our components
+import { withColorProp } from "lib/wrappers/with-color-prop"
+import { withOffsetProp } from "lib/wrappers/with-offset-prop"
+
 export interface CubeProps {
   size: number | [number, number, number]
 }
 
-// Example usage
-export function Cube({ size }: CubeProps) {
+const CubeBase = ({ size }: CubeProps) => {
   return <cube size={size} />
 }
+
+export const Cube = withOffsetProp(withColorProp(CubeBase))
