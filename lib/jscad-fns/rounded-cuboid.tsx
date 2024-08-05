@@ -1,3 +1,4 @@
+import { withColorProp } from "../wrappers/with-color-prop"
 import { withOffsetProp } from "../wrappers/with-offset-prop"
 
 export type RoundedCuboidProps = {
@@ -9,4 +10,4 @@ const RoundedCuboidBase = ({ size, roundRadius }: RoundedCuboidProps) => {
   return <roundedCuboid size={size} roundRadius={roundRadius} />
 }
 
-export const RoundedCuboid = withOffsetProp(RoundedCuboidBase)
+export const RoundedCuboid = withOffsetProp(withColorProp(RoundedCuboidBase))
