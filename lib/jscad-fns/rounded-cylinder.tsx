@@ -1,14 +1,17 @@
+import { withColorProp } from "lib/wrappers/with-color-prop"
+import { withOffsetProp } from "lib/wrappers/with-offset-prop"
+
 export type RoundedCylinderProps = {
   radius: number
   height: number
   roundRadius: number
 }
 
-export function RoundedCylinder({
+const RoundedCylinderBase = ({
   radius,
   height,
   roundRadius,
-}: RoundedCylinderProps) {
+}: RoundedCylinderProps) => {
   return (
     <roundedCylinder
       radius={radius}
@@ -17,3 +20,7 @@ export function RoundedCylinder({
     />
   )
 }
+
+export const RoundedCylinder = withOffsetProp(
+  withColorProp(RoundedCylinderBase),
+)
