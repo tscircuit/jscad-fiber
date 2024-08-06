@@ -10,7 +10,7 @@ export type RoundedCylinderProps = {
 const RoundedCylinderBase = ({
   radius,
   height,
-  roundRadius
+  roundRadius,
 }: RoundedCylinderProps) => {
   return (
     <roundedCylinder
@@ -21,4 +21,6 @@ const RoundedCylinderBase = ({
   )
 }
 
-export const RoundedCylinder = withOffsetProp(withColorProp(RoundedCylinderBase))
+export const RoundedCylinder = withOffsetProp(
+  withColorProp(RoundedCylinderBase),
+)
