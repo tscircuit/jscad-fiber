@@ -10,6 +10,8 @@ export default () => (
       segments={32}
       startAngle={0}
       endAngle={Math.PI * 2}
+      color="green"
+      center={[0, 5, 5]}
     />
   </JsCadFixture>
 )
