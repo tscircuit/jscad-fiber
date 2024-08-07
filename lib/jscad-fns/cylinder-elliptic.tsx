@@ -19,14 +19,18 @@ const CylinderEllipticBase = ({
   startAngle = 0,
   endAngle = Math.PI * 2,
 }: CylinderEllipticProps) => {
-  return (<cylinderElliptic
-    height={height}
-    startRadius={startRadius}
-    endRadius={endRadius}
-    segments={segments}
-    startAngle={startAngle}
-    endAngle={endAngle}
-  />)
+  return (
+    <cylinderElliptic
+      height={height}
+      startRadius={startRadius}
+      endRadius={endRadius}
+      segments={segments}
+      startAngle={startAngle}
+      endAngle={endAngle}
+    />
+  )
 }
 
-export const CylinderElliptic = withOffsetProp(withColorProp(CylinderEllipticBase))
+export const CylinderElliptic = withOffsetProp(
+  withColorProp(CylinderEllipticBase),
+)
