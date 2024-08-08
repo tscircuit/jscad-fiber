@@ -1,3 +1,5 @@
+import { withColorProp } from "lib/wrappers/with-color-prop"
+import { withOffsetProp } from "lib/wrappers/with-offset-prop"
 import type { Point3 } from "./translate"
 
 export type RotateProps = {
@@ -6,7 +8,7 @@ export type RotateProps = {
   children: React.ReactNode
 }
 
-export function Rotate({ rotation, angles, children }: RotateProps) {
+const RotateBase = ({ rotation, angles, children }: RotateProps) => {
   if (rotation && !Array.isArray(rotation)) {
     rotation = [rotation.x, rotation.y, rotation.z]
   } else if (angles && !Array.isArray(angles)) {
@@ -21,3 +23,5 @@ export function Rotate({ rotation, angles, children }: RotateProps) {
     </rotate>
   )
 }
+
+export const Rotate = withOffsetProp(withColorProp(RotateBase))
