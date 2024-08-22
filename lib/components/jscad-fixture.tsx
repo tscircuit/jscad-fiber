@@ -10,9 +10,11 @@ const { createJSCADRoot } = createJSCADRenderer(jscad as any)
 export function JsCadFixture({
   children,
   wireframe,
+  zAxisUp = false,
 }: {
   children: any
   wireframe?: boolean
+  zAxisUp?: boolean
 }) {
   const containerRef = React.useRef<HTMLDivElement>(null)
 
