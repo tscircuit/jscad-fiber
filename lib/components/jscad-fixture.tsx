@@ -10,9 +10,11 @@ const { createJSCADRoot } = createJSCADRenderer(jscad as any)
 export function JsCadFixture({
   children,
   wireframe,
+  zAxisUp = false,
 }: {
   children: any
   wireframe?: boolean
+  zAxisUp?: boolean
 }) {
   const containerRef = React.useRef<HTMLDivElement>(null)
 
@@ -23,6 +25,9 @@ export function JsCadFixture({
       root.render(children)
 
       const scene = new THREE.Scene()
+      if (zAxisUp) {
+        scene.rotation.x = -Math.PI / 2
+      }
       const camera = new THREE.PerspectiveCamera(
         75,
         window.innerWidth / window.innerHeight,
@@ -93,7 +98,7 @@ export function JsCadFixture({
       }
       animate()
     }
-  }, [children, wireframe])
+  }, [children, wireframe, zAxisUp])
 
   return (
     <div ref={containerRef} style={{ width: "100%", minHeight: "400px" }} />
