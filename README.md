@@ -1,6 +1,6 @@
 # jscad-fiber
 
-[View examples](https://tscircuit.github.io/jscad-fiber/) &middot; [jscad](https://github.com/jscad/OpenJSCAD.org) &middot; [tscircuit](https://github.com/tscircuit/tscircuit)
+[View examples](https://tscircuit.github.io/jscad-fiber/) &middot; [jscad](https://github.com/jscad/OpenJSCAD.org) &middot; [tscircuit](https://github.com/tscircuit/tscircuit) &middot; [jscad-electronics](https://github.com/tscircuit/jscad-electronics)
 
 This package allows you to create 3d CAD objects with React and jscad.
 
