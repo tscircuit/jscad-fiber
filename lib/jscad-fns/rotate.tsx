@@ -16,11 +16,14 @@ export type RotateProps = {
   children: React.ReactNode
 }
 
-const convertToDegrees = (value: string | number): number => {
+const convertToRadians = (value: string | number): number => {
   if (typeof value === "string") {
     const numericValue = value.replace(/[^\d.-]/g, "")
     const parsedValue = parseFloat(numericValue)
     if (!isNaN(parsedValue)) {
+      if (value.toLowerCase().includes("deg")) {
+        return (parsedValue * Math.PI) / 180
+      }
       return parsedValue
     }
     throw new Error(`Invalid rotation value: ${value}`)
@@ -33,15 +36,15 @@ const RotateBase = ({ rotation, angles, children }: RotateProps) => {
     value: RotateProps["rotation"] | RotateProps["angles"],
   ): [number, number, number] => {
     if (typeof value === "string" || typeof value === "number") {
-      const angle = convertToDegrees(value)
+      const angle = convertToRadians(value)
       return [0, 0, angle]
     } else if (Array.isArray(value)) {
-      return value.map(convertToDegrees) as [number, number, number]
+      return value.map(convertToRadians) as [number, number, number]
     } else if (value && typeof value === "object") {
       return [
-        convertToDegrees(value.x),
-        convertToDegrees(value.y),
-        convertToDegrees(value.z),
+        convertToRadians(value.x),
+        convertToRadians(value.y),
+        convertToRadians(value.z),
       ]
     }
     return [0, 0, 0]
