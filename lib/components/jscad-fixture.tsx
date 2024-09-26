@@ -86,7 +86,9 @@ export function JsCadFixture({
         }
       }
 
-      camera.position.set(20, 20, 20)
+      camera.position.x = 20
+      camera.position.y = 20
+      camera.position.z = 20
 
       const renderer = new THREE.WebGLRenderer()
       renderer.setSize(window.innerWidth, window.innerHeight)
