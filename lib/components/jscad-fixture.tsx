@@ -11,12 +11,16 @@ export function JsCadFixture({
   children,
   wireframe,
   zAxisUp = false,
+  showGrid = false,
 }: {
   children: any
   wireframe?: boolean
   zAxisUp?: boolean
+  showGrid?: boolean 
 }) {
   const containerRef = React.useRef<HTMLDivElement>(null)
+  const sceneRef = React.useRef<THREE.Scene | null>(null)
+  const gridRef = React.useRef<THREE.GridHelper | null>(null)
 
   React.useEffect(() => {
     if (containerRef.current) {
@@ -25,6 +29,7 @@ export function JsCadFixture({
       root.render(children)
 
       const scene = new THREE.Scene()
+      sceneRef.current = scene
       if (zAxisUp) {
         scene.rotation.x = -Math.PI / 2
       }
@@ -39,7 +44,7 @@ export function JsCadFixture({
       const ambientLight = new THREE.AmbientLight(0xffffff, 0.5)
       scene.add(ambientLight)
 
-      // Add directional light
+      // Add directional lights
       const directionalLight1 = new THREE.DirectionalLight(0xffffff, 0.5)
       directionalLight1.position.set(100, 100, 100)
       scene.add(directionalLight1)
@@ -51,6 +56,12 @@ export function JsCadFixture({
       const directionalLight3 = new THREE.DirectionalLight(0xffffff, 0.1)
       directionalLight3.position.set(-100, 100, 100)
       scene.add(directionalLight3)
+
+      // Add grid
+      const gridHelper = new THREE.GridHelper(100, 100)
+      gridHelper.visible = showGrid
+      scene.add(gridHelper)
+      gridRef.current = gridHelper
 
       for (const csg of jscadGeoms) {
         const geometry = convertCSGToThreeGeom(csg)
@@ -75,9 +86,7 @@ export function JsCadFixture({
         }
       }
 
-      camera.position.x = 20
-      camera.position.y = 20
-      camera.position.z = 20
+      camera.position.set(20, 20, 20)
 
       const renderer = new THREE.WebGLRenderer()
       renderer.setSize(window.innerWidth, window.innerHeight)
@@ -97,8 +106,22 @@ export function JsCadFixture({
         renderer.render(scene, camera)
       }
       animate()
+
+      // Cleanup function
+      return () => {
+        scene.remove(gridHelper)
+        renderer.dispose()
+        controls.dispose()
+      }
     }
-  }, [children, wireframe, zAxisUp])
+  }, [children, wireframe, zAxisUp, showGrid])
+
+  // Update grid visibility when showGrid prop changes
+  React.useEffect(() => {
+    if (gridRef.current) {
+      gridRef.current.visible = showGrid
+    }
+  }, [showGrid])
 
   return (
     <div ref={containerRef} style={{ width: "100%", minHeight: "400px" }} />
