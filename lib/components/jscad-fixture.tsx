@@ -16,7 +16,7 @@ export function JsCadFixture({
   children: any
   wireframe?: boolean
   zAxisUp?: boolean
-  showGrid?: boolean 
+  showGrid?: boolean
 }) {
   const containerRef = React.useRef<HTMLDivElement>(null)
   const sceneRef = React.useRef<THREE.Scene | null>(null)
