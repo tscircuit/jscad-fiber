@@ -39,6 +39,8 @@
     "@types/three": "^0.166.0",
     "@vitejs/plugin-react": "^4.3.1",
     "gh-pages": "^5.0.0",
+    "jscad-electronics": "^0.0.1",
+    "jscad-planner": "^0.0.5",
     "react": "^18.3.1",
     "react-cosmos": "^6.1.1",
     "react-cosmos-plugin-vite": "^6.1.1",
