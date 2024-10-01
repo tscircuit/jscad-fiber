@@ -176,3 +176,4 @@ dist
 .vscode
 .aider*
 cosmos-export
+package-lock.json

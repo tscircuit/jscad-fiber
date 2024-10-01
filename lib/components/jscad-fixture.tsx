@@ -60,6 +60,9 @@ export function JsCadFixture({
       // Add grid
       const gridHelper = new THREE.GridHelper(100, 100)
       gridHelper.visible = showGrid
+      if (zAxisUp) {
+        gridHelper.rotation.x = -Math.PI / 2
+      }
       scene.add(gridHelper)
       gridRef.current = gridHelper
 
