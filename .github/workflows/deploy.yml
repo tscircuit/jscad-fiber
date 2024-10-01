@@ -10,10 +10,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - name: Setup bun
+        uses: oven-sh/setup-bun@v1
         with:
-          node-version: "20"
-      - run: npm ci
+          bun-version: latest
+      - run: bun install
       - name: Deploy
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
