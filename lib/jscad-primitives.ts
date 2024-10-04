@@ -1,4 +1,4 @@
-import type { Point3 } from "./jscad-fns"
+import type { Point3, Slice } from "./jscad-fns"
 
 // Define a type for the JSCAD module structure we expect
 export interface JSCADModule {
@@ -112,6 +112,17 @@ export interface JSCADModule {
         origin: [number, number, number]
       },
       geometry: any,
+    ) => any
+    extrudeFromSlices: (
+      options: {
+        numberOfSlices?: number
+        capStart?: boolean
+        capEnd?: boolean
+        close?: boolean
+        repair?: boolean
+        callback?: (progress: number, count: number, base: Slice) => Slice
+      },
+      baseSlice: Slice,
     ) => any
   }
   colors: {

@@ -9,6 +9,7 @@ import type {
   CylinderEllipticProps,
   CylinderProps,
   EllipsoidProps,
+  ExtrudeFromSlicesProps,
   ExtrudeHelicalProps,
   ExtrudeLinearProps,
   ExtrudeRectangularProps,
@@ -21,6 +22,7 @@ import type {
   RectangleProps,
   RoundedCuboidProps,
   RoundedCylinderProps,
+  Slice,
   SphereProps,
   TorusProps,
   UnionProps,
@@ -191,6 +193,18 @@ export function createHostConfig(jscad: JSCADModule) {
 
         return extrudedGeometry
       }
+
+      case "extrudeFromSlices": {
+        const { baseSlice, ...extrudeProps } = props as ExtrudeFromSlicesProps
+
+        const extrudedGeometry = jscad.extrusions.extrudeFromSlices(
+          extrudeProps,
+          baseSlice as Slice,
+        )
+
+        return extrudedGeometry
+      }
+
       case "project": {
         const { children, ...projectProps } = props as ProjectProps
 

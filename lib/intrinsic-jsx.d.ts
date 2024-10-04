@@ -16,11 +16,20 @@ declare global {
       cylinderElliptic: FN.CylinderEllipticProps & CommonProps
       jscadPolygon: FN.PolygonProps & CommonProps
       colorize: FN.ColorizeProps & CommonProps
+      extrudeFromSlices: {
+        numberOfSlices?: number
+        capStart?: boolean
+        capEnd?: boolean
+        close?: boolean
+        repair?: boolean
+        baseSlice?: FN.Slice
+        callback?: (progress: number, count: number, base: Slice) => Slice
+      } & CommonProps
       sphere: FN.SphereProps & CommonProps
       cuboid: FN.CuboidProps & CommonProps
+      cube: FN.CubeProps & CommonProps
       ellipsoid: FN.EllipsoidProps & CommonProps
       cylinder: FN.CylinderProps & CommonProps
-      cube: FN.CubeProps & CommonProps
       torus: FN.TorusProps & CommonProps
       custom: FN.CustomProps & CommonProps
       union: FN.UnionProps & CommonProps
