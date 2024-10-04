@@ -1,7 +1,7 @@
-import { Rotate } from "lib/jscad-fns/rotate"
+import { Rotate, type RotationValue } from "lib/jscad-fns/rotate"
 
 export interface RotationProps {
-  rotation?: Point3
+  rotation?: RotationValue
 }
 
 export function withRotationProp<P extends object>(
