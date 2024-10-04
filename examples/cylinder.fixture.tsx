@@ -2,7 +2,14 @@ import { Cylinder } from "../lib"
 import { JsCadFixture } from "../lib/components/jscad-fixture"
 
 export default () => (
-  <JsCadFixture wireframe>
-    <Cylinder radius={10} height={20} color="#F7E8AA" center={[0, 0, 10]} />
+  <JsCadFixture showGrid zAxisUp>
+    <Cylinder
+      radius={5}
+      height={10}
+      color="#F7E8AA"
+      center={[-20, 0, 0]}
+      rotation={["90deg", 0, 0]}
+    />
+    <Cylinder radius={5} height={10} color="#F7E8AA" center={[20, 0, 0]} />
   </JsCadFixture>
 )
