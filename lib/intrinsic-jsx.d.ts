@@ -27,6 +27,7 @@ declare global {
       } & CommonProps
       sphere: FN.SphereProps & CommonProps
       cuboid: FN.CuboidProps & CommonProps
+      cube: FN.CubeProps & CommonProps
       ellipsoid: FN.EllipsoidProps & CommonProps
       cylinder: FN.CylinderProps & CommonProps
       torus: FN.TorusProps & CommonProps
