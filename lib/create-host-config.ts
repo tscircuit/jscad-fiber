@@ -264,7 +264,7 @@ export function createHostConfig(jscad: JSCADModule) {
           throw new Error("Subtract must have at least two children")
         }
 
-        const geometries = children.map((child) =>
+        const geometries = children.map((child: any) =>
           createInstance(
             child.type,
             child.props,
