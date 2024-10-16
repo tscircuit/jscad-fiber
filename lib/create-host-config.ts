@@ -273,7 +273,9 @@ export function createHostConfig(jscad: JSCADModule) {
             internalInstanceHandle,
           ),
         )
-        return geometries.reduce((acc, curr) => jscad.booleans.subtract(acc, curr))
+        return geometries.reduce((acc, curr) =>
+          jscad.booleans.subtract(acc, curr),
+        )
       }
 
       case "translate": {
