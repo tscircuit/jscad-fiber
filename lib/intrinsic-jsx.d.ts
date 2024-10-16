@@ -33,6 +33,7 @@ declare global {
       torus: FN.TorusProps & CommonProps
       custom: FN.CustomProps & CommonProps
       union: FN.UnionProps & CommonProps
+      subtract: FN.SubtractProps & CommonProps
       circle: FN.CircleProps & CommonProps
       rectangle: FN.RectangleProps & CommonProps
       hull: FN.HullProps & CommonProps

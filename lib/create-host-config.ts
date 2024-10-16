@@ -24,6 +24,7 @@ import type {
   RoundedCylinderProps,
   Slice,
   SphereProps,
+  SubtractProps,
   TorusProps,
   UnionProps,
 } from "./jscad-fns"
@@ -255,6 +256,26 @@ export function createHostConfig(jscad: JSCADModule) {
           ),
         )
         return geometries.reduce((acc, curr) => jscad.booleans.union(acc, curr))
+      }
+
+      case "subtract": {
+        const { children } = props as SubtractProps
+        if (!Array.isArray(children) || children.length < 2) {
+          throw new Error("Subtract must have at least two children")
+        }
+
+        const geometries = children.map((child: any) =>
+          createInstance(
+            child.type,
+            child.props,
+            rootContainerInstance,
+            hostContext,
+            internalInstanceHandle,
+          ),
+        )
+        return geometries.reduce((acc, curr) =>
+          jscad.booleans.subtract(acc, curr),
+        )
       }
 
       case "translate": {
