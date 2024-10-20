@@ -40,7 +40,15 @@ export function createHostConfig(jscad: JSCADModule) {
   ) => {
     const renderChildren = (children: any) => {
       if (Array.isArray(children)) {
-        throw new Error("Unioning multiple children is not yet supported")
+        return children.map((child) =>
+          createInstance(
+            child.type,
+            child.props,
+            [],
+            hostContext,
+            internalInstanceHandle,
+          ),
+        )
       }
       if (children) {
         return createInstance(

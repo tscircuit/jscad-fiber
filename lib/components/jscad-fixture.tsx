@@ -66,27 +66,37 @@ export function JsCadFixture({
       scene.add(gridHelper)
       gridRef.current = gridHelper
 
-      for (const csg of jscadGeoms) {
-        const geometry = convertCSGToThreeGeom(csg)
-
-        if (csg.sides) {
-          // 2D shape
-          const material = new THREE.LineBasicMaterial({
-            vertexColors: true,
-            linewidth: 2, // Note: linewidth > 1 only works in WebGL 2
-          })
-          const lineLoop = new THREE.LineLoop(geometry, material)
-          scene.add(lineLoop)
+      function processCGS(csg: any) {
+        if (Array.isArray(csg)) {
+          for (const child of csg) {
+            processCGS(child)
+          }
         } else {
-          // 3D shape
-          const material = new THREE.MeshStandardMaterial({
-            vertexColors: true,
-            wireframe: wireframe,
-            side: THREE.DoubleSide, // Ensure both sides are visible
-          })
-          const mesh = new THREE.Mesh(geometry, material)
-          scene.add(mesh)
+          const geometry = convertCSGToThreeGeom(csg)
+
+          if (csg.sides) {
+            // 2D shape
+            const material = new THREE.LineBasicMaterial({
+              vertexColors: true,
+              linewidth: 2, // Note: linewidth > 1 only works in WebGL 2
+            })
+            const lineLoop = new THREE.LineLoop(geometry, material)
+            scene.add(lineLoop)
+          } else {
+            // 3D shape
+            const material = new THREE.MeshStandardMaterial({
+              vertexColors: true,
+              wireframe: wireframe,
+              side: THREE.DoubleSide, // Ensure both sides are visible
+            })
+            const mesh = new THREE.Mesh(geometry, material)
+            scene.add(mesh)
+          }
         }
+      }
+
+      for (const csg of jscadGeoms) {
+        processCGS(csg)
       }
 
       camera.position.x = 20
