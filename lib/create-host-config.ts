@@ -29,7 +29,8 @@ import type {
   UnionProps,
 } from "./jscad-fns"
 import type { JSCADModule, JSCADPrimitive } from "./jscad-primitives"
-
+import React from "react"
+import { flattenArray } from "./utils/flattenArray"
 export function createHostConfig(jscad: JSCADModule) {
   const createInstance = (
     type: string | ((props: any) => any),
@@ -38,28 +39,35 @@ export function createHostConfig(jscad: JSCADModule) {
     hostContext: any,
     internalInstanceHandle: any,
   ) => {
-    const renderChildren = (children: any) => {
+    const renderChildren = (children: any): any[] => {
+      if (!children) return []
       if (Array.isArray(children)) {
-        return children.map((child) =>
+        return flattenArray(
+          children
+            .filter(React.isValidElement)
+            .map((child) =>
+              createInstance(
+                child.type,
+                child.props,
+                [],
+                hostContext,
+                internalInstanceHandle,
+              ),
+            ),
+        )
+      }
+      if (React.isValidElement(children)) {
+        return [
           createInstance(
-            child.type,
-            child.props,
+            children.type,
+            children.props,
             [],
             hostContext,
             internalInstanceHandle,
           ),
-        )
+        ]
       }
-      if (children) {
-        return createInstance(
-          children.type,
-          children.props,
-          [],
-          hostContext,
-          internalInstanceHandle,
-        )
-      }
-      return null
+      return []
     }
 
     // Handle function components
@@ -268,22 +276,57 @@ export function createHostConfig(jscad: JSCADModule) {
 
       case "subtract": {
         const { children } = props as SubtractProps
-        if (!Array.isArray(children) || children.length < 2) {
-          throw new Error("Subtract must have at least two children")
+
+        if (!children || children.length < 2) {
+          throw new Error(
+            "Subtract must have at least one base component and one component to subtract.",
+          )
         }
 
-        const geometries = children.map((child: any) =>
-          createInstance(
-            child.type,
-            child.props,
-            rootContainerInstance,
-            hostContext,
-            internalInstanceHandle,
-          ),
+        // Filter to only include valid React elements
+        const validChildren = React.Children.toArray(children).filter(
+          React.isValidElement,
         )
-        return geometries.reduce((acc, curr) =>
-          jscad.booleans.subtract(acc, curr),
+
+        if (validChildren.length < 2) {
+          throw new Error(
+            "Subtract must have at least one base component and one component to subtract.",
+          )
+        }
+
+        // Convert the base component (first child) to JSCAD geometry
+        const baseGeometry = createInstance(
+          validChildren[0].type,
+          validChildren[0].props,
+          rootContainerInstance,
+          hostContext,
+          internalInstanceHandle,
         )
+
+        // Convert the rest of the valid children (subtraction components) to JSCAD geometries
+        const subtractGeometries = flattenArray(
+          validChildren
+            .slice(1)
+            .map((child) =>
+              createInstance(
+                child.type,
+                child.props,
+                rootContainerInstance,
+                hostContext,
+                internalInstanceHandle,
+              ),
+            ),
+        )
+
+        // Ensure the base and subtract geometries were created successfully
+        if (!baseGeometry || subtractGeometries.some((geo) => geo == null)) {
+          throw new Error(
+            "One or more geometries could not be processed for subtraction.",
+          )
+        }
+
+        // Apply JSCAD's subtract operation across the array of subtraction geometries
+        return jscad.booleans.subtract(baseGeometry, subtractGeometries)
       }
 
       case "translate": {
