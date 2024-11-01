@@ -30,16 +30,8 @@ import type {
 } from "./jscad-fns"
 import type { JSCADModule, JSCADPrimitive } from "./jscad-primitives"
 import React from "react"
-
+import { flattenArray } from "./utils/flattenArray"
 export function createHostConfig(jscad: JSCADModule) {
-  function flattenArray(arr: any[]): any[] {
-    return arr.reduce(
-      (flat, item) =>
-        flat.concat(Array.isArray(item) ? flattenArray(item) : item),
-      [],
-    )
-  }
-
   const createInstance = (
     type: string | ((props: any) => any),
     props: any,
@@ -50,7 +42,6 @@ export function createHostConfig(jscad: JSCADModule) {
     const renderChildren = (children: any): any[] => {
       if (!children) return []
       if (Array.isArray(children)) {
-        // Flatten and filter valid React elements, processing recursively
         return flattenArray(
           children
             .filter(React.isValidElement)
@@ -335,10 +326,7 @@ export function createHostConfig(jscad: JSCADModule) {
         }
 
         // Apply JSCAD's subtract operation across the array of subtraction geometries
-        return subtractGeometries.reduce(
-          (acc, curr) => jscad.booleans.subtract(acc, curr),
-          baseGeometry,
-        )
+        return jscad.booleans.subtract(baseGeometry, subtractGeometries)
       }
 
       case "translate": {
