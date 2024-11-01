@@ -47,7 +47,7 @@ export function createHostConfig(jscad: JSCADModule) {
             .filter(React.isValidElement)
             .map((child) =>
               createInstance(
-                child.type,
+                child.type as string | ((props: any) => any),
                 child.props,
                 [],
                 hostContext,
@@ -59,7 +59,7 @@ export function createHostConfig(jscad: JSCADModule) {
       if (React.isValidElement(children)) {
         return [
           createInstance(
-            children.type,
+            children.type as string | ((props: any) => any),
             children.props,
             [],
             hostContext,
@@ -296,7 +296,7 @@ export function createHostConfig(jscad: JSCADModule) {
 
         // Convert the base component (first child) to JSCAD geometry
         const baseGeometry = createInstance(
-          validChildren[0].type,
+          validChildren[0].type as string | ((props: any) => any),
           validChildren[0].props,
           rootContainerInstance,
           hostContext,
@@ -309,7 +309,7 @@ export function createHostConfig(jscad: JSCADModule) {
             .slice(1)
             .map((child) =>
               createInstance(
-                child.type,
+                child.type as string | ((props: any) => any),
                 child.props,
                 rootContainerInstance,
                 hostContext,
