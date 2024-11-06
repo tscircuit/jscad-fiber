@@ -1,7 +1,10 @@
-import { CylinderElliptic } from "../lib"
-import { JsCadFixture } from "../lib/components/jscad-fixture"
+import { designCodeCone } from "src/designCode";
+import Example from "src/Example";
+import { CylinderElliptic } from "../lib";
+import { JsCadFixture } from "../lib/components/jscad-fixture";
 
 export default () => (
+  <Example designCode={designCodeCone}>
   <JsCadFixture wireframe>
     <CylinderElliptic
       height={5}
@@ -14,4 +17,5 @@ export default () => (
       center={[0, 5, 5]}
     />
   </JsCadFixture>
+  </Example>
 )

@@ -1,8 +1,11 @@
+import { designCodeExtrudeRectangular } from "src/designCode"
+import Example from "src/Example"
 import { JsCadFixture } from "../lib/components/jscad-fixture"
 import { ExtrudeRectangular } from "../lib/jscad-fns"
 import { Polygon } from "../lib/jscad-fns/polygon"
 
 export default () => (
+  <Example designCode={designCodeExtrudeRectangular}>
   <JsCadFixture>
     <ExtrudeRectangular
       size={10}
@@ -23,4 +26,5 @@ export default () => (
       />
     </ExtrudeRectangular>
   </JsCadFixture>
+  </Example>
 )

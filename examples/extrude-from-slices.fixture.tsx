@@ -1,6 +1,8 @@
-import { ExtrudeFromSlices } from "../lib"
-import { JsCadFixture } from "../lib/components/jscad-fixture"
-import jscad from "@jscad/modeling"
+import jscad from "@jscad/modeling";
+import { designCodeExtrudeFromSlices } from "src/designCode";
+import Example from "src/Example";
+import { ExtrudeFromSlices } from "../lib";
+import { JsCadFixture } from "../lib/components/jscad-fixture";
 
 const { bezier } = jscad.curves
 const { circle, line, polygon, rectangle, roundedRectangle, star } =
@@ -20,6 +22,7 @@ const xCurve = bezier.create([1, 1.8, 0.4, 1])
 const yCurve = bezier.create([1, 1.8, 0.5])
 
 export default () => (
+  <Example designCode={designCodeExtrudeFromSlices}>
   <JsCadFixture zAxisUp showGrid>
     <ExtrudeFromSlices
       numberOfSlices={10}
@@ -53,4 +56,5 @@ export default () => (
       }}
     />
   </JsCadFixture>
+  </Example>
 )

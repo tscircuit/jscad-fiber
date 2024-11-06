@@ -1,8 +1,11 @@
+import { designCodeCylinderElliptic } from "src/designCode"
+import Example from "src/Example"
 import { CylinderElliptic } from "../lib"
 import { JsCadFixture } from "../lib/components/jscad-fixture"
 
 export default () => (
-  <JsCadFixture wireframe>
+<Example designCode={designCodeCylinderElliptic}>
+ <JsCadFixture wireframe>
     <CylinderElliptic
       height={6}
       startRadius={[1, 2]}
@@ -12,4 +15,5 @@ export default () => (
       endAngle={Math.PI / 2}
     />
   </JsCadFixture>
+</Example>
 )

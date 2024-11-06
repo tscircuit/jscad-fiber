@@ -1,7 +1,10 @@
+import { designCodeHullChain } from "src/designCode"
+import Example from "src/Example"
 import { Cuboid, Ellipsoid, HullChain } from "../lib"
 import { JsCadFixture } from "../lib/components/jscad-fixture"
 
 export default () => (
+  <Example designCode={designCodeHullChain}>
   <JsCadFixture>
     <HullChain color="lightgreen" center={[0, 0, -10]}>
       <Cuboid size={[10, 10, 10]} />
@@ -9,4 +12,5 @@ export default () => (
       <Cuboid size={[10, 10, 10]} center={[0, 0, 20]} />
     </HullChain>
   </JsCadFixture>
+  </Example>
 )

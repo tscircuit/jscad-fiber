@@ -1,7 +1,10 @@
-import { Torus } from "../lib"
-import { JsCadFixture } from "../lib/components/jscad-fixture"
+import { designCodeCustomTorus } from "src/designCode";
+import Example from "src/Example";
+import { Torus } from "../lib";
+import { JsCadFixture } from "../lib/components/jscad-fixture";
 
 export default () => (
+  <Example designCode={designCodeCustomTorus}>
   <JsCadFixture wireframe>
     <Torus
       innerRadius={15}
@@ -13,4 +16,5 @@ export default () => (
       startAngle={0}
     />
   </JsCadFixture>
+  </Example>
 )

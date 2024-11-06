@@ -1,8 +1,12 @@
-import { JsCadFixture } from "../lib/components/jscad-fixture"
-import { ExtrudeLinear } from "../lib/jscad-fns"
-import { Polygon } from "../lib/jscad-fns/polygon"
+import { designCodeExtrudeLinear } from "src/designCode";
+import Example from "src/Example";
+import { JsCadFixture } from "../lib/components/jscad-fixture";
+import { ExtrudeLinear } from "../lib/jscad-fns";
+import { Polygon } from "../lib/jscad-fns/polygon";
 
 export default () => (
+    <Example designCode={designCodeExtrudeLinear}>
+
   <JsCadFixture>
     <ExtrudeLinear height={2} color="lightgreen" center={[0, 0, 4]}>
       <Polygon
@@ -18,4 +22,5 @@ export default () => (
       />
     </ExtrudeLinear>
   </JsCadFixture>
+  </Example>
 )

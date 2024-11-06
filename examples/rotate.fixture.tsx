@@ -1,8 +1,11 @@
+import { designCodeRotate } from "src/designCode"
+import Example from "src/Example"
 import { Polygon } from "../lib"
 import { JsCadFixture } from "../lib/components/jscad-fixture"
 import { Rotate } from "../lib/jscad-fns"
 
 export default () => (
+    <Example designCode={designCodeRotate}>
   <JsCadFixture>
     <Rotate angles={[0, 0, Math.PI]} color="cyan" center={[0, 0, 10]}>
       <Polygon
@@ -18,4 +21,5 @@ export default () => (
       />
     </Rotate>
   </JsCadFixture>
+</Example>
 )

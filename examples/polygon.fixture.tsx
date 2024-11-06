@@ -1,7 +1,10 @@
+import { designCodePolygon } from "src/designCode"
+import Example from "src/Example"
 import { JsCadFixture } from "../lib/components/jscad-fixture"
 import { Polygon } from "../lib/jscad-fns/polygon"
 
 export default () => (
+  <Example designCode={designCodePolygon}>
   <JsCadFixture>
     <Polygon
       points={[
@@ -15,4 +18,5 @@ export default () => (
       ]}
     />
   </JsCadFixture>
+  </Example>
 )

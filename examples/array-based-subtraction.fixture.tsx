@@ -1,7 +1,10 @@
+import Example from "src/Example"
+import { designCodeArray } from "src/designCode"
 import { JsCadFixture } from "../lib/components/jscad-fixture"
-import { Colorize, Cuboid, Sphere, Subtract } from "../lib/jscad-fns"
+import { Cuboid, Subtract } from "../lib/jscad-fns"
 
 export default () => (
+  <Example designCode={designCodeArray}>
   <JsCadFixture zAxisUp showGrid>
     <Subtract>
       <Cuboid size={[10, 5, 2]} />
@@ -10,4 +13,5 @@ export default () => (
       ))}
     </Subtract>
   </JsCadFixture>
+  </Example>
 )

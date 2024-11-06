@@ -1,8 +1,11 @@
+import { designCodeProject } from "src/designCode"
+import Example from "src/Example"
 import { JsCadFixture } from "../lib/components/jscad-fixture"
 import { Project } from "../lib/jscad-fns"
 import { Polygon } from "../lib/jscad-fns/polygon"
 
 export default () => (
+    <Example designCode={designCodeProject}>
   <JsCadFixture>
     <Project axis={[0, 0, 1]} origin={[0, 0, 0]}>
       <Polygon
@@ -18,4 +21,5 @@ export default () => (
       />
     </Project>
   </JsCadFixture>
+  </Example>
 )
