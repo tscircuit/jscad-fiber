@@ -1,8 +1,5 @@
 import React from "react"
-import {
-  CodeBlock,
-  anOldHope,
-} from "react-code-blocks"
+import { CodeBlock, anOldHope } from "react-code-blocks"
 import jsxToString from "react-element-to-jsx-string"
 import { ChevronUp, ChevronDown } from "lucide-react"
 
