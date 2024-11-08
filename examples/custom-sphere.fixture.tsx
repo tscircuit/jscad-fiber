@@ -1,8 +1,11 @@
+import { ExampleWrapper } from "lib/components/Example-wrapper"
 import { Sphere } from "../lib"
-import { JsCadFixture } from "../lib/components/jscad-fixture"
+import { JsCadView } from "../lib/components/jscad-view"
 
 export default () => (
-  <JsCadFixture wireframe>
-    <Sphere radius={10} segments={64} />
-  </JsCadFixture>
+  <ExampleWrapper>
+    <JsCadView wireframe>
+      <Sphere radius={10} segments={64} />
+    </JsCadView>
+  </ExampleWrapper>
 )

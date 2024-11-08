@@ -1,8 +1,11 @@
+import { ExampleWrapper } from "lib/components/Example-wrapper"
 import { Circle } from "../lib"
-import { JsCadFixture } from "../lib/components/jscad-fixture"
+import { JsCadView } from "../lib/components/jscad-view"
 
 export default () => (
-  <JsCadFixture>
-    <Circle radius={10} />
-  </JsCadFixture>
+  <ExampleWrapper>
+    <JsCadView>
+      <Circle radius={10} />
+    </JsCadView>
+  </ExampleWrapper>
 )

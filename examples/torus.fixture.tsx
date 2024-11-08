@@ -1,8 +1,16 @@
+import { ExampleWrapper } from "lib/components/Example-wrapper"
 import { Torus } from "../lib"
-import { JsCadFixture } from "../lib/components/jscad-fixture"
+import { JsCadView } from "../lib/components/jscad-view"
 
 export default () => (
-  <JsCadFixture wireframe>
-    <Torus innerRadius={1} outerRadius={1.2} color="red" center={[0, 10, 0]} />
-  </JsCadFixture>
+  <ExampleWrapper>
+    <JsCadView wireframe>
+      <Torus
+        innerRadius={1}
+        outerRadius={1.2}
+        color="red"
+        center={[0, 10, 0]}
+      />
+    </JsCadView>
+  </ExampleWrapper>
 )

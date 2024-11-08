@@ -1,17 +1,20 @@
+import { ExampleWrapper } from "lib/components/Example-wrapper"
 import { CylinderElliptic } from "../lib"
-import { JsCadFixture } from "../lib/components/jscad-fixture"
+import { JsCadView } from "../lib/components/jscad-view"
 
 export default () => (
-  <JsCadFixture wireframe>
-    <CylinderElliptic
-      height={5}
-      startRadius={[2, 2]}
-      endRadius={[0, 0]}
-      segments={32}
-      startAngle={0}
-      endAngle={Math.PI * 2}
-      color="green"
-      center={[0, 5, 5]}
-    />
-  </JsCadFixture>
+  <ExampleWrapper>
+    <JsCadView wireframe>
+      <CylinderElliptic
+        height={5}
+        startRadius={[2, 2]}
+        endRadius={[0, 0]}
+        segments={32}
+        startAngle={0}
+        endAngle={Math.PI * 2}
+        color="green"
+        center={[0, 5, 5]}
+      />
+    </JsCadView>
+  </ExampleWrapper>
 )

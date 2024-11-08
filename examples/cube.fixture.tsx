@@ -1,8 +1,11 @@
 import { Cube } from "../lib"
-import { JsCadFixture } from "../lib/components/jscad-fixture"
+import { JsCadView } from "../lib/components/jscad-view"
+import { ExampleWrapper } from "../lib/components/Example-wrapper"
 
 export default () => (
-  <JsCadFixture>
-    <Cube size={10} color="orange" center={[0, 0, 10]} />
-  </JsCadFixture>
+  <ExampleWrapper>
+    <JsCadView>
+      <Cube size={10} color="orange" center={[0, 0, 10]} />
+    </JsCadView>
+  </ExampleWrapper>
 )

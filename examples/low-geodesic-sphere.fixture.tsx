@@ -1,8 +1,11 @@
+import { ExampleWrapper } from "lib/components/Example-wrapper"
 import { GeodesicSphere } from "../lib"
-import { JsCadFixture } from "../lib/components/jscad-fixture"
+import { JsCadView } from "../lib/components/jscad-view"
 
 export default () => (
-  <JsCadFixture wireframe>
-    <GeodesicSphere radius={10} frequency={6} />
-  </JsCadFixture>
+  <ExampleWrapper>
+    <JsCadView wireframe>
+      <GeodesicSphere radius={10} frequency={6} />
+    </JsCadView>
+  </ExampleWrapper>
 )
