@@ -1,11 +1,10 @@
-import { designCodeTranslate } from "src/designCode";
 import Example from "src/Example";
 import { Cuboid } from "../lib";
 import { JsCadFixture } from "../lib/components/jscad-fixture";
 import { Translate } from "../lib/jscad-fns";
 
 export default () => (
-  <Example designCode={designCodeTranslate}>
+  <Example>
     <JsCadFixture>
       <Cuboid size={[20, 10, 10]} />
       <Cuboid center={[0, 0, 15]} size={[15, 10, 15]} color="red" />

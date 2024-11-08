@@ -1,10 +1,9 @@
-import { designCodeTorus } from "src/designCode";
 import Example from "src/Example";
 import { Torus } from "../lib";
 import { JsCadFixture } from "../lib/components/jscad-fixture";
 
 export default () => (
-  <Example designCode={designCodeTorus}>
+  <Example>
     <JsCadFixture wireframe>
       <Torus
         innerRadius={1}

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { FiCopy } from "react-icons/fi";
-import { LightAsync as SyntaxHighlighter } from "react-syntax-highlighter";
-import { vs2015 } from "react-syntax-highlighter/dist/esm/styles/hljs";
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
 
 interface CodeViewerProps {
   code: string;
@@ -24,19 +24,18 @@ const CodeViewer: React.FC<CodeViewerProps> = ({ code }) => {
     <div style={{ position: "relative", width: "100%" }}>
       <SyntaxHighlighter
         language="typescript"
-        style={vs2015}
-        showLineNumbers
+        style={vscDarkPlus}
         customStyle={{
           padding: "16px",
           borderRadius: "8px",
-          backgroundColor: "black",
+          fontSize: "14px",
           overflow: "auto",
+          whiteSpace: "pre-wrap",
+          wordWrap: "break-word",
         }}
       >
         {code}
       </SyntaxHighlighter>
-
-      {/* Copy button outside the SyntaxHighlighter, but within the container */}
       <button
         onClick={handleCopy}
         style={{
@@ -53,8 +52,6 @@ const CodeViewer: React.FC<CodeViewerProps> = ({ code }) => {
       >
         <FiCopy size={20} />
       </button>
-
-      {/* Optional message to show copy success */}
       {copySuccess && (
         <span
           style={{

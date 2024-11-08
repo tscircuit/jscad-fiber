@@ -1,10 +1,9 @@
-import { designCodeSubtract } from "src/designCode";
 import Example from "src/Example";
 import { Cube, Sphere, Subtract } from "../lib";
 import { JsCadFixture } from "../lib/components/jscad-fixture";
 
 export default () => (
-  <Example designCode={designCodeSubtract}>
+  <Example>
     <JsCadFixture>
       <Subtract>
         <Cube size={10} />
