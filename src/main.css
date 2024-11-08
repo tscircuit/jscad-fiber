@@ -3,3 +3,39 @@ body {
   margin: 0;
   padding: 0;
 }
+
+.example-container {
+  position: relative; /* This allows absolute positioning of the button and code viewer */
+}
+
+.toggle-button {
+  position: absolute;
+  top: 10px; /* Position from the top */
+  left: 10px; /* Position from the left */
+  background-color: #3b82f6; /* Blue color */
+  color: white;
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  z-index: 10; /* Ensure the button stays above other content */
+}
+
+.toggle-button:hover {
+  background-color: #2563eb; /* Darker blue on hover */
+}
+
+.code-viewer {
+  position: absolute;
+  top: 20px;
+  left: 10px;
+  right: 10px;
+  bottom: 10px;
+  background-color: black;
+  padding: 16px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  overflow-y: auto;
+  height: 40vh;
+}

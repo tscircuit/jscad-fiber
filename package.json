@@ -27,7 +27,10 @@
   },
   "dependencies": {
     "color": "^4.2.3",
-    "react-reconciler": "^0.29.2"
+    "react-element-to-jsx-string": "^15.0.0",
+    "react-icons": "^5.3.0",
+    "react-reconciler": "^0.29.2",
+    "react-syntax-highlighter": "^15.6.1"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.3",

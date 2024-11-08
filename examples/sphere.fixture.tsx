@@ -1,8 +1,11 @@
-import { Sphere } from "../lib"
-import { JsCadFixture } from "../lib/components/jscad-fixture"
+import Example from "src/Example";
+import { Sphere } from "../lib";
+import { JsCadFixture } from "../lib/components/jscad-fixture";
 
 export default () => (
-  <JsCadFixture wireframe>
-    <Sphere radius={10} color="orange" />
-  </JsCadFixture>
-)
+  <Example>
+    <JsCadFixture wireframe>
+      <Sphere radius={10} color="orange" />
+    </JsCadFixture>
+  </Example>
+);
