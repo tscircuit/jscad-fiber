@@ -27,6 +27,7 @@
   },
   "dependencies": {
     "color": "^4.2.3",
+    "lodash": "^4.17.21",
     "react-reconciler": "^0.29.2"
   },
   "devDependencies": {
