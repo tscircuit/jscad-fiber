@@ -4,7 +4,7 @@ import { JsCadView } from "../lib/components/jscad-view"
 import { Translate } from "../lib/jscad-fns"
 
 export default () => (
-  <ExampleWrapper>
+  <ExampleWrapper fileName="translate.fixture.tsx">
     <JsCadView>
       <Cuboid size={[20, 10, 10]} />
       <Cuboid center={[0, 0, 15]} size={[15, 10, 15]} color="red" />

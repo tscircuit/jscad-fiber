@@ -3,7 +3,7 @@ import { JsCadView } from "../lib/components/jscad-view"
 import { ExampleWrapper } from "lib/components/Example-wrapper"
 
 export default () => (
-  <ExampleWrapper>
+  <ExampleWrapper fileName="hull.fixture.tsx">
     <JsCadView>
       <Hull color="lightblue" center={[0, -5, -10]}>
         <Cuboid size={[10, 10, 10]} />

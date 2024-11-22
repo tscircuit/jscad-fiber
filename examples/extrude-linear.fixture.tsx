@@ -4,7 +4,7 @@ import { ExtrudeLinear } from "../lib/jscad-fns"
 import { Polygon } from "../lib/jscad-fns/polygon"
 
 export default () => (
-  <ExampleWrapper>
+  <ExampleWrapper fileName="extrude-linear.fixture.tsx">
     <JsCadView>
       <ExtrudeLinear height={2} color="lightgreen" center={[0, 0, 4]}>
         <Polygon

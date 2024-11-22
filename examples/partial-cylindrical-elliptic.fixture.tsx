@@ -3,7 +3,7 @@ import { JsCadView } from "../lib/components/jscad-view"
 import { ExampleWrapper } from "lib/components/Example-wrapper"
 
 export default () => (
-  <ExampleWrapper>
+  <ExampleWrapper fileName="partial-cylindrical-elliptic.fixture.tsx">
     <JsCadView wireframe>
       <CylinderElliptic
         height={6}

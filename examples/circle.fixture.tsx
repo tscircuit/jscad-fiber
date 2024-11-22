@@ -3,7 +3,7 @@ import { Circle } from "../lib"
 import { JsCadView } from "../lib/components/jscad-view"
 
 export default () => (
-  <ExampleWrapper>
+  <ExampleWrapper fileName="circle.fixture.tsx">
     <JsCadView>
       <Circle radius={10} />
     </JsCadView>

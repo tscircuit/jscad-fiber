@@ -4,7 +4,7 @@ import { Polygon } from "../lib/jscad-fns/polygon"
 import { ExampleWrapper } from "lib/components/Example-wrapper"
 
 export default () => (
-  <ExampleWrapper>
+  <ExampleWrapper fileName="extrude-rotate.fixture.tsx">
     <JsCadView>
       <ExtrudeRotate
         angle={Math.PI}

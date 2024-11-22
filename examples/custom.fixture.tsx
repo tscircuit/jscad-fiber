@@ -9,7 +9,7 @@ const sphere = primitives.sphere({ radius: 6, segments: 32 })
 const intersected = booleans.subtract(cube, sphere)
 
 export default () => (
-  <ExampleWrapper>
+  <ExampleWrapper fileName="custom.fixture.tsx">
     <JsCadView>
       <Custom geometry={intersected} />
     </JsCadView>

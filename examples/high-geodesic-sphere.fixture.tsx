@@ -3,7 +3,7 @@ import { GeodesicSphere } from "../lib"
 import { JsCadView } from "../lib/components/jscad-view"
 
 export default () => (
-  <ExampleWrapper>
+  <ExampleWrapper fileName="high-geodesic-sphere.fixture.tsx">
     <JsCadView wireframe>
       <GeodesicSphere
         radius={10}

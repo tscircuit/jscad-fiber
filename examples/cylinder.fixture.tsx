@@ -3,7 +3,7 @@ import { Cylinder } from "../lib"
 import { JsCadView } from "../lib/components/jscad-view"
 
 export default () => (
-  <ExampleWrapper>
+  <ExampleWrapper fileName="cylinder.fixture.tsx">
     <JsCadView showGrid zAxisUp>
       <Cylinder
         radius={5}

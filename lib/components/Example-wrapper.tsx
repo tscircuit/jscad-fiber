@@ -1,38 +1,27 @@
 import React from "react"
 import { CodeBlock, anOldHope } from "react-code-blocks"
-import jsxToString from "react-element-to-jsx-string"
 import { ChevronUp, ChevronDown } from "lucide-react"
 
 type FixtureWrapperProps = {
   children: React.ReactNode
+  fileName: string // Add the fileName prop to specify the example file
 }
 
-export function ExampleWrapper({ children }: FixtureWrapperProps) {
-  let codeString = jsxToString(children)
-
-  // Handle nested HOCs and format the code string
-  codeString = codeString
-    .replace(/<\w+\([^<>]*?(\w+)Base\)([^>]*)>/g, "<$1$2>")
-    .replace(/<\w+\([^<>]*?(\w+)Base\)([^>]*)?\/>/g, "<$1$2/>")
-    .replace(/<(\w+)\)\s*([^>]*)>/g, "<$1 $2>")
-    .replace(/<\/\w+(?:\(\w+)*\((\w+)Base\)\)>/g, "</$1>")
-    .replace(/<(\w+)\s*\)\s*([^>]*)>/g, "<$1 $2>")
-
-  // Format array and object props as single lines
-  codeString = codeString
-    .replace(
-      /(\w+)=\{\s*\[(.*?)\]\s*\}/gs,
-      (match, propName, inner) =>
-        `${propName}={[${inner.replace(/\s+/g, " ").trim()}]}`,
-    )
-    .replace(
-      /(\w+)=\{\s*\{\s*(.*?)\s*\}\s*\}/gs,
-      (match, propName, inner) =>
-        `${propName}={{${inner.replace(/\s+/g, " ").trim()}}}`,
-    )
-
+export function ExampleWrapper({ children, fileName }: FixtureWrapperProps) {
   const [showCode, setShowCode] = React.useState(false)
+  const [codeString, setCodeString] = React.useState<string | null>(null)
 
+  // Fetch the code from the plugin when showCode is toggled on
+  React.useEffect(() => {
+    if (showCode && codeString === null) {
+      fetch(`/example-code/${fileName}`) // Fetch code from the plugin using the fileName
+        .then((response) => response.json())
+        .then((data) => setCodeString(data.code))
+        .catch((error) => console.error("Error fetching code:", error))
+    }
+  }, [showCode, codeString, fileName])
+  fetch(`/example-code/${fileName}`)
+  console.log("codeString", codeString)
   return (
     <div>
       <div
@@ -78,16 +67,22 @@ export function ExampleWrapper({ children }: FixtureWrapperProps) {
           )}
         </button>
 
-        {showCode && (
+        {showCode && codeString && (
           <pre
             style={{
               zIndex: 1,
-              borderRadius: "8px",
-              padding: "2px",
-              marginTop: "40px",
+              margin: "30px 5px 9px 5px",
             }}
           >
-            <CodeBlock language="jsx" text={codeString} theme={anOldHope} />
+            <CodeBlock
+              customStyle={{
+                padding: "20px",
+                borderRadius: "0px 0px 20px 20px",
+              }}
+              language="jsx"
+              text={codeString}
+              theme={anOldHope}
+            />
           </pre>
         )}
       </div>

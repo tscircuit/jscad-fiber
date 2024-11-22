@@ -3,7 +3,7 @@ import { Torus } from "../lib"
 import { JsCadView } from "../lib/components/jscad-view"
 
 export default () => (
-  <ExampleWrapper>
+  <ExampleWrapper fileName="custom-torus.fixture.tsx">
     <JsCadView wireframe>
       <Torus
         innerRadius={15}

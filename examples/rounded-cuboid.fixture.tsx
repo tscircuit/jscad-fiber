@@ -3,7 +3,7 @@ import { RoundedCuboid } from "../lib"
 import { JsCadView } from "../lib/components/jscad-view"
 
 export default () => (
-  <ExampleWrapper>
+  <ExampleWrapper fileName="rounded-cuboid.fixture.tsx">
     <JsCadView>
       <RoundedCuboid
         size={[15, 10, 10]}

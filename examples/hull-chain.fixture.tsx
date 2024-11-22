@@ -3,7 +3,7 @@ import { Cuboid, Ellipsoid, HullChain } from "../lib"
 import { JsCadView } from "../lib/components/jscad-view"
 
 export default () => (
-  <ExampleWrapper>
+  <ExampleWrapper fileName="hull-chain.fixture.tsx">
     <JsCadView>
       <HullChain color="lightgreen" center={[0, 0, -10]}>
         <Cuboid size={[10, 10, 10]} />

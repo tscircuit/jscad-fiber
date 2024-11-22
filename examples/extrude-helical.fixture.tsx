@@ -4,7 +4,7 @@ import { ExtrudeHelical } from "../lib/jscad-fns"
 import { Polygon } from "../lib/jscad-fns/polygon"
 
 export default () => (
-  <ExampleWrapper>
+  <ExampleWrapper fileName="extrude-helical.fixture.tsx">
     <JsCadView>
       <ExtrudeHelical
         height={5}

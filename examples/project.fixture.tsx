@@ -4,7 +4,7 @@ import { Project } from "../lib/jscad-fns"
 import { Polygon } from "../lib/jscad-fns/polygon"
 
 export default () => (
-  <ExampleWrapper>
+  <ExampleWrapper fileName="project.fixture.tsx">
     <JsCadView>
       <Project axis={[0, 0, 1]} origin={[0, 0, 0]}>
         <Polygon

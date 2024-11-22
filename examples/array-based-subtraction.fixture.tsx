@@ -3,7 +3,7 @@ import { JsCadView } from "../lib/components/jscad-view"
 import { Cuboid, Subtract } from "../lib/jscad-fns"
 
 export default () => (
-  <ExampleWrapper>
+  <ExampleWrapper fileName="array-based-subtraction.fixture.tsx">
     <JsCadView zAxisUp showGrid>
       <Subtract>
         <Cuboid size={[10, 5, 2]} />
