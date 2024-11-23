@@ -27,6 +27,8 @@
   },
   "dependencies": {
     "color": "^4.2.3",
+    "lucide-react": "^0.456.0",
+    "react-code-blocks": "^0.1.6",
     "react-reconciler": "^0.29.2"
   },
   "devDependencies": {

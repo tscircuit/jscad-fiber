@@ -1,8 +1,11 @@
+import { ExampleWrapper } from "lib/components/Example-wrapper"
 import { Rectangle } from "../lib"
-import { JsCadFixture } from "../lib/components/jscad-fixture"
+import { JsCadView } from "../lib/components/jscad-view"
 
 export default () => (
-  <JsCadFixture>
-    <Rectangle size={[10, 20]} />
-  </JsCadFixture>
+  <ExampleWrapper fileName={import.meta.url}>
+    <JsCadView>
+      <Rectangle size={[10, 20]} />
+    </JsCadView>
+  </ExampleWrapper>
 )
