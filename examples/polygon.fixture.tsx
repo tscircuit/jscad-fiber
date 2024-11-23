@@ -2,7 +2,7 @@ import { JsCadView } from "../lib/components/jscad-view"
 import { Polygon } from "../lib/jscad-fns/polygon"
 import { ExampleWrapper } from "lib/components/Example-wrapper"
 export default () => (
-  <ExampleWrapper fileName="polygon.fixture.tsx">
+  <ExampleWrapper fileName={import.meta.url}>
     <JsCadView>
       <Polygon
         points={[

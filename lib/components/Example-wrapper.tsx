@@ -4,24 +4,24 @@ import { ChevronUp, ChevronDown } from "lucide-react"
 
 type FixtureWrapperProps = {
   children: React.ReactNode
-  fileName: string // Add the fileName prop to specify the example file
+  fileName: ImportMeta["url"]
 }
 
 export function ExampleWrapper({ children, fileName }: FixtureWrapperProps) {
   const [showCode, setShowCode] = React.useState(false)
   const [codeString, setCodeString] = React.useState<string | null>(null)
 
-  // Fetch the code from the plugin when showCode is toggled on
+  const derivedFileName = new URL(fileName).pathname.split("/").pop()
+
   React.useEffect(() => {
     if (showCode && codeString === null) {
-      fetch(`/example-code/${fileName}`) // Fetch code from the plugin using the fileName
+      fetch(`/example-code/${derivedFileName}`)
         .then((response) => response.json())
         .then((data) => setCodeString(data.code))
         .catch((error) => console.error("Error fetching code:", error))
     }
-  }, [showCode, codeString, fileName])
-  fetch(`/example-code/${fileName}`)
-  console.log("codeString", codeString)
+  }, [showCode, codeString, derivedFileName])
+
   return (
     <div>
       <div
@@ -56,6 +56,7 @@ export function ExampleWrapper({ children, fileName }: FixtureWrapperProps) {
             display: "flex",
             padding: "8px 8px",
             cursor: "pointer",
+            transition: "background-color 0.9s ease",
           }}
           onClick={() => setShowCode(!showCode)}
         >

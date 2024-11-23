@@ -3,7 +3,7 @@ import { Sphere } from "../lib"
 import { JsCadView } from "../lib/components/jscad-view"
 
 export default () => (
-  <ExampleWrapper fileName="sphere.fixture.tsx">
+  <ExampleWrapper fileName={import.meta.url}>
     <JsCadView wireframe>
       <Sphere radius={10} color="orange" />
     </JsCadView>

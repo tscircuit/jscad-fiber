@@ -9,6 +9,8 @@ export default defineConfig({
       lib: path.resolve(__dirname, "lib"),
     },
   },
+  base: process.env.BUILD_FOR_GH_PAGES ? "/jscad-fiber/" : undefined,
+
   plugins: [
     react(),
     {

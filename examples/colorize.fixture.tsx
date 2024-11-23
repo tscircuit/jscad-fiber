@@ -3,7 +3,7 @@ import { JsCadView } from "../lib/components/jscad-view"
 import { Colorize, Cube } from "../lib/jscad-fns"
 
 export default () => (
-  <ExampleWrapper fileName="colorize.fixture.tsx">
+  <ExampleWrapper fileName={import.meta.url}>
     <JsCadView>
       <Colorize color={"red"}>
         <Cube size={10} />

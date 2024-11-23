@@ -4,7 +4,7 @@ import { ExtrudeRectangular } from "../lib/jscad-fns"
 import { Polygon } from "../lib/jscad-fns/polygon"
 
 export default () => (
-  <ExampleWrapper fileName="extrude-rectangular.fixture.tsx">
+  <ExampleWrapper fileName={import.meta.url}>
     <JsCadView>
       <ExtrudeRectangular
         size={10}

@@ -3,7 +3,7 @@ import { Cube, Sphere, Subtract } from "../lib"
 import { JsCadView } from "../lib/components/jscad-view"
 
 export default () => (
-  <ExampleWrapper fileName="subtract.fixture.tsx">
+  <ExampleWrapper fileName={import.meta.url}>
     <JsCadView showGrid>
       <Subtract>
         <Cube size={10} />

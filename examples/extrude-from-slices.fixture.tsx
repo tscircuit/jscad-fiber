@@ -21,7 +21,7 @@ const xCurve = bezier.create([1, 1.8, 0.4, 1])
 const yCurve = bezier.create([1, 1.8, 0.5])
 
 export default () => (
-  <ExampleWrapper fileName="extrude-from-slices.fixture.tsx">
+  <ExampleWrapper fileName={import.meta.url}>
     <JsCadView zAxisUp showGrid>
       <ExtrudeFromSlices
         numberOfSlices={10}

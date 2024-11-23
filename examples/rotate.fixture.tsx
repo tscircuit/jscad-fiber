@@ -4,7 +4,7 @@ import { JsCadView } from "../lib/components/jscad-view"
 import { Rotate } from "../lib/jscad-fns"
 
 export default () => (
-  <ExampleWrapper fileName="rotate.fixture.tsx">
+  <ExampleWrapper fileName={import.meta.url}>
     <JsCadView>
       <Rotate angles={[0, 0, Math.PI]} color="cyan" center={[0, 0, 10]}>
         <Polygon

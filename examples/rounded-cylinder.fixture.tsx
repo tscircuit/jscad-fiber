@@ -3,7 +3,7 @@ import { RoundedCylinder } from "../lib"
 import { JsCadView } from "../lib/components/jscad-view"
 
 export default () => (
-  <ExampleWrapper fileName="rounded-cylinder.fixture.tsx">
+  <ExampleWrapper fileName={import.meta.url}>
     <JsCadView wireframe>
       <RoundedCylinder
         radius={10}
