@@ -1,16 +1,19 @@
+import { ExampleWrapper } from "lib/components/Example-wrapper"
 import { Torus } from "../lib"
-import { JsCadFixture } from "../lib/components/jscad-fixture"
+import { JsCadView } from "../lib/components/jscad-view"
 
 export default () => (
-  <JsCadFixture wireframe>
-    <Torus
-      innerRadius={15}
-      outerRadius={20}
-      innerSegments={64}
-      outerSegments={96}
-      innerRotation={Math.PI}
-      outerRotation={Math.PI / 2}
-      startAngle={0}
-    />
-  </JsCadFixture>
+  <ExampleWrapper fileName={import.meta.url}>
+    <JsCadView wireframe>
+      <Torus
+        innerRadius={15}
+        outerRadius={20}
+        innerSegments={64}
+        outerSegments={96}
+        innerRotation={Math.PI}
+        outerRotation={Math.PI / 2}
+        startAngle={0}
+      />
+    </JsCadView>
+  </ExampleWrapper>
 )

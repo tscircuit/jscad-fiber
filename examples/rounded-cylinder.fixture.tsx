@@ -1,14 +1,17 @@
+import { ExampleWrapper } from "lib/components/Example-wrapper"
 import { RoundedCylinder } from "../lib"
-import { JsCadFixture } from "../lib/components/jscad-fixture"
+import { JsCadView } from "../lib/components/jscad-view"
 
 export default () => (
-  <JsCadFixture wireframe>
-    <RoundedCylinder
-      radius={10}
-      height={20}
-      roundRadius={5}
-      color="#4B0082"
-      center={[0, 0, 10]}
-    />
-  </JsCadFixture>
+  <ExampleWrapper fileName={import.meta.url}>
+    <JsCadView wireframe>
+      <RoundedCylinder
+        radius={10}
+        height={20}
+        roundRadius={5}
+        color="#4B0082"
+        center={[0, 0, 10]}
+      />
+    </JsCadView>
+  </ExampleWrapper>
 )

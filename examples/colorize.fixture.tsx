@@ -1,10 +1,13 @@
-import { JsCadFixture } from "../lib/components/jscad-fixture"
+import { ExampleWrapper } from "lib/components/Example-wrapper"
+import { JsCadView } from "../lib/components/jscad-view"
 import { Colorize, Cube } from "../lib/jscad-fns"
 
 export default () => (
-  <JsCadFixture>
-    <Colorize color={"red"}>
-      <Cube size={10} />
-    </Colorize>
-  </JsCadFixture>
+  <ExampleWrapper fileName={import.meta.url}>
+    <JsCadView>
+      <Colorize color={"red"}>
+        <Cube size={10} />
+      </Colorize>
+    </JsCadView>
+  </ExampleWrapper>
 )

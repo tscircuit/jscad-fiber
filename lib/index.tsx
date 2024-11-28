@@ -3,7 +3,7 @@ import { createHostConfig } from "./create-host-config"
 import type { JSCADModule, JSCADPrimitive } from "./jscad-primitives"
 import cloneDeep from "lodash/cloneDeep";
 export * from "./jscad-fns"
-export * from "./components/jscad-fixture"
+export * from "./components/jscad-view"
 export * from "./components/jscad-three-mesh"
 export * from "./convert-csg-to-three-geom"
 export * from "./hooks/use-render-elements-to-jscad-plan"
