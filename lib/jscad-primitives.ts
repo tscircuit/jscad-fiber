@@ -165,3 +165,4 @@ export type JSCADPrimitive =
 export type JSCADOperation =
   | JSCADModule["booleans"]["union"]
   | JSCADModule["booleans"]["subtract"]
+  | JSCADModule["hulls"]["hull"]
