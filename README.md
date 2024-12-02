@@ -4,7 +4,22 @@
 
 This package allows you to create 3D CAD objects with React and JSCAD.
 
-![image](https://github.com/user-attachments/assets/a17e5e04-ba88-4b9b-9308-58121779463e)
+## Table of Contents
+- [Installation](#installation)
+- [Usage](#usage)
+- [Common Props](#common-props)
+- [Components](#components)
+  - [Basic Shapes](#basic-shapes)
+  - [Boolean Operations](#boolean-operations)
+  - [Transformations](#transformations)
+  - [Extrusions](#extrusions)
+- [Example Wrapper](#example-wrapper)
+- [Why?](#why)
+- [Contributing](#contributing)
+
+![Example CAD Model](https://github.com/user-attachments/assets/a17e5e04-ba88-4b9b-9308-58121779463e)
+
+
 
 ## Installation
 
@@ -30,32 +45,62 @@ export default () => (
 )
 ```
 
-## Components
+## Common Props
 
 All components support these common props:
-- `color`: CSS color string or RGB array [r,g,b]
-- `center`: Position as [x,y,z] or {x,y,z}
-- `offset`: Alternative to center, same format
+
+| Prop | Type | Description |
+|------|------|-------------|
+| `color` | `string \| [number,number,number]` | CSS color string or RGB array |
+| `center` | `[number,number,number] \| {x,y,z}` | Position in 3D space |
+| `offset` | `[number,number,number] \| {x,y,z}` | Alternative to center |
+
+## Components
 
 ### Basic Shapes
 
 #### Cube
+
+| Prop | Type | Description |
+|------|------|-------------|
+| `size` | `number \| [number,number,number]` | Single number for all dimensions or [width, height, depth] |
+
 ```tsx
 <Cube size={10} /> // Single number for all dimensions
 <Cube size={[width, height, depth]} /> // Array for different dimensions
 ```
 
 #### Sphere
+
+| Prop | Type | Description |
+|------|------|-------------|
+| `radius` | `number` | Sphere radius |
+| `segments` | `number` | Optional detail level (default: 32) |
+
 ```tsx
 <Sphere radius={10} segments={32} />
 ```
 
 #### Cylinder
+
+| Prop | Type | Description |
+|------|------|-------------|
+| `radius` | `number` | Cylinder radius |
+| `height` | `number` | Cylinder height |
+
 ```tsx
 <Cylinder radius={5} height={10} />
 ```
 
 #### Torus
+
+| Prop | Type | Description |
+|------|------|-------------|
+| `innerRadius` | `number` | Inner ring radius |
+| `outerRadius` | `number` | Outer ring radius |
+| `innerSegments` | `number` | Optional inner detail level (default: 32) |
+| `outerSegments` | `number` | Optional outer detail level (default: 32) |
+
 ```tsx
 <Torus 
   innerRadius={10}
@@ -68,6 +113,11 @@ All components support these common props:
 ### Boolean Operations
 
 #### Subtract
+
+| Prop | Type | Description |
+|------|------|-------------|
+| `children` | `React.ReactNode[]` | First child is base shape, others are subtracted |
+
 ```tsx
 <Subtract>
   <Cube size={10} /> {/* Base shape */}
@@ -76,6 +126,11 @@ All components support these common props:
 ```
 
 #### Union
+
+| Prop | Type | Description |
+|------|------|-------------|
+| `children` | `React.ReactNode[]` | Shapes to combine |
+
 ```tsx
 <Union>
   <Cube size={10} />
@@ -84,6 +139,11 @@ All components support these common props:
 ```
 
 #### Hull
+
+| Prop | Type | Description |
+|------|------|-------------|
+| `children` | `React.ReactNode[]` | Shapes to create hull from |
+
 ```tsx
 <Hull>
   <Cube size={10} />
@@ -94,6 +154,11 @@ All components support these common props:
 ### Transformations
 
 #### Translate
+
+| Prop | Type | Description |
+|------|------|-------------|
+| `offset` | `[number,number,number]` | Translation in [x,y,z] |
+
 ```tsx
 <Translate offset={[x,y,z]}>
   <Cube size={10} />
@@ -101,6 +166,11 @@ All components support these common props:
 ```
 
 #### Rotate
+
+| Prop | Type | Description |
+|------|------|-------------|
+| `angles` | `[number,number,number]` | Rotation angles in radians [x,y,z] |
+
 ```tsx
 <Rotate angles={[x,y,z]}>
   <Cube size={10} />
@@ -110,6 +180,12 @@ All components support these common props:
 ### Extrusions
 
 #### ExtrudeLinear
+
+| Prop | Type | Description |
+|------|------|-------------|
+| `height` | `number` | Extrusion height |
+| `twistAngle` | `number` | Optional twist during extrusion |
+
 ```tsx
 <ExtrudeLinear height={10}>
   <Polygon points={[[0,0], [10,0], [5,10]]} />
@@ -117,6 +193,12 @@ All components support these common props:
 ```
 
 #### ExtrudeRotate
+
+| Prop | Type | Description |
+|------|------|-------------|
+| `angle` | `number` | Rotation angle in radians |
+| `segments` | `number` | Optional number of segments |
+
 ```tsx
 <ExtrudeRotate angle={Math.PI * 2}>
   <Polygon points={[[0,0], [10,0], [5,10]]} />
@@ -141,12 +223,12 @@ All components support these common props:
 | Subtract | `children: React.ReactNode` | Boolean subtraction |
 
 ## Why?
+![Example Circuit](https://raw.githubusercontent.com/tscircuit/docs/cc50157788914f060f0169b92b994deff754877b/images/pushbutton-led-circuit/3d.png)
 
 JSCAD allows you to create detailed 3D objects using boolean operations. This
 is how modern CAD tools create precise 3D models. jscad-fiber is used to
 create the 3D electronics library for [tscircuit](https://github.com/tscircuit/tscircuit) called
 [jscad-electronics](https://github.com/tscircuit/jscad-electronics)
-
 ## Example Wrapper
 
 The library includes an `ExampleWrapper` component that provides a convenient way to display both the rendered 3D object and its source code:
