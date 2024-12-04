@@ -232,7 +232,7 @@ create the 3D electronics library for [tscircuit](https://github.com/tscircuit/t
 ## Example Wrapper
 
 The library includes an `ExampleWrapper` component that provides a convenient way to display both the rendered 3D object and its source code:
-
+![ExampleWrapper](https://github.com/user-attachments/assets/c3a44096-b26b-4774-ba3f-b34f89e46639)
 ```tsx
 import { ExampleWrapper } from "jscad-fiber"
 
