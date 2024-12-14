@@ -1,0 +1,18 @@
+// Bun Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`planner-1 should render properly to jscad-plan 1`] = `
+[
+  {
+    "color": [
+      1,
+      0,
+      0,
+    ],
+    "shape": {
+      "size": 10,
+      "type": "cube",
+    },
+    "type": "colorize",
+  },
+]
+`;
