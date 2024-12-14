@@ -334,7 +334,8 @@ export function createHostConfig(jscad: JSCADModule) {
       }
 
       case "translate": {
-        const { args, children } = props as JSX.IntrinsicElements["translate"]
+        const { args, children } =
+          props as React.JSX.IntrinsicElements["translate"]
         const childrenGeometries = renderChildren(children)
         return jscad.transforms.translate(
           args,
@@ -344,7 +345,7 @@ export function createHostConfig(jscad: JSCADModule) {
 
       case "rotate": {
         const { children, ...rotateProps } =
-          props as JSX.IntrinsicElements["rotate"]
+          props as React.JSX.IntrinsicElements["rotate"]
 
         const childrenGeometries = renderChildren(children)
 
