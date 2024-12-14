@@ -1,0 +1,269 @@
+{
+  "rendererUrl": "renderer.html",
+  "fixtures": [
+    {
+      "filePath": "examples/array-based-subtraction.fixture.tsx",
+      "cleanPath": [
+        "examples",
+        "array-based-subtraction"
+      ],
+      "rendererUrl": "renderer.html?fixtureId=%7B%22path%22%3A%22examples%2Farray-based-subtraction.fixture.tsx%22%7D&locked=true"
+    },
+    {
+      "filePath": "examples/circle.fixture.tsx",
+      "cleanPath": [
+        "examples",
+        "circle"
+      ],
+      "rendererUrl": "renderer.html?fixtureId=%7B%22path%22%3A%22examples%2Fcircle.fixture.tsx%22%7D&locked=true"
+    },
+    {
+      "filePath": "examples/colorize.fixture.tsx",
+      "cleanPath": [
+        "examples",
+        "colorize"
+      ],
+      "rendererUrl": "renderer.html?fixtureId=%7B%22path%22%3A%22examples%2Fcolorize.fixture.tsx%22%7D&locked=true"
+    },
+    {
+      "filePath": "examples/cone.fixture.tsx",
+      "cleanPath": [
+        "examples",
+        "cone"
+      ],
+      "rendererUrl": "renderer.html?fixtureId=%7B%22path%22%3A%22examples%2Fcone.fixture.tsx%22%7D&locked=true"
+    },
+    {
+      "filePath": "examples/cube.fixture.tsx",
+      "cleanPath": [
+        "examples",
+        "cube"
+      ],
+      "rendererUrl": "renderer.html?fixtureId=%7B%22path%22%3A%22examples%2Fcube.fixture.tsx%22%7D&locked=true"
+    },
+    {
+      "filePath": "examples/cuboid.fixture.tsx",
+      "cleanPath": [
+        "examples",
+        "cuboid"
+      ],
+      "rendererUrl": "renderer.html?fixtureId=%7B%22path%22%3A%22examples%2Fcuboid.fixture.tsx%22%7D&locked=true"
+    },
+    {
+      "filePath": "examples/custom.fixture.tsx",
+      "cleanPath": [
+        "examples",
+        "custom"
+      ],
+      "rendererUrl": "renderer.html?fixtureId=%7B%22path%22%3A%22examples%2Fcustom.fixture.tsx%22%7D&locked=true"
+    },
+    {
+      "filePath": "examples/custom-sphere.fixture.tsx",
+      "cleanPath": [
+        "examples",
+        "custom-sphere"
+      ],
+      "rendererUrl": "renderer.html?fixtureId=%7B%22path%22%3A%22examples%2Fcustom-sphere.fixture.tsx%22%7D&locked=true"
+    },
+    {
+      "filePath": "examples/custom-torus.fixture.tsx",
+      "cleanPath": [
+        "examples",
+        "custom-torus"
+      ],
+      "rendererUrl": "renderer.html?fixtureId=%7B%22path%22%3A%22examples%2Fcustom-torus.fixture.tsx%22%7D&locked=true"
+    },
+    {
+      "filePath": "examples/cylinder.fixture.tsx",
+      "cleanPath": [
+        "examples",
+        "cylinder"
+      ],
+      "rendererUrl": "renderer.html?fixtureId=%7B%22path%22%3A%22examples%2Fcylinder.fixture.tsx%22%7D&locked=true"
+    },
+    {
+      "filePath": "examples/ellipsoid.fixture.tsx",
+      "cleanPath": [
+        "examples",
+        "ellipsoid"
+      ],
+      "rendererUrl": "renderer.html?fixtureId=%7B%22path%22%3A%22examples%2Fellipsoid.fixture.tsx%22%7D&locked=true"
+    },
+    {
+      "filePath": "examples/extrude-from-slices.fixture.tsx",
+      "cleanPath": [
+        "examples",
+        "extrude-from-slices"
+      ],
+      "rendererUrl": "renderer.html?fixtureId=%7B%22path%22%3A%22examples%2Fextrude-from-slices.fixture.tsx%22%7D&locked=true"
+    },
+    {
+      "filePath": "examples/extrude-helical.fixture.tsx",
+      "cleanPath": [
+        "examples",
+        "extrude-helical"
+      ],
+      "rendererUrl": "renderer.html?fixtureId=%7B%22path%22%3A%22examples%2Fextrude-helical.fixture.tsx%22%7D&locked=true"
+    },
+    {
+      "filePath": "examples/extrude-linear.fixture.tsx",
+      "cleanPath": [
+        "examples",
+        "extrude-linear"
+      ],
+      "rendererUrl": "renderer.html?fixtureId=%7B%22path%22%3A%22examples%2Fextrude-linear.fixture.tsx%22%7D&locked=true"
+    },
+    {
+      "filePath": "examples/extrude-rectangular.fixture.tsx",
+      "cleanPath": [
+        "examples",
+        "extrude-rectangular"
+      ],
+      "rendererUrl": "renderer.html?fixtureId=%7B%22path%22%3A%22examples%2Fextrude-rectangular.fixture.tsx%22%7D&locked=true"
+    },
+    {
+      "filePath": "examples/extrude-rotate.fixture.tsx",
+      "cleanPath": [
+        "examples",
+        "extrude-rotate"
+      ],
+      "rendererUrl": "renderer.html?fixtureId=%7B%22path%22%3A%22examples%2Fextrude-rotate.fixture.tsx%22%7D&locked=true"
+    },
+    {
+      "filePath": "examples/high-geodesic-sphere.fixture.tsx",
+      "cleanPath": [
+        "examples",
+        "high-geodesic-sphere"
+      ],
+      "rendererUrl": "renderer.html?fixtureId=%7B%22path%22%3A%22examples%2Fhigh-geodesic-sphere.fixture.tsx%22%7D&locked=true"
+    },
+    {
+      "filePath": "examples/hull.fixture.tsx",
+      "cleanPath": [
+        "examples",
+        "hull"
+      ],
+      "rendererUrl": "renderer.html?fixtureId=%7B%22path%22%3A%22examples%2Fhull.fixture.tsx%22%7D&locked=true"
+    },
+    {
+      "filePath": "examples/hull-chain.fixture.tsx",
+      "cleanPath": [
+        "examples",
+        "hull-chain"
+      ],
+      "rendererUrl": "renderer.html?fixtureId=%7B%22path%22%3A%22examples%2Fhull-chain.fixture.tsx%22%7D&locked=true"
+    },
+    {
+      "filePath": "examples/jscad-three-mesh.fixture.tsx",
+      "cleanPath": [
+        "examples",
+        "jscad-three-mesh"
+      ],
+      "rendererUrl": "renderer.html?fixtureId=%7B%22path%22%3A%22examples%2Fjscad-three-mesh.fixture.tsx%22%7D&locked=true"
+    },
+    {
+      "filePath": "examples/low-geodesic-sphere.fixture.tsx",
+      "cleanPath": [
+        "examples",
+        "low-geodesic-sphere"
+      ],
+      "rendererUrl": "renderer.html?fixtureId=%7B%22path%22%3A%22examples%2Flow-geodesic-sphere.fixture.tsx%22%7D&locked=true"
+    },
+    {
+      "filePath": "examples/partial-cylindrical-elliptic.fixture.tsx",
+      "cleanPath": [
+        "examples",
+        "partial-cylindrical-elliptic"
+      ],
+      "rendererUrl": "renderer.html?fixtureId=%7B%22path%22%3A%22examples%2Fpartial-cylindrical-elliptic.fixture.tsx%22%7D&locked=true"
+    },
+    {
+      "filePath": "examples/polygon.fixture.tsx",
+      "cleanPath": [
+        "examples",
+        "polygon"
+      ],
+      "rendererUrl": "renderer.html?fixtureId=%7B%22path%22%3A%22examples%2Fpolygon.fixture.tsx%22%7D&locked=true"
+    },
+    {
+      "filePath": "examples/project.fixture.tsx",
+      "cleanPath": [
+        "examples",
+        "project"
+      ],
+      "rendererUrl": "renderer.html?fixtureId=%7B%22path%22%3A%22examples%2Fproject.fixture.tsx%22%7D&locked=true"
+    },
+    {
+      "filePath": "examples/rectangle.fixture.tsx",
+      "cleanPath": [
+        "examples",
+        "rectangle"
+      ],
+      "rendererUrl": "renderer.html?fixtureId=%7B%22path%22%3A%22examples%2Frectangle.fixture.tsx%22%7D&locked=true"
+    },
+    {
+      "filePath": "examples/rotate.fixture.tsx",
+      "cleanPath": [
+        "examples",
+        "rotate"
+      ],
+      "rendererUrl": "renderer.html?fixtureId=%7B%22path%22%3A%22examples%2Frotate.fixture.tsx%22%7D&locked=true"
+    },
+    {
+      "filePath": "examples/rounded-cuboid.fixture.tsx",
+      "cleanPath": [
+        "examples",
+        "rounded-cuboid"
+      ],
+      "rendererUrl": "renderer.html?fixtureId=%7B%22path%22%3A%22examples%2Frounded-cuboid.fixture.tsx%22%7D&locked=true"
+    },
+    {
+      "filePath": "examples/rounded-cylinder.fixture.tsx",
+      "cleanPath": [
+        "examples",
+        "rounded-cylinder"
+      ],
+      "rendererUrl": "renderer.html?fixtureId=%7B%22path%22%3A%22examples%2Frounded-cylinder.fixture.tsx%22%7D&locked=true"
+    },
+    {
+      "filePath": "examples/sphere.fixture.tsx",
+      "cleanPath": [
+        "examples",
+        "sphere"
+      ],
+      "rendererUrl": "renderer.html?fixtureId=%7B%22path%22%3A%22examples%2Fsphere.fixture.tsx%22%7D&locked=true"
+    },
+    {
+      "filePath": "examples/subtract.fixture.tsx",
+      "cleanPath": [
+        "examples",
+        "subtract"
+      ],
+      "rendererUrl": "renderer.html?fixtureId=%7B%22path%22%3A%22examples%2Fsubtract.fixture.tsx%22%7D&locked=true"
+    },
+    {
+      "filePath": "examples/torus.fixture.tsx",
+      "cleanPath": [
+        "examples",
+        "torus"
+      ],
+      "rendererUrl": "renderer.html?fixtureId=%7B%22path%22%3A%22examples%2Ftorus.fixture.tsx%22%7D&locked=true"
+    },
+    {
+      "filePath": "examples/translate.fixture.tsx",
+      "cleanPath": [
+        "examples",
+        "translate"
+      ],
+      "rendererUrl": "renderer.html?fixtureId=%7B%22path%22%3A%22examples%2Ftranslate.fixture.tsx%22%7D&locked=true"
+    },
+    {
+      "filePath": "examples/twisted-cylindrical-elliptic.fixture.tsx",
+      "cleanPath": [
+        "examples",
+        "twisted-cylindrical-elliptic"
+      ],
+      "rendererUrl": "renderer.html?fixtureId=%7B%22path%22%3A%22examples%2Ftwisted-cylindrical-elliptic.fixture.tsx%22%7D&locked=true"
+    }
+  ]
+}
