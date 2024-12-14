@@ -31,6 +31,7 @@ import type {
 import type { JSCADModule, JSCADPrimitive } from "./jscad-primitives"
 import React from "react"
 import { flattenArray } from "./utils/flattenArray"
+import { singleElementUnnest } from "./utils/singleElementUnnest"
 export function createHostConfig(jscad: JSCADModule) {
   const createInstance = (
     type: string | ((props: any) => any),
@@ -245,7 +246,10 @@ export function createHostConfig(jscad: JSCADModule) {
         // Assert that color is an array
         const color = colorizeProps.color as unknown as [number, number, number]
 
-        const colorizedGeometry = jscad.colors.colorize(color, childrenGeometry)
+        const colorizedGeometry = jscad.colors.colorize(
+          color,
+          singleElementUnnest(childrenGeometry),
+        )
 
         return colorizedGeometry
       }
@@ -331,19 +335,22 @@ export function createHostConfig(jscad: JSCADModule) {
 
       case "translate": {
         const { args, children } = props as JSX.IntrinsicElements["translate"]
-        const childGeometry = renderChildren(children)
-        return jscad.transforms.translate(args, childGeometry)
+        const childrenGeometries = renderChildren(children)
+        return jscad.transforms.translate(
+          args,
+          singleElementUnnest(childrenGeometries),
+        )
       }
 
       case "rotate": {
         const { children, ...rotateProps } =
           props as JSX.IntrinsicElements["rotate"]
 
-        const childrenGeometry = renderChildren(children)
+        const childrenGeometries = renderChildren(children)
 
         const rotateGeometry = jscad.transforms.rotate(
           rotateProps.angles,
-          childrenGeometry,
+          singleElementUnnest(childrenGeometries),
         )
 
         return rotateGeometry
