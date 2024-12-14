@@ -2,7 +2,7 @@ import type * as FN from "./jscad-fns"
 
 type CommonProps = { key?: any }
 
-export interface TscircuitJscadElements {
+export interface JscadElements {
   project: FN.ProjectProps & CommonProps
   extrudeRectangular: FN.ExtrudeRectangularProps & CommonProps
   extrudeRotate: FN.ExtrudeRotateProps & CommonProps
@@ -42,11 +42,11 @@ export interface TscircuitJscadElements {
 
 declare module "react" {
   namespace JSX {
-    interface IntrinsicElements extends TscircuitJscadElements {}
+    interface IntrinsicElements extends JscadElements {}
   }
 }
 declare module "react/jsx-runtime" {
   namespace JSX {
-    interface IntrinsicElements extends TscircuitJscadElements {}
+    interface IntrinsicElements extends JscadElements {}
   }
 }

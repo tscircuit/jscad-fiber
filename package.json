@@ -37,7 +37,7 @@
     "@react-three/drei": "^9.108.4",
     "@react-three/fiber": "^8.16.8",
     "@types/bun": "^1.1.14",
-    "@types/react": "18",
+    "@types/react": "19.0.1",
     "@types/react-reconciler": "^0.28.8",
     "@types/three": "^0.166.0",
     "@vitejs/plugin-react": "^4.3.1",
