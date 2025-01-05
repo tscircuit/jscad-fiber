@@ -4,23 +4,21 @@ import { ChevronUp, ChevronDown } from "lucide-react"
 
 type FixtureWrapperProps = {
   children: React.ReactNode
-  fileName: ImportMeta["url"]
+  fileName: string
 }
 
 export function ExampleWrapper({ children, fileName }: FixtureWrapperProps) {
   const [showCode, setShowCode] = React.useState(false)
   const [codeString, setCodeString] = React.useState<string | null>(null)
 
-  const derivedFileName = new URL(fileName).pathname.split("/").pop()
-
   React.useEffect(() => {
     if (showCode && codeString === null) {
-      fetch(`/example-code/${derivedFileName}`)
-        .then((response) => response.json())
-        .then((data) => setCodeString(data.code))
+      fetch(`/examples/${fileName}`)
+        .then((response) => response.text())
+        .then((data) => setCodeString(data))
         .catch((error) => console.error("Error fetching code:", error))
     }
-  }, [showCode, codeString, derivedFileName])
+  }, [showCode, codeString, fileName])
 
   return (
     <div>
