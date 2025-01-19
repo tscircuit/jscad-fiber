@@ -29,7 +29,6 @@ test("useRenderElementsToJscadPlan", async () => {
   const afterRenderResult = hookTester.run(mockJscad, <cube size={10} />)
   expect(afterRenderResult.loading).toBe(false)
   expect(afterRenderResult.error).toBe(null)
-  console.log(afterRenderResult)
   expect(afterRenderResult.jscadElms).toHaveLength(1)
   expect(afterRenderResult.jscadElms[0]).toEqual({ type: "cube", size: 10 })
 

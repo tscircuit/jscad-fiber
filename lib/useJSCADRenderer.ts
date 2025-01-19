@@ -1,5 +1,5 @@
 import * as jscad from "@jscad/modeling"
-import { useEffect, useMemo, useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 import ReactReconciler from "react-reconciler"
 import * as THREE from "three"
 import convertCSGToThreeGeom from "./convert-csg-to-three-geom"
@@ -13,6 +13,7 @@ const reconciler = ReactReconciler(hostConfig)
  */
 export function useJSCADRenderer(children) {
   const container = useMemo<any[]>(() => [], [])
+  const [containerError, setContainerError] = useState<Error | null>(null)
 
   const root = useMemo(() => {
     const root = reconciler.createContainer(
@@ -22,7 +23,9 @@ export function useJSCADRenderer(children) {
       false,
       null,
       "",
-      (error) => console.error(error),
+      (error) => {
+        setContainerError(error)
+      },
       null,
     )
 
@@ -32,7 +35,12 @@ export function useJSCADRenderer(children) {
   const [mesh, setMesh] = useState<THREE.Scene | null>(null)
 
   useEffect(() => {
-    reconciler.updateContainer(children, root, null, () => {})
+    // @ts-expect-error
+    // https://github.com/diegomura/react-pdf/blob/fabecc56727dfb6d590a3fa1e11f50250ecbbea1/packages/reconciler/src/reconciler-31.js#L78
+    reconciler.updateContainerSync(children, root, null, () => {})
+    // @ts-expect-error
+    // https://github.com/diegomura/react-pdf/blob/fabecc56727dfb6d590a3fa1e11f50250ecbbea1/packages/reconciler/src/reconciler-31.js#L78
+    reconciler.flushSyncWork()
 
     const scene = new THREE.Scene()
 
@@ -60,6 +68,10 @@ export function useJSCADRenderer(children) {
 
     setMesh(scene)
   }, [children, root, container])
+
+  if (containerError) {
+    throw containerError
+  }
 
   return mesh
 }
