@@ -10,10 +10,20 @@
     "dist"
   ],
   "main": "./dist/index.cjs",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./three": {
+      "import": "./dist/three.js",
+      "require": "./dist/three.cjs"
+    }
+  },
   "scripts": {
     "start": "cosmos",
     "build": "npm run build:lib",
-    "build:lib": "tsup ./lib/index.tsx --dts --sourcemap",
+    "build:lib": "tsup ./lib/index.tsx ./lib/three.tsx --dts --sourcemap",
     "build:cosmos": "cosmos-export",
     "predeploy": "BUILD_FOR_GH_PAGES=1 npm run build:cosmos && touch ./cosmos-export/.nojekyll",
     "format": "biome format . --write",
