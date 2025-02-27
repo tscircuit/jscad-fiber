@@ -1,6 +1,7 @@
 import type { Geom3 } from "@jscad/modeling/src/geometries/types"
 import type ReactReconciler from "react-reconciler"
 import type { AnyConstructors } from "three/examples/jsm/nodes/Nodes.js"
+import { DefaultEventPriority } from "react-reconciler/constants"
 import type {
   CircleProps,
   ColorizeProps,
@@ -513,13 +514,21 @@ export function createHostConfig(jscad: JSCADModule) {
     cancelTimeout: clearTimeout,
     noTimeout: -1,
     isPrimaryRenderer: true,
-    getCurrentEventPriority: () => 99,
     getInstanceFromNode: () => null,
     beforeActiveInstanceBlur: () => {},
     afterActiveInstanceBlur: () => {},
     prepareScopeUpdate: () => {},
     getInstanceFromScope: () => null,
     detachDeletedInstance: () => {},
+
+    // https://github.com/pmndrs/react-three-fiber/pull/2360#discussion_r916356874
+    getCurrentEventPriority: () => DefaultEventPriority,
+
+    // https://github.com/diegomura/react-pdf/blob/fabecc56727dfb6d590a3fa1e11f50250ecbbea1/packages/reconciler/src/reconciler-31.js#L57
+    getCurrentUpdatePriority: () => DefaultEventPriority,
+    resolveUpdatePriority: () => DefaultEventPriority,
+    setCurrentUpdatePriority: () => {},
+    maySuspendCommit: () => false,
   }
   return hostConfig
 }
