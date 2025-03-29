@@ -13,7 +13,7 @@ export function ExampleWrapper({ children, fileName }: FixtureWrapperProps) {
 
   React.useEffect(() => {
     if (showCode && codeString === null) {
-      fetch(`/examples/${fileName}`)
+      fetch(`/code-examples/${fileName}`)
         .then((response) => response.text())
         .then((data) => setCodeString(data))
         .catch((error) => console.error("Error fetching code:", error))

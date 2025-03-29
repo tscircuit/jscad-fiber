@@ -14,7 +14,7 @@
     "start": "cosmos",
     "build": "npm run build:lib",
     "build:lib": "tsup ./lib/index.tsx --dts --sourcemap",
-    "build:cosmos": "cosmos-export",
+    "build:cosmos": "cosmos-export;cp -r examples cosmos-export;mv cosmos-export/examples cosmos-export/code-examples",
     "predeploy": "BUILD_FOR_GH_PAGES=1 npm run build:cosmos && touch ./cosmos-export/.nojekyll",
     "format": "biome format . --write",
     "format:check": "biome format ."
