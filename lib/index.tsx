@@ -2,9 +2,6 @@ import ReactReconciler from "react-reconciler"
 import { createHostConfig } from "./create-host-config"
 import type { JSCADModule, JSCADPrimitive } from "./jscad-primitives"
 export * from "./jscad-fns"
-export * from "./components/jscad-view"
-export * from "./components/jscad-three-mesh"
-export * from "./convert-csg-to-three-geom"
 export * from "./hooks/use-render-elements-to-jscad-plan"
 
 // Create a function that returns the reconciler and root creation function
