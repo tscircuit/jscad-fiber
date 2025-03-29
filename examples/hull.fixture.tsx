@@ -1,6 +1,6 @@
 import { Cuboid, Ellipsoid, Hull, Translate } from "../lib"
 import { JsCadView } from "../lib/components/jscad-view"
-import { ExampleWrapper } from "lib/components/Example-wrapper"
+import { ExampleWrapper } from "../lib/components/Example-wrapper"
 
 export default () => (
   <ExampleWrapper fileName={import.meta.url}>
