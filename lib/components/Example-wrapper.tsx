@@ -13,7 +13,9 @@ export function ExampleWrapper({ children, fileName }: FixtureWrapperProps) {
 
   React.useEffect(() => {
     if (showCode && codeString === null) {
-      fetch(`/code-examples/${fileName}`)
+      fetch(
+        `${window.location.origin.includes("github.io") ? "/jscad-fiber" : ""}/code-examples/${fileName}`,
+      )
         .then((response) => response.text())
         .then((data) => setCodeString(data))
         .catch((error) => console.error("Error fetching code:", error))
