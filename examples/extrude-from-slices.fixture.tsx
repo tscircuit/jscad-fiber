@@ -1,4 +1,4 @@
-import { ExampleWrapper } from "lib/components/Example-wrapper"
+import { ExampleWrapper } from "../lib/components/Example-wrapper"
 import { ExtrudeFromSlices } from "../lib"
 import { JsCadView } from "../lib/components/jscad-view"
 import jscad from "@jscad/modeling"

@@ -14,17 +14,16 @@ export default defineConfig({
   plugins: [
     react(),
     {
-      name: "serve-examples",
+      name: "dev-serve-examples",
       configureServer(server) {
         server.middlewares.use(async (req, res, next) => {
-          if (req.url?.startsWith("/example-code/")) {
-            const filePath = req.url.replace("/example-code/", "")
+          if (req.url?.startsWith("/code-examples/")) {
+            const filePath = req.url.replace("/code-examples/", "")
             const fullPath = path.resolve(__dirname, "examples", filePath)
-
             try {
               const code = await fs.promises.readFile(fullPath, "utf-8")
-              res.setHeader("Content-Type", "application/json")
-              res.end(JSON.stringify({ code }))
+              res.setHeader("content-type", "application/octet-stream")
+              res.end(code)
             } catch (error) {
               res.statusCode = 404
               res.end("File not found")
@@ -33,6 +32,21 @@ export default defineConfig({
             next()
           }
         })
+      },
+    },
+    {
+      name: "replace-meta-url",
+      transform(code, id) {
+        if (!id.includes(".fixture.tsx")) {
+          return
+        }
+        return {
+          code: code.replaceAll(
+            "import.meta.url",
+            `"${id.split("/").pop() || ""}"`,
+          ),
+          map: null,
+        }
       },
     },
   ],

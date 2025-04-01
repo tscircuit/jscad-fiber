@@ -1,4 +1,4 @@
-import { ExampleWrapper } from "lib/components/Example-wrapper"
+import { ExampleWrapper } from "../lib/components/Example-wrapper"
 import { JsCadView } from "../lib/components/jscad-view"
 import { Colorize, Cube } from "../lib/jscad-fns"
 
