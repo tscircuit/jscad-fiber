@@ -45,6 +45,9 @@ export function JsCadView({
       const axesScene = new THREE.Scene()
       const axesCamera = new THREE.OrthographicCamera(-2, 2, 2, -2, 0.1, 1000)
       const axesHelper = new THREE.AxesHelper(2)
+      if (zAxisUp) {
+        axesHelper.rotation.x = -Math.PI / 2
+      }
       axesScene.add(axesHelper)
       axesCamera.position.z = 5
 
@@ -80,8 +83,13 @@ export function JsCadView({
 
       // Position labels at the end of each axis
       xLabel.position.set(1.2, 0, 0)
-      yLabel.position.set(0, 1.2, 0)
-      zLabel.position.set(0, 0, 1.2)
+      if (zAxisUp) {
+        yLabel.position.set(0, 0, -1.2)
+        zLabel.position.set(0, 1.2, 0)
+      } else {
+        yLabel.position.set(0, 1.2, 0)
+        zLabel.position.set(0, 0, 1.2)
+      }
 
       axesGroup.add(xLabel)
       axesGroup.add(yLabel)
