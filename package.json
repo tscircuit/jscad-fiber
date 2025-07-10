@@ -34,15 +34,15 @@
     "@jscad/modeling": "*",
     "@react-three/fiber": "*",
     "react": "*",
-    "three": "*"
+    "three": "*",
+    "react-reconciler": "*"
   },
   "dependencies": {
-    "color": "^4.2.3",
-    "lucide-react": "^0.456.0",
-    "react-code-blocks": "^0.1.6",
-    "react-reconciler": "^0.29.2"
+    "color": "^4.2.3"
   },
   "devDependencies": {
+    "react-code-blocks": "^0.1.6",
+    "lucide-react": "^0.456.0",
     "@biomejs/biome": "^1.9.4",
     "@jscad/modeling": "^2.12.2",
     "@react-three/drei": "^9.108.4",
