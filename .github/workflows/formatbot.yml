@@ -25,25 +25,21 @@ jobs:
       with:
         token: ${{ steps.check_fork.outputs.is_fork == 'true' && secrets.GITHUB_TOKEN || secrets.TSCIRCUIT_BOT_GITHUB_TOKEN }}
 
-    - name: Setup Node.js
-      uses: actions/setup-node@v3
+    - name: Setup bun
+      uses: oven-sh/setup-bun@v1
       with:
-        node-version: '20'
+        bun-version: latest
 
-    - name: Get @biomejs/biome version
-      id: get-biome-version
-      run: echo "BIOME_VERSION=$(node -p "require('./package.json').devDependencies['@biomejs/biome']")" >> $GITHUB_OUTPUT
-
-    - name: Install @biomejs/biome
-      run: npm install @biomejs/biome@${{ steps.get-biome-version.outputs.BIOME_VERSION }}
+    - name: Install dependencies
+      run: bun install
 
     - name: Run Formatter and autofix
       if: steps.check_fork.outputs.is_fork == 'false'
-      run: npx @biomejs/biome format . --write
+      run: bun run format
 
     - name: Format Check (cannot autofix against forks)
       if: steps.check_fork.outputs.is_fork == 'true'
-      run: npx @biomejs/biome format .
+      run: bun run format:check
 
     - name: Restore lock files
       if: steps.check_fork.outputs.is_fork == 'false'
