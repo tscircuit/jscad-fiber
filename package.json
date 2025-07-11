@@ -42,7 +42,7 @@
   },
   "devDependencies": {
     "react-code-blocks": "^0.1.6",
-    "lucide-react": "^0.456.0",
+    "lucide-react": "^0.525.0",
     "@biomejs/biome": "^1.9.4",
     "@jscad/modeling": "^2.12.2",
     "@react-three/drei": "^9.108.4",
