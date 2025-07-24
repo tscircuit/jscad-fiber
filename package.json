@@ -37,6 +37,17 @@
     "three": "*",
     "react-reconciler": "*"
   },
+  "peerDependenciesMeta": {
+    "@react-three/fiber": {
+      "optional": true
+    },
+    "@jscad/modeling": {
+      "optional": true
+    },
+    "three": {
+      "optional": true
+    }
+  },
   "dependencies": {
     "color": "^4.2.3"
   },
