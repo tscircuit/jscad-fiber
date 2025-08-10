@@ -1,4 +1,5 @@
 import { useJSCADRenderer } from "../useJSCADRenderer"
+import { Primitive } from "./primitive"
 
 export function JSCadThreeMesh({
   children,
@@ -11,6 +12,5 @@ export function JSCadThreeMesh({
     return null
   }
 
-  //@ts-ignore
-  return <primitive object={mesh} />
+  return <Primitive object={mesh} />
 }

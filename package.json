@@ -32,15 +32,11 @@
   },
   "peerDependencies": {
     "@jscad/modeling": "*",
-    "@react-three/fiber": "*",
     "react": "*",
     "three": "*",
     "react-reconciler": "*"
   },
   "peerDependenciesMeta": {
-    "@react-three/fiber": {
-      "optional": true
-    },
     "@jscad/modeling": {
       "optional": true
     },
