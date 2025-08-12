@@ -9,7 +9,7 @@ on:
 
 jobs:
   format-check:
-    runs-on: ubuntu-latest
+    runs-on: windows-11-arm
 
     steps:
       - uses: actions/checkout@v4
@@ -23,4 +23,4 @@ jobs:
         run: bun install
 
       - name: Run format check
-        run: bun x @biomejs/cli-linux-x64 format .
+        run: bun run format:check
