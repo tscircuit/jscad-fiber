@@ -9,18 +9,16 @@ on:
 
 jobs:
   format-check:
-    runs-on: ubuntu-22.04-arm
+    runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup bun
-        uses: oven-sh/setup-bun@v2
-        with:
-          bun-version: latest
+      - name: Setup Biome
+        uses: biomejs/setup-biome@v2
 
       - name: Install dependencies
         run: bun install
 
       - name: Run format check
-        run: bun run format:check
+        run: biome format
