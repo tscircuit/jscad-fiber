@@ -27,8 +27,8 @@
     "build:lib": "tsup ./lib/index.tsx ./lib/three.tsx --dts --sourcemap --format esm",
     "build:cosmos": "cosmos-export;cp -r examples cosmos-export;mv cosmos-export/examples cosmos-export/code-examples",
     "predeploy": "BUILD_FOR_GH_PAGES=1 npm run build:cosmos && touch ./cosmos-export/.nojekyll",
-    "format": "biome format . --write",
-    "format:check": "biome format ."
+    "format": "bun x biome format . --write",
+    "format:check": "bun x biome format ."
   },
   "peerDependencies": {
     "@jscad/modeling": "*",
