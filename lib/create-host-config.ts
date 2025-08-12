@@ -427,7 +427,8 @@ export function createHostConfig(jscad: JSCADModule) {
     boolean, // UpdatePayload
     never, // ChildSet
     number, // TimeoutHandle
-    number // NoTimeout
+    number, // NoTimeout
+    any
   > = {
     // @ts-ignore
     now: Date.now,
@@ -499,11 +500,15 @@ export function createHostConfig(jscad: JSCADModule) {
     getPublicInstance(instance: JSCADPrimitive) {
       return instance
     },
-    getRootHostContext() {
-      return {}
+    getRootHostContext(rootContainer: any) {
+      return null
     },
-    getChildHostContext() {
-      return {}
+    getChildHostContext(
+      parentHostContext: any,
+      type: string,
+      rootContainer: JSCADPrimitive,
+    ) {
+      return parentHostContext
     },
     shouldSetTextContent() {
       return false
@@ -512,7 +517,7 @@ export function createHostConfig(jscad: JSCADModule) {
     scheduleTimeout: setTimeout,
     cancelTimeout: clearTimeout,
     noTimeout: -1,
-    isPrimaryRenderer: true,
+    isPrimaryRTransitionStatusenderer: true,
     getCurrentEventPriority: () => 99,
     getInstanceFromNode: () => null,
     beforeActiveInstanceBlur: () => {},
