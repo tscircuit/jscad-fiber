@@ -1,6 +1,6 @@
 {
   "name": "jscad-fiber",
-  "version": "0.0.83",
+  "version": "0.0.93",
   "type": "module",
   "repository": {
     "type": "git",
@@ -32,9 +32,10 @@
   },
   "peerDependencies": {
     "@jscad/modeling": "*",
-    "react": "*",
-    "three": "*",
-    "react-reconciler": "*"
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
+    "react-reconciler": "*",
+    "three": "*"
   },
   "peerDependenciesMeta": {
     "@jscad/modeling": {
@@ -57,7 +58,7 @@
     "@types/bun": "^1.1.14",
     "@types/react": "19.0.1",
     "@types/three": "^0.166.0",
-    "@vitejs/plugin-react": "^4.3.1",
+    "@vitejs/plugin-react": "^5.0.0",
     "gh-pages": "^5.0.0",
     "jscad-planner": "^0.0.10",
     "react-cosmos": "^6.1.1",
