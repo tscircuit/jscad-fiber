@@ -1,6 +1,9 @@
 import type { Geom3 } from "@jscad/modeling/src/geometries/types"
 import type ReactReconciler from "react-reconciler"
-import type { AnyConstructors } from "three/examples/jsm/nodes/Nodes.js"
+import {
+  DefaultEventPriority,
+  DiscreteEventPriority,
+} from "react-reconciler/constants.js"
 import type {
   CircleProps,
   ColorizeProps,
@@ -33,6 +36,7 @@ import React from "react"
 import { flattenArray } from "./utils/flattenArray"
 import { singleElementUnnest } from "./utils/singleElementUnnest"
 export function createHostConfig(jscad: JSCADModule) {
+  let hostContext
   const createInstance = (
     type: string | ((props: any) => any),
     props: any,
@@ -422,19 +426,20 @@ export function createHostConfig(jscad: JSCADModule) {
     never, // TextInstance
     never, // SuspenseInstance
     never, // HydratableInstance
+    never, // FormInstance
     JSCADPrimitive, // PublicInstance
     object, // HostContext
-    boolean, // UpdatePayload
     never, // ChildSet
     number, // TimeoutHandle
     number, // NoTimeout
-    any
+    any // TransitionStatus
   > = {
     // @ts-ignore
     now: Date.now,
     supportsMutation: true,
     supportsPersistence: false,
     supportsHydration: false,
+    currentUpdatePriority: DefaultEventPriority,
 
     createInstance: createInstance,
 
@@ -501,7 +506,7 @@ export function createHostConfig(jscad: JSCADModule) {
       return instance
     },
     getRootHostContext(rootContainer: any) {
-      return null
+      return jscad
     },
     getChildHostContext(
       parentHostContext: any,
@@ -517,7 +522,7 @@ export function createHostConfig(jscad: JSCADModule) {
     scheduleTimeout: setTimeout,
     cancelTimeout: clearTimeout,
     noTimeout: -1,
-    isPrimaryRTransitionStatusenderer: true,
+    isPrimaryRenderer: true,
     getCurrentEventPriority: () => 99,
     getInstanceFromNode: () => null,
     beforeActiveInstanceBlur: () => {},
@@ -525,6 +530,14 @@ export function createHostConfig(jscad: JSCADModule) {
     prepareScopeUpdate: () => {},
     getInstanceFromScope: () => null,
     detachDeletedInstance: () => {},
+    resolveUpdatePriority: () => DiscreteEventPriority,
+    setCurrentUpdatePriority: (priority: number) => {},
+    getCurrentUpdatePriority: () => {
+      return DefaultEventPriority
+    },
+    maySuspendCommit() {
+      return false
+    },
   }
   return hostConfig
 }
