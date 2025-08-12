@@ -30,16 +30,16 @@ jobs:
       with:
         bun-version: latest
 
-    - name: Install dependencies
-      run: bun install
+    - name: Setup Biome
+      uses: biomejs/setup-biome@v2
 
     - name: Run Formatter and autofix
       if: steps.check_fork.outputs.is_fork == 'false'
-      run: bun run format
+      run: biome format . --write
 
     - name: Format Check (cannot autofix against forks)
       if: steps.check_fork.outputs.is_fork == 'true'
-      run: bun run format:check
+      run: biome format .
 
     - name: Restore lock files
       if: steps.check_fork.outputs.is_fork == 'false'
