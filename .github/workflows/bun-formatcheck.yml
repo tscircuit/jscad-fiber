@@ -17,8 +17,5 @@ jobs:
       - name: Setup Biome
         uses: biomejs/setup-biome@v2
 
-      - name: Install dependencies
-        run: bun install
-
       - name: Run format check
-        run: biome format
+        run: biome format .
