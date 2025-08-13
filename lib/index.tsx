@@ -4,6 +4,7 @@ import type { JSCADModule, JSCADPrimitive } from "./jscad-primitives"
 import React from "react"
 export * from "./jscad-fns"
 export * from "./hooks/use-render-elements-to-jscad-plan"
+export * from "./components/jscad-view"
 
 // Create a function that returns the reconciler and root creation function
 export function createJSCADRenderer(jscad: JSCADModule) {
@@ -17,9 +18,63 @@ export function createJSCADRenderer(jscad: JSCADModule) {
     const createInstanceFromHostConfig = hostConfig.createInstance
 
     function processElement(
-      elem: React.ReactElement,
+      elem: React.ReactElement | React.ReactElement[],
     ): JSCADPrimitive | JSCADPrimitive[] {
+      // Handle arrays of elements
+      if (Array.isArray(elem)) {
+        return elem.flatMap((child) => processElement(child))
+      }
+
       const { type, props } = elem
+
+      // Handle React Fragment
+      if (
+        type === React.Fragment ||
+        (typeof type === "symbol" && String(type).includes("react.fragment"))
+      ) {
+        // For fragments, just process the children directly
+        if (props && typeof props === "object" && "children" in props) {
+          return processElement((props as any).children)
+        }
+        return []
+      }
+
+      // Handle function components by calling them first
+      if (typeof type === "function") {
+        try {
+          // Temporarily suppress console.error for hook-related errors
+          const originalError = console.error
+          console.error = (...args: any[]) => {
+            const message = args.join(" ")
+            if (!message.includes("Invalid hook call")) {
+              originalError(...args)
+            }
+          }
+
+          try {
+            // @ts-ignore
+            const result = type(props)
+            console.error = originalError
+            return processElement(result)
+          } finally {
+            console.error = originalError
+          }
+        } catch (error) {
+          // If the function component fails (e.g., uses hooks in sync mode),
+          // try to extract and process its children instead
+          if (props && typeof props === "object" && "children" in props) {
+            return processElement((props as any).children)
+          }
+          // Don't re-throw hook errors since we handle them gracefully
+          if (
+            error instanceof Error &&
+            error.message.includes("Invalid hook call")
+          ) {
+            return []
+          }
+          throw error
+        }
+      }
 
       // Create instance using the same logic as the host config
       const instance = createInstanceFromHostConfig(

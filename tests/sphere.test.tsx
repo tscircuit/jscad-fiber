@@ -1,5 +1,5 @@
 import { jscadPlanner } from "jscad-planner"
-import { createJSCADRenderer } from "../../lib"
+import { createJSCADRenderer } from "../lib"
 import { Sphere, Colorize } from "lib/jscad-fns"
 import { test, expect } from "bun:test"
 

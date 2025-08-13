@@ -36,7 +36,6 @@ import React from "react"
 import { flattenArray } from "./utils/flattenArray"
 import { singleElementUnnest } from "./utils/singleElementUnnest"
 export function createHostConfig(jscad: JSCADModule) {
-  let hostContext
   const createInstance = (
     type: string | ((props: any) => any),
     props: any,

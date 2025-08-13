@@ -1,6 +1,5 @@
 import React from "react"
 import { createJSCADRenderer } from ".."
-import { createHostConfig } from "../create-host-config"
 
 /**
  * Renders children and returns jscad plan JSON
