@@ -1,7 +1,9 @@
-# Created using @tscircuit/plop (npm install -g @tscircuit/plop)
-name: Publish to npm
+name: Build and Check
 on:
   push:
+    branches:
+      - main
+  pull_request:
     branches:
       - main
 jobs:
@@ -13,13 +15,9 @@ jobs:
         uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         with:
           node-version: 20
           registry-url: https://registry.npmjs.org/
-      - run: npm install -g pver
       - run: bun install --frozen-lockfile
       - run: bun run build
-      - run: pver release
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
