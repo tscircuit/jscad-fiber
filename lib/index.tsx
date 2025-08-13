@@ -23,7 +23,7 @@ export function createJSCADRenderer(jscad: JSCADModule) {
 
       // Create instance using the same logic as the host config
       const instance = createInstanceFromHostConfig(
-        type as any,
+        type as string,
         props,
         container,
         jscad, // hostContext

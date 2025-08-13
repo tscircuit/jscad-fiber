@@ -7,7 +7,8 @@ export type SphereProps = {
 }
 
 const SphereBase = ({ radius, segments }: SphereProps) => {
-  return <Sphere radius={radius} segments={segments || 32} />
+  // @ts-ignore
+  return <sphere radius={radius} segments={segments || 32} />
 }
 
 export const Sphere = withColorProp(withOffsetProp(SphereBase))

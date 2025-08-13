@@ -1,0 +1,19 @@
+// Bun Snapshot v1, https://bun.sh/docs/test/snapshots
+
+exports[`sphere should render properly to jscad-plan sync 1`] = `
+[
+  {
+    "color": [
+      1,
+      0,
+      0,
+    ],
+    "shape": {
+      "radius": 1,
+      "segments": 32,
+      "type": "sphere",
+    },
+    "type": "colorize",
+  },
+]
+`;
