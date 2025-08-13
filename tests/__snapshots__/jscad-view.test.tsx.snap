@@ -1,0 +1,22 @@
+// Bun Snapshot v1, https://bun.sh/docs/test/snapshots
+
+exports[`lol.tsx integration test should render JsCadView with Subtract operation properly 1`] = `
+[
+  {
+    "shapes": [
+      {
+        "size": 10,
+        "type": "cube",
+      },
+      [
+        {
+          "radius": 6.8,
+          "segments": 32,
+          "type": "sphere",
+        },
+      ],
+    ],
+    "type": "subtract",
+  },
+]
+`;

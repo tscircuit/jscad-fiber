@@ -7,6 +7,7 @@ export type SphereProps = {
 }
 
 const SphereBase = ({ radius, segments }: SphereProps) => {
+  // @ts-ignore
   return <sphere radius={radius} segments={segments || 32} />
 }
 

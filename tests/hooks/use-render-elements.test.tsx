@@ -1,6 +1,5 @@
 import { expect, mock, test } from "bun:test"
 import { useRenderElementsToJscadPlan } from "lib/hooks/use-render-elements-to-jscad-plan" // Adjust the import path
-import React from "react"
 import { createHookTester } from "../fixtures/create-hook-tester" // Adjust the import path as needed
 
 // Mock JSCAD library
@@ -27,6 +26,7 @@ test("useRenderElementsToJscadPlan", async () => {
 
   // Test after render
   const afterRenderResult = hookTester.run(mockJscad, <cube size={10} />)
+  console.log(afterRenderResult)
   expect(afterRenderResult.loading).toBe(false)
   expect(afterRenderResult.error).toBe(null)
   console.log(afterRenderResult)

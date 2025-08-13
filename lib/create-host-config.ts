@@ -1,6 +1,9 @@
 import type { Geom3 } from "@jscad/modeling/src/geometries/types"
 import type ReactReconciler from "react-reconciler"
-import type { AnyConstructors } from "three/examples/jsm/nodes/Nodes.js"
+import {
+  DefaultEventPriority,
+  DiscreteEventPriority,
+} from "react-reconciler/constants.js"
 import type {
   CircleProps,
   ColorizeProps,
@@ -422,18 +425,20 @@ export function createHostConfig(jscad: JSCADModule) {
     never, // TextInstance
     never, // SuspenseInstance
     never, // HydratableInstance
+    never, // FormInstance
     JSCADPrimitive, // PublicInstance
     object, // HostContext
-    boolean, // UpdatePayload
     never, // ChildSet
     number, // TimeoutHandle
-    number // NoTimeout
+    number, // NoTimeout
+    any // TransitionStatus
   > = {
     // @ts-ignore
     now: Date.now,
     supportsMutation: true,
     supportsPersistence: false,
     supportsHydration: false,
+    currentUpdatePriority: DefaultEventPriority,
 
     createInstance: createInstance,
 
@@ -499,11 +504,15 @@ export function createHostConfig(jscad: JSCADModule) {
     getPublicInstance(instance: JSCADPrimitive) {
       return instance
     },
-    getRootHostContext() {
-      return {}
+    getRootHostContext(rootContainer: any) {
+      return jscad
     },
-    getChildHostContext() {
-      return {}
+    getChildHostContext(
+      parentHostContext: any,
+      type: string,
+      rootContainer: JSCADPrimitive,
+    ) {
+      return parentHostContext
     },
     shouldSetTextContent() {
       return false
@@ -520,6 +529,14 @@ export function createHostConfig(jscad: JSCADModule) {
     prepareScopeUpdate: () => {},
     getInstanceFromScope: () => null,
     detachDeletedInstance: () => {},
+    resolveUpdatePriority: () => DiscreteEventPriority,
+    setCurrentUpdatePriority: (priority: number) => {},
+    getCurrentUpdatePriority: () => {
+      return DefaultEventPriority
+    },
+    maySuspendCommit() {
+      return false
+    },
   }
   return hostConfig
 }
