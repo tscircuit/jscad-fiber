@@ -49,8 +49,6 @@
     "color": "^4.2.3"
   },
   "devDependencies": {
-    "react-code-blocks": "^0.1.6",
-    "lucide-react": "^0.525.0",
     "@biomejs/biome": "^1.9.4",
     "@jscad/modeling": "^2.12.2",
     "@react-three/drei": "10.6.1",
@@ -61,12 +59,13 @@
     "@vitejs/plugin-react": "^5.0.0",
     "gh-pages": "^5.0.0",
     "jscad-planner": "^0.0.10",
+    "lucide-react": "^0.525.0",
+    "react-code-blocks": "^0.1.6",
     "react-cosmos": "^6.1.1",
     "react-cosmos-plugin-vite": "^6.1.1",
     "three": "^0.166.1",
     "tsup": "^8.1.0",
     "typescript": "^5.5.3",
-    "vite": "^5.3.3",
-    "vite-tsconfig-paths": "^4.3.2"
+    "vite": "^7.1.2"
   }
 }
