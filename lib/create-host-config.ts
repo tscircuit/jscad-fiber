@@ -58,18 +58,18 @@ export function createHostConfig(jscad: JSCADModule) {
                 internalInstanceHandle,
               ),
             ),
-        )
+        ).filter(Boolean)
       }
       if (React.isValidElement(children)) {
-        return [
-          createInstance(
-            children.type as string | ((props: any) => any),
-            children.props,
-            [],
-            hostContext,
-            internalInstanceHandle,
-          ),
-        ]
+        const result = createInstance(
+          children.type as string | ((props: any) => any),
+          children.props,
+          [],
+          hostContext,
+          internalInstanceHandle,
+        )
+        if (!result) return []
+        return Array.isArray(result) ? result : [result]
       }
       return []
     }
@@ -77,6 +77,7 @@ export function createHostConfig(jscad: JSCADModule) {
     // Handle function components
     if (typeof type === "function") {
       const element = type(props)
+      if (element == null) return null
       return createInstance(
         element.type,
         element.props,

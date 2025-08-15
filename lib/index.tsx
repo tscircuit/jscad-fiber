@@ -12,18 +12,22 @@ export function createJSCADRenderer(jscad: JSCADModule) {
 
   // Synchronous renderer that directly processes React elements
   function renderElementSync(
-    element: React.ReactElement,
+    element: React.ReactElement | null,
     container: JSCADPrimitive[],
   ) {
     const createInstanceFromHostConfig = hostConfig.createInstance
 
     function processElement(
-      elem: React.ReactElement | React.ReactElement[],
+      elem: React.ReactElement | React.ReactElement[] | null,
     ): JSCADPrimitive | JSCADPrimitive[] {
+      if (elem == null || typeof elem === "boolean") return []
+
       // Handle arrays of elements
       if (Array.isArray(elem)) {
         return elem.flatMap((child) => processElement(child))
       }
+
+      if (!React.isValidElement(elem)) return []
 
       const { type, props } = elem
 
@@ -91,8 +95,8 @@ export function createJSCADRenderer(jscad: JSCADModule) {
     try {
       const result = processElement(element)
       if (Array.isArray(result)) {
-        container.push(...result)
-      } else {
+        if (result.length > 0) container.push(...result)
+      } else if (result) {
         container.push(result)
       }
     } catch (error) {
