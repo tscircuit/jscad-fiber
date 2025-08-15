@@ -12,13 +12,13 @@ export function createJSCADRenderer(jscad: JSCADModule) {
 
   // Synchronous renderer that directly processes React elements
   function renderElementSync(
-    element: React.ReactElement,
+    element: React.ReactElement | null,
     container: JSCADPrimitive[],
   ) {
     const createInstanceFromHostConfig = hostConfig.createInstance
 
     function processElement(
-      elem: React.ReactNode,
+      elem: React.ReactElement | React.ReactElement[] | null,
     ): JSCADPrimitive | JSCADPrimitive[] {
       if (elem == null || typeof elem === "boolean") return []
 
@@ -38,9 +38,7 @@ export function createJSCADRenderer(jscad: JSCADModule) {
       ) {
         // For fragments, just process the children directly
         if (props && typeof props === "object" && "children" in props) {
-          return processElement(
-            (props as { children?: React.ReactNode }).children ?? null,
-          )
+          return processElement((props as any).children)
         }
         return []
       }
@@ -58,8 +56,8 @@ export function createJSCADRenderer(jscad: JSCADModule) {
           }
 
           try {
-            const Component = type as (props: unknown) => React.ReactNode
-            const result = Component(props)
+            // @ts-ignore
+            const result = type(props)
             console.error = originalError
             return processElement(result)
           } finally {
@@ -69,9 +67,7 @@ export function createJSCADRenderer(jscad: JSCADModule) {
           // If the function component fails (e.g., uses hooks in sync mode),
           // try to extract and process its children instead
           if (props && typeof props === "object" && "children" in props) {
-            return processElement(
-              (props as { children?: React.ReactNode }).children ?? null,
-            )
+            return processElement((props as any).children)
           }
           // Don't re-throw hook errors since we handle them gracefully
           if (
