@@ -18,12 +18,16 @@ export function createJSCADRenderer(jscad: JSCADModule) {
     const createInstanceFromHostConfig = hostConfig.createInstance
 
     function processElement(
-      elem: React.ReactElement | React.ReactElement[],
+      elem: React.ReactNode,
     ): JSCADPrimitive | JSCADPrimitive[] {
+      if (elem == null || typeof elem === "boolean") return []
+
       // Handle arrays of elements
       if (Array.isArray(elem)) {
         return elem.flatMap((child) => processElement(child))
       }
+
+      if (!React.isValidElement(elem)) return []
 
       const { type, props } = elem
 
@@ -34,7 +38,9 @@ export function createJSCADRenderer(jscad: JSCADModule) {
       ) {
         // For fragments, just process the children directly
         if (props && typeof props === "object" && "children" in props) {
-          return processElement((props as any).children)
+          return processElement(
+            (props as { children?: React.ReactNode }).children ?? null,
+          )
         }
         return []
       }
@@ -52,8 +58,8 @@ export function createJSCADRenderer(jscad: JSCADModule) {
           }
 
           try {
-            // @ts-ignore
-            const result = type(props)
+            const Component = type as (props: unknown) => React.ReactNode
+            const result = Component(props)
             console.error = originalError
             return processElement(result)
           } finally {
@@ -63,7 +69,9 @@ export function createJSCADRenderer(jscad: JSCADModule) {
           // If the function component fails (e.g., uses hooks in sync mode),
           // try to extract and process its children instead
           if (props && typeof props === "object" && "children" in props) {
-            return processElement((props as any).children)
+            return processElement(
+              (props as { children?: React.ReactNode }).children ?? null,
+            )
           }
           // Don't re-throw hook errors since we handle them gracefully
           if (
@@ -91,8 +99,8 @@ export function createJSCADRenderer(jscad: JSCADModule) {
     try {
       const result = processElement(element)
       if (Array.isArray(result)) {
-        container.push(...result)
-      } else {
+        if (result.length > 0) container.push(...result)
+      } else if (result) {
         container.push(result)
       }
     } catch (error) {
