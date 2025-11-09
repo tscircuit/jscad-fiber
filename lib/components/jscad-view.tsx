@@ -21,6 +21,7 @@ export function JsCadView({
   const containerRef = React.useRef<HTMLDivElement>(null)
   const sceneRef = React.useRef<THREE.Scene | null>(null)
   const gridRef = React.useRef<THREE.GridHelper | null>(null)
+  const axesRendererRef = React.useRef<THREE.WebGLRenderer | null>(null)
 
   React.useEffect(() => {
     if (containerRef.current) {
@@ -39,6 +40,67 @@ export function JsCadView({
         0.1,
         1000,
       )
+
+      // Create separate scene and camera for axes helper
+      const axesScene = new THREE.Scene()
+      const axesCamera = new THREE.OrthographicCamera(-2, 2, 2, -2, 0.1, 1000)
+      axesCamera.position.z = 5
+
+      // Create axis labels
+      function createAxisLabel(text: string, color: string) {
+        const canvas = document.createElement("canvas")
+        canvas.width = 64
+        canvas.height = 64
+        const context = canvas.getContext("2d")!
+        context.fillStyle = color
+        context.font = "bold 48px Arial"
+        context.textAlign = "center"
+        context.textBaseline = "middle"
+        context.fillText(text, 32, 32)
+
+        const texture = new THREE.CanvasTexture(canvas)
+        const spriteMaterial = new THREE.SpriteMaterial({
+          map: texture,
+          sizeAttenuation: false, // This ensures consistent size regardless of position
+        })
+        const sprite = new THREE.Sprite(spriteMaterial)
+        sprite.scale.set(0.5, 0.5, 6)
+        return sprite
+      }
+
+      const xLabel = createAxisLabel("X", "#ff0000")
+      const yLabel = createAxisLabel("Y", "#00ff00")
+      const zLabel = createAxisLabel("Z", "#0000ff")
+
+      const axesHelper = new THREE.AxesHelper(1.5)
+
+      // Create a group to hold both axes and labels
+      const axesGroup = new THREE.Group()
+      axesGroup.add(axesHelper)
+
+      // Position labels at the end of each axis
+      xLabel.position.set(0.9, 0, 0)
+      yLabel.position.set(0, 0.9, 0)
+      zLabel.position.set(0, 0, 0.9)
+
+      axesGroup.add(xLabel)
+      axesGroup.add(yLabel)
+      axesGroup.add(zLabel)
+
+      if (zAxisUp) {
+        axesGroup.rotation.x = -Math.PI / 2
+      }
+
+      axesScene.add(axesGroup)
+
+      // Create separate renderer for axes
+      const axesRenderer = new THREE.WebGLRenderer({ alpha: true })
+      axesRenderer.setSize(200, 200)
+      axesRenderer.domElement.style.position = "absolute"
+      axesRenderer.domElement.style.bottom = "10px"
+      axesRenderer.domElement.style.right = "10px"
+      containerRef.current.appendChild(axesRenderer.domElement)
+      axesRendererRef.current = axesRenderer
 
       // Add ambient light
       const ambientLight = new THREE.AmbientLight(0xffffff, 0.5)
@@ -118,7 +180,14 @@ export function JsCadView({
       function animate() {
         requestAnimationFrame(animate)
         controls.update()
+
+        // Update axes group rotation to match camera
+        const cameraRotationMatrix = new THREE.Matrix4()
+        cameraRotationMatrix.extractRotation(camera.matrix)
+        axesGroup.quaternion.setFromRotationMatrix(cameraRotationMatrix)
+
         renderer.render(scene, camera)
+        axesRenderer.render(axesScene, axesCamera)
       }
       animate()
 
@@ -126,12 +195,13 @@ export function JsCadView({
       return () => {
         scene.remove(gridHelper)
         renderer.dispose()
+        axesRenderer.dispose()
         controls.dispose()
       }
     }
   }, [children, wireframe, zAxisUp, showGrid])
 
-  // Update grid visibility when showGrid prop changes
+  // Update the grid visibility when showGrid prop changes
   React.useEffect(() => {
     if (gridRef.current) {
       gridRef.current.visible = showGrid
