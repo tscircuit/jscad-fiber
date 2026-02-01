@@ -4,6 +4,16 @@ import * as THREE from "three"
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js"
 import { Cube, Sphere, createJSCADRenderer } from "../../lib"
 import convertCSGToThreeGeom from "../../lib/convert-csg-to-three-geom"
+import {
+  type AxisHelperConfig,
+  createAxisHelperCamera,
+  createAxisHelperScene,
+  createAxisLabels,
+  getAxisHelperViewport,
+  renderAxisHelper,
+  syncAxisHelperCamera,
+  updateAxisLabels,
+} from "./AxisHelper"
 
 const { createJSCADRoot } = createJSCADRenderer(jscad as any)
 
@@ -12,15 +22,25 @@ export function JsCadFixture({
   wireframe,
   zAxisUp = false,
   showGrid = false,
+  showAxes = false,
+  axesConfig = {},
 }: {
   children: any
   wireframe?: boolean
   zAxisUp?: boolean
   showGrid?: boolean
+  showAxes?: boolean
+  axesConfig?: AxisHelperConfig
 }) {
   const containerRef = React.useRef<HTMLDivElement>(null)
   const sceneRef = React.useRef<THREE.Scene | null>(null)
   const gridRef = React.useRef<THREE.GridHelper | null>(null)
+  const axesSceneRef = React.useRef<THREE.Scene | null>(null)
+  const axesCameraRef = React.useRef<THREE.OrthographicCamera | null>(null)
+  const axesLabelsRef = React.useRef<{
+    labelContainer: HTMLDivElement
+    labels: { x: HTMLSpanElement; y: HTMLSpanElement; z: HTMLSpanElement }
+  } | null>(null)
 
   React.useEffect(() => {
     if (containerRef.current) {
@@ -114,11 +134,65 @@ export function JsCadFixture({
       controls.dampingFactor = 0.25
       controls.enableZoom = true
 
+      // Setup axis helper if enabled
+      let axesScene: THREE.Scene | null = null
+      let axesCamera: THREE.OrthographicCamera | null = null
+      let labelsData: {
+        labelContainer: HTMLDivElement
+        labels: { x: HTMLSpanElement; y: HTMLSpanElement; z: HTMLSpanElement }
+      } | null = null
+
+      if (showAxes && containerRef.current) {
+        axesScene = createAxisHelperScene()
+        axesSceneRef.current = axesScene
+
+        // Apply the same rotation to axes scene if zAxisUp
+        if (zAxisUp) {
+          axesScene.rotation.x = -Math.PI / 2
+        }
+
+        axesCamera = createAxisHelperCamera()
+        axesCameraRef.current = axesCamera
+
+        // Create labels if enabled
+        if (axesConfig.showLabels !== false) {
+          labelsData = createAxisLabels(containerRef.current, axesConfig)
+          axesLabelsRef.current = labelsData
+        }
+      }
+
       // Animation loop
       function animate() {
         requestAnimationFrame(animate)
         controls.update()
+
+        // Render main scene
+        const containerWidth =
+          containerRef.current?.clientWidth || window.innerWidth
+        const containerHeight =
+          containerRef.current?.clientHeight || window.innerHeight
+
+        renderer.setViewport(0, 0, containerWidth, containerHeight)
+        renderer.setScissor(0, 0, containerWidth, containerHeight)
+        renderer.setScissorTest(false)
         renderer.render(scene, camera)
+
+        // Render axis helper if enabled
+        if (showAxes && axesScene && axesCamera) {
+          const viewport = getAxisHelperViewport(
+            containerWidth,
+            containerHeight,
+            axesConfig,
+          )
+
+          syncAxisHelperCamera(axesCamera, camera)
+          renderAxisHelper(renderer, axesScene, axesCamera, viewport)
+
+          // Update label positions
+          if (labelsData) {
+            updateAxisLabels(labelsData.labels, axesCamera, viewport)
+          }
+        }
       }
       animate()
 
@@ -127,9 +201,17 @@ export function JsCadFixture({
         scene.remove(gridHelper)
         renderer.dispose()
         controls.dispose()
+
+        // Cleanup axis helper
+        if (labelsData?.labelContainer && containerRef.current) {
+          containerRef.current.removeChild(labelsData.labelContainer)
+        }
+        axesSceneRef.current = null
+        axesCameraRef.current = null
+        axesLabelsRef.current = null
       }
     }
-  }, [children, wireframe, zAxisUp, showGrid])
+  }, [children, wireframe, zAxisUp, showGrid, showAxes, axesConfig])
 
   // Update grid visibility when showGrid prop changes
   React.useEffect(() => {
@@ -139,6 +221,9 @@ export function JsCadFixture({
   }, [showGrid])
 
   return (
-    <div ref={containerRef} style={{ width: "100%", minHeight: "400px" }} />
+    <div
+      ref={containerRef}
+      style={{ width: "100%", minHeight: "400px", position: "relative" }}
+    />
   )
 }

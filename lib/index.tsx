@@ -5,6 +5,8 @@ import React from "react"
 export * from "./jscad-fns"
 export * from "./hooks/use-render-elements-to-jscad-plan"
 export * from "./components/jscad-view"
+export * from "./components/jscad-fixture"
+export type { AxisHelperConfig } from "./components/AxisHelper"
 
 // Create a function that returns the reconciler and root creation function
 export function createJSCADRenderer(jscad: JSCADModule) {
