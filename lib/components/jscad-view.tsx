@@ -4,6 +4,14 @@ import * as THREE from "three"
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js"
 import { createJSCADRenderer } from ".."
 import convertCSGToThreeGeom from "../convert-csg-to-three-geom"
+import {
+  createAxisHelperCamera,
+  createAxisHelperScene,
+  getAxisHelperViewport,
+  renderAxisHelper,
+  syncAxisHelperCamera,
+  type AxisHelperConfig,
+} from "../utils/axis-helper"
 
 const { createJSCADRoot } = createJSCADRenderer(jscad as any)
 
@@ -12,11 +20,15 @@ export function JsCadView({
   wireframe,
   zAxisUp = false,
   showGrid = false,
+  showAxes = true,
+  axesConfig,
 }: {
   children: any
   wireframe?: boolean
   zAxisUp?: boolean
   showGrid?: boolean
+  showAxes?: boolean
+  axesConfig?: AxisHelperConfig
 }) {
   const containerRef = React.useRef<HTMLDivElement>(null)
   const sceneRef = React.useRef<THREE.Scene | null>(null)
@@ -66,6 +78,12 @@ export function JsCadView({
       scene.add(gridHelper)
       gridRef.current = gridHelper
 
+      const axesScene = showAxes ? createAxisHelperScene(axesConfig) : null
+      const axesCamera = showAxes ? createAxisHelperCamera() : null
+      if (axesScene && zAxisUp) {
+        axesScene.rotation.x = -Math.PI / 2
+      }
+
       function processCGS(csg: any) {
         if (Array.isArray(csg)) {
           for (const child of csg) {
@@ -105,6 +123,7 @@ export function JsCadView({
 
       const renderer = new THREE.WebGLRenderer()
       renderer.setSize(window.innerWidth, window.innerHeight)
+      renderer.autoClear = false
 
       containerRef.current.appendChild(renderer.domElement)
 
@@ -115,21 +134,49 @@ export function JsCadView({
       controls.enableZoom = true
 
       // Animation loop
+      let animationFrameId: number
       function animate() {
-        requestAnimationFrame(animate)
+        animationFrameId = requestAnimationFrame(animate)
         controls.update()
+
+        const containerWidth =
+          containerRef.current?.clientWidth || window.innerWidth
+        const containerHeight =
+          containerRef.current?.clientHeight || window.innerHeight
+
+        if (camera.aspect !== containerWidth / containerHeight) {
+          camera.aspect = containerWidth / containerHeight
+          camera.updateProjectionMatrix()
+        }
+
+        renderer.setSize(containerWidth, containerHeight)
+        renderer.clear()
+        renderer.setViewport(0, 0, containerWidth, containerHeight)
+        renderer.setScissor(0, 0, containerWidth, containerHeight)
+        renderer.setScissorTest(true)
         renderer.render(scene, camera)
+
+        if (showAxes && axesScene && axesCamera) {
+          const viewport = getAxisHelperViewport(
+            containerWidth,
+            containerHeight,
+            axesConfig,
+          )
+          syncAxisHelperCamera(axesCamera, camera)
+          renderAxisHelper(renderer, axesScene, axesCamera, viewport)
+        }
       }
       animate()
 
       // Cleanup function
       return () => {
+        cancelAnimationFrame(animationFrameId)
         scene.remove(gridHelper)
         renderer.dispose()
         controls.dispose()
       }
     }
-  }, [children, wireframe, zAxisUp, showGrid])
+  }, [children, wireframe, zAxisUp, showGrid, showAxes, axesConfig])
 
   // Update grid visibility when showGrid prop changes
   React.useEffect(() => {
