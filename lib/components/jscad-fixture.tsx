@@ -12,15 +12,19 @@ export function JsCadFixture({
   wireframe,
   zAxisUp = false,
   showGrid = false,
+  showAxes = false,
 }: {
   children: any
   wireframe?: boolean
   zAxisUp?: boolean
   showGrid?: boolean
+  showAxes?: boolean
 }) {
   const containerRef = React.useRef<HTMLDivElement>(null)
   const sceneRef = React.useRef<THREE.Scene | null>(null)
   const gridRef = React.useRef<THREE.GridHelper | null>(null)
+  const axesSceneRef = React.useRef<THREE.Scene | null>(null)
+  const axesCameraRef = React.useRef<THREE.OrthographicCamera | null>(null)
 
   React.useEffect(() => {
     if (containerRef.current) {
@@ -65,6 +69,29 @@ export function JsCadFixture({
       }
       scene.add(gridHelper)
       gridRef.current = gridHelper
+
+      // Create axes helper scene (for corner widget)
+      const axesScene = new THREE.Scene()
+      axesSceneRef.current = axesScene
+      const axesHelper = new THREE.AxesHelper(1)
+      if (zAxisUp) {
+        axesHelper.rotation.x = -Math.PI / 2
+      }
+      axesScene.add(axesHelper)
+
+      // Create orthographic camera for axes
+      const axesSize = 2
+      const axesCamera = new THREE.OrthographicCamera(
+        -axesSize,
+        axesSize,
+        axesSize,
+        -axesSize,
+        0.1,
+        10,
+      )
+      axesCamera.position.set(0, 0, 3)
+      axesCamera.lookAt(0, 0, 0)
+      axesCameraRef.current = axesCamera
 
       function processCGS(csg: any) {
         if (Array.isArray(csg)) {
@@ -118,18 +145,57 @@ export function JsCadFixture({
       function animate() {
         requestAnimationFrame(animate)
         controls.update()
+
+        // Render main scene
         renderer.render(scene, camera)
+
+        // Render axes helper in bottom-right corner
+        if (showAxes && axesSceneRef.current && axesCameraRef.current) {
+          // Copy main camera rotation to axes camera
+          axesCameraRef.current.quaternion.copy(camera.quaternion)
+
+          // Set viewport for bottom-right corner (100x100 pixels)
+          const axesViewportSize = 100
+          renderer.setViewport(
+            renderer.domElement.width - axesViewportSize - 10,
+            10,
+            axesViewportSize,
+            axesViewportSize,
+          )
+          renderer.setScissor(
+            renderer.domElement.width - axesViewportSize - 10,
+            10,
+            axesViewportSize,
+            axesViewportSize,
+          )
+          renderer.setScissorTest(true)
+          renderer.setClearColor(0x000000, 0)
+          renderer.clear()
+          renderer.render(axesSceneRef.current, axesCameraRef.current)
+
+          // Reset viewport and scissor
+          renderer.setScissorTest(false)
+          renderer.setViewport(
+            0,
+            0,
+            renderer.domElement.width,
+            renderer.domElement.height,
+          )
+        }
       }
       animate()
 
       // Cleanup function
       return () => {
         scene.remove(gridHelper)
+        if (axesSceneRef.current) {
+          axesSceneRef.current.clear()
+        }
         renderer.dispose()
         controls.dispose()
       }
     }
-  }, [children, wireframe, zAxisUp, showGrid])
+  }, [children, wireframe, zAxisUp, showGrid, showAxes])
 
   // Update grid visibility when showGrid prop changes
   React.useEffect(() => {
