@@ -1,5 +1,5 @@
-import { ExampleWrapper } from "../lib/components/Example-wrapper"
 import { Cube, Sphere, Subtract } from "../lib"
+import { ExampleWrapper } from "../lib/components/Example-wrapper"
 import { JsCadView } from "../lib/components/jscad-view"
 
 export default () => (

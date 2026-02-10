@@ -1,7 +1,7 @@
-import { ExampleWrapper } from "../lib/components/Example-wrapper"
-import { ExtrudeFromSlices } from "../lib"
-import { JsCadView } from "../lib/components/jscad-view"
 import jscad from "@jscad/modeling"
+import { ExtrudeFromSlices } from "../lib"
+import { ExampleWrapper } from "../lib/components/Example-wrapper"
+import { JsCadView } from "../lib/components/jscad-view"
 
 const { bezier } = jscad.curves
 const { circle, line, polygon, rectangle, roundedRectangle, star } =

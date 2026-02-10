@@ -1,6 +1,6 @@
-import { useThree } from "../hooks/use-three"
 import React from "react"
 import type * as THREE from "three"
+import { useThree } from "../hooks/use-three"
 
 /**
  * A component that adds a THREE.Object3D to the scene.
