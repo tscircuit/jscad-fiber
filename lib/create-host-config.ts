@@ -1,4 +1,5 @@
 import type { Geom3 } from "@jscad/modeling/src/geometries/types"
+import React from "react"
 import type ReactReconciler from "react-reconciler"
 import {
   DefaultEventPriority,
@@ -32,7 +33,6 @@ import type {
   UnionProps,
 } from "./jscad-fns"
 import type { JSCADModule, JSCADPrimitive } from "./jscad-primitives"
-import React from "react"
 import { flattenArray } from "./utils/flattenArray"
 import { singleElementUnnest } from "./utils/singleElementUnnest"
 export function createHostConfig(jscad: JSCADModule) {

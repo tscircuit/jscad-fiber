@@ -1,6 +1,6 @@
 import { Cube } from "../lib"
-import { JsCadView } from "../lib/components/jscad-view"
 import { ExampleWrapper } from "../lib/components/Example-wrapper"
+import { JsCadView } from "../lib/components/jscad-view"
 export default () => (
   <ExampleWrapper fileName={import.meta.url}>
     <JsCadView>

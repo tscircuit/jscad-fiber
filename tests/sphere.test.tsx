@@ -1,7 +1,7 @@
+import { expect, test } from "bun:test"
 import { jscadPlanner } from "jscad-planner"
+import { Colorize, Sphere } from "lib/jscad-fns"
 import { createJSCADRenderer } from "../lib"
-import { Sphere, Colorize } from "lib/jscad-fns"
-import { test, expect } from "bun:test"
 
 test("sphere should render properly to jscad-plan sync", () => {
   const container = []

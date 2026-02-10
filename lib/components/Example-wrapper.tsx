@@ -1,6 +1,6 @@
+import { ChevronDown, ChevronUp } from "lucide-react"
 import React from "react"
 import { CodeBlock, anOldHope } from "react-code-blocks"
-import { ChevronUp, ChevronDown } from "lucide-react"
 
 type FixtureWrapperProps = {
   children: React.ReactNode

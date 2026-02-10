@@ -1,5 +1,5 @@
-import { ExampleWrapper } from "../lib/components/Example-wrapper"
 import { Polygon } from "../lib"
+import { ExampleWrapper } from "../lib/components/Example-wrapper"
 import { JsCadView } from "../lib/components/jscad-view"
 import { Rotate } from "../lib/jscad-fns"
 

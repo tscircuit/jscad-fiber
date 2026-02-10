@@ -1,6 +1,6 @@
+import { describe, expect, it } from "bun:test"
 import { jscadPlanner } from "jscad-planner"
-import { Cube, Subtract, createJSCADRenderer, JsCadView, Sphere } from "../lib"
-import { it, describe, expect } from "bun:test"
+import { Cube, JsCadView, Sphere, Subtract, createJSCADRenderer } from "../lib"
 
 describe("lol.tsx integration test", () => {
   it("should render JsCadView with Subtract operation properly", () => {

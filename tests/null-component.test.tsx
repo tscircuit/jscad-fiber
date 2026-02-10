@@ -1,6 +1,6 @@
-import { test, expect } from "bun:test"
-import { createJSCADRenderer } from "../lib"
+import { expect, test } from "bun:test"
 import { jscadPlanner } from "jscad-planner"
+import { createJSCADRenderer } from "../lib"
 
 const NullComponent = () => null
 

@@ -1,5 +1,5 @@
-import { ExampleWrapper } from "../lib/components/Example-wrapper"
 import { Cuboid } from "../lib"
+import { ExampleWrapper } from "../lib/components/Example-wrapper"
 import { JsCadView } from "../lib/components/jscad-view"
 import { Translate } from "../lib/jscad-fns"
 
