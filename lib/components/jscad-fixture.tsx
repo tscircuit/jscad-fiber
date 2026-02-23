@@ -12,11 +12,13 @@ export function JsCadFixture({
   wireframe,
   zAxisUp = false,
   showGrid = false,
+  showAxes = true,
 }: {
   children: any
   wireframe?: boolean
   zAxisUp?: boolean
   showGrid?: boolean
+  showAxes?: boolean
 }) {
   const containerRef = React.useRef<HTMLDivElement>(null)
   const sceneRef = React.useRef<THREE.Scene | null>(null)
@@ -103,10 +105,18 @@ export function JsCadFixture({
       camera.position.y = 20
       camera.position.z = 20
 
-      const renderer = new THREE.WebGLRenderer()
+      const renderer = new THREE.WebGLRenderer({ antialias: true })
+      renderer.setPixelRatio(window.devicePixelRatio)
       renderer.setSize(window.innerWidth, window.innerHeight)
+      renderer.autoClear = false
 
       containerRef.current.appendChild(renderer.domElement)
+
+      // Setup axes helper
+      const axesScene = new THREE.Scene()
+      const axesCamera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000)
+      const axesHelper = new THREE.AxesHelper(1)
+      axesScene.add(axesHelper)
 
       // Add OrbitControls
       const controls = new OrbitControls(camera, renderer.domElement)
@@ -118,7 +128,25 @@ export function JsCadFixture({
       function animate() {
         requestAnimationFrame(animate)
         controls.update()
+
+        renderer.clear()
         renderer.render(scene, camera)
+
+        if (showAxes) {
+          const axesSize = 100
+          renderer.setViewport(
+            window.innerWidth - axesSize - 10,
+            10,
+            axesSize,
+            axesSize,
+          )
+          axesCamera.position.copy(camera.position)
+          axesCamera.position.sub(controls.target)
+          axesCamera.position.setLength(2.5)
+          axesCamera.lookAt(0, 0, 0)
+          renderer.render(axesScene, axesCamera)
+          renderer.setViewport(0, 0, window.innerWidth, window.innerHeight)
+        }
       }
       animate()
 
