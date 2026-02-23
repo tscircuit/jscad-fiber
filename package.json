@@ -32,6 +32,7 @@
   },
   "peerDependencies": {
     "@jscad/modeling": "*",
+    "basefold": "*",
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "react-reconciler": "*",
@@ -39,6 +40,9 @@
   },
   "peerDependenciesMeta": {
     "@jscad/modeling": {
+      "optional": true
+    },
+    "basefold": {
       "optional": true
     },
     "three": {
@@ -49,6 +53,7 @@
     "color": "^4.2.3"
   },
   "devDependencies": {
+    "basefold": "file:../basefold",
     "@biomejs/biome": "^1.9.4",
     "@jscad/modeling": "^2.12.2",
     "@react-three/drei": "10.6.1",
