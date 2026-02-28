@@ -7,6 +7,37 @@ import convertCSGToThreeGeom from "../../lib/convert-csg-to-three-geom"
 
 const { createJSCADRoot } = createJSCADRenderer(jscad as any)
 
+function createAxisHelper(): THREE.Group {
+  const group = new THREE.Group()
+  const length = 1
+
+  // X axis - Red
+  const xMat = new THREE.LineBasicMaterial({ color: 0xff0000 })
+  const xGeom = new THREE.BufferGeometry().setFromPoints([
+    new THREE.Vector3(0, 0, 0),
+    new THREE.Vector3(length, 0, 0),
+  ])
+  group.add(new THREE.Line(xGeom, xMat))
+
+  // Y axis - Green
+  const yMat = new THREE.LineBasicMaterial({ color: 0x00ff00 })
+  const yGeom = new THREE.BufferGeometry().setFromPoints([
+    new THREE.Vector3(0, 0, 0),
+    new THREE.Vector3(0, length, 0),
+  ])
+  group.add(new THREE.Line(yGeom, yMat))
+
+  // Z axis - Blue
+  const zMat = new THREE.LineBasicMaterial({ color: 0x0000ff })
+  const zGeom = new THREE.BufferGeometry().setFromPoints([
+    new THREE.Vector3(0, 0, 0),
+    new THREE.Vector3(0, 0, length),
+  ])
+  group.add(new THREE.Line(zGeom, zMat))
+
+  return group
+}
+
 export function JsCadFixture({
   children,
   wireframe,
@@ -105,6 +136,7 @@ export function JsCadFixture({
 
       const renderer = new THREE.WebGLRenderer()
       renderer.setSize(window.innerWidth, window.innerHeight)
+      renderer.autoClear = false
 
       containerRef.current.appendChild(renderer.domElement)
 
@@ -114,11 +146,41 @@ export function JsCadFixture({
       controls.dampingFactor = 0.25
       controls.enableZoom = true
 
+      // Axis helper overlay (bottom-right corner)
+      const axisScene = new THREE.Scene()
+      const axisCamera = new THREE.PerspectiveCamera(50, 1, 0.1, 10)
+      axisCamera.position.set(0, 0, 3)
+      axisCamera.lookAt(0, 0, 0)
+      const axisHelper = createAxisHelper()
+      if (zAxisUp) {
+        axisHelper.rotation.x = -Math.PI / 2
+      }
+      axisScene.add(axisHelper)
+
       // Animation loop
       function animate() {
         requestAnimationFrame(animate)
         controls.update()
+
+        // Sync axis camera orientation with main camera
+        axisCamera.quaternion.copy(camera.quaternion)
+        axisCamera.position.set(0, 0, 3).applyQuaternion(camera.quaternion)
+        axisCamera.lookAt(0, 0, 0)
+
+        renderer.clear()
         renderer.render(scene, camera)
+
+        // Render axis helper in bottom-right corner
+        const size = 100
+        const margin = 10
+        const width = renderer.domElement.width
+        const height = renderer.domElement.height
+        renderer.setViewport(width - size - margin, margin, size, size)
+        renderer.setScissor(width - size - margin, margin, size, size)
+        renderer.setScissorTest(true)
+        renderer.render(axisScene, axisCamera)
+        renderer.setScissorTest(false)
+        renderer.setViewport(0, 0, width, height)
       }
       animate()
 
