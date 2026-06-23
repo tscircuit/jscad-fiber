@@ -1,5 +1,6 @@
 import { withColorProp } from "../wrappers/with-color-prop"
 import { withOffsetProp } from "../wrappers/with-offset-prop"
+import { withRotationProp } from "../wrappers/with-rotation-prop"
 
 export type ExtrudeHelicalProps = {
   height: number
@@ -34,4 +35,6 @@ const ExtrudeHelicalBase = ({
   )
 }
 
-export const ExtrudeHelical = withOffsetProp(withColorProp(ExtrudeHelicalBase))
+export const ExtrudeHelical = withOffsetProp(
+  withColorProp(withRotationProp(ExtrudeHelicalBase)),
+)

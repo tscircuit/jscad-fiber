@@ -1,5 +1,6 @@
 import { withColorProp } from "lib/wrappers/with-color-prop"
 import { withOffsetProp } from "lib/wrappers/with-offset-prop"
+import { withRotationProp } from "lib/wrappers/with-rotation-prop"
 
 export type TorusProps = {
   innerRadius: number
@@ -33,4 +34,4 @@ const TorusBase = ({
   )
 }
 
-export const Torus = withOffsetProp(withColorProp(TorusBase))
+export const Torus = withOffsetProp(withColorProp(withRotationProp(TorusBase)))

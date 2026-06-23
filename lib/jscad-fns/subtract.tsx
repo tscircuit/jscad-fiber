@@ -1,5 +1,6 @@
 import { withColorProp } from "lib/wrappers/with-color-prop"
 import { withOffsetProp } from "lib/wrappers/with-offset-prop"
+import { withRotationProp } from "lib/wrappers/with-rotation-prop"
 
 export type SubtractProps = {
   children: React.ReactNode[]
@@ -12,4 +13,6 @@ const SubtractBase = ({ children }: SubtractProps) => {
   return <subtract>{children}</subtract>
 }
 
-export const Subtract = withOffsetProp(withColorProp(SubtractBase))
+export const Subtract = withOffsetProp(
+  withColorProp(withRotationProp(SubtractBase)),
+)
