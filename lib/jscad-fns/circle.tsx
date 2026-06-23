@@ -1,7 +1,11 @@
+import { withColorProp } from "lib/wrappers/with-color-prop"
+
 export type CircleProps = {
   radius: number
 }
 
-export function Circle({ radius }: CircleProps) {
+const CircleBase = ({ radius }: CircleProps) => {
   return <circle radius={radius} />
 }
+
+export const Circle = withColorProp(CircleBase)

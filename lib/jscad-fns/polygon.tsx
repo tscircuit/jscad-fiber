@@ -1,7 +1,11 @@
+import { withColorProp } from "lib/wrappers/with-color-prop"
+
 export type PolygonProps = {
   points: [number, number][]
 }
 
-export function Polygon({ points }: PolygonProps) {
+const PolygonBase = ({ points }: PolygonProps) => {
   return <jscadPolygon points={points} />
 }
+
+export const Polygon = withColorProp(PolygonBase)
