@@ -1,7 +1,11 @@
+import { withColorProp } from "lib/wrappers/with-color-prop"
+
 export type UnionProps = {
   children: React.ReactNode
 }
 
-export function Union({ children }: UnionProps) {
+const UnionBase = ({ children }: UnionProps) => {
   return <union>{children}</union>
 }
+
+export const Union = withColorProp(UnionBase)
