@@ -11,6 +11,8 @@ export type RotationValue =
 export type RotateProps = {
   rotation?: RotationValue
   angles?: RotationValue
+  axis?: "x" | "y" | "z"
+  angle?: string | number
   children: React.ReactNode
 }
 
@@ -27,6 +29,13 @@ const convertToRadians = (value: string | number): number => {
     throw new Error(`Invalid rotation value: ${value}`)
   }
   return value
+}
+
+const convertAxisAngleToRadians = (value: string | number): number => {
+  if (typeof value === "number" && Math.abs(value) > Math.PI * 2) {
+    return (value * Math.PI) / 180
+  }
+  return convertToRadians(value)
 }
 
 export const processRotation = (
@@ -47,10 +56,28 @@ export const processRotation = (
   return [0, 0, 0]
 }
 
-const RotateBase = ({ rotation, angles, children }: RotateProps) => {
-  const finalRotation = rotation
-    ? processRotation(rotation)
-    : processRotation(angles)
+const processAxisAngle = (
+  axis: RotateProps["axis"],
+  angle: RotateProps["angle"],
+): [number, number, number] | null => {
+  if (!axis || angle === undefined) return null
+
+  const angleInRadians = convertAxisAngleToRadians(angle)
+  if (axis === "x") return [angleInRadians, 0, 0]
+  if (axis === "y") return [0, angleInRadians, 0]
+  return [0, 0, angleInRadians]
+}
+
+const RotateBase = ({
+  rotation,
+  angles,
+  axis,
+  angle,
+  children,
+}: RotateProps) => {
+  const finalRotation =
+    processAxisAngle(axis, angle) ??
+    (rotation ? processRotation(rotation) : processRotation(angles))
 
   return <rotate angles={finalRotation}>{children}</rotate>
 }
