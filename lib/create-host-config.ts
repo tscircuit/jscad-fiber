@@ -1,4 +1,5 @@
 import type { Geom3 } from "@jscad/modeling/src/geometries/types"
+import React from "react"
 import type ReactReconciler from "react-reconciler"
 import {
   DefaultEventPriority,
@@ -32,7 +33,6 @@ import type {
   UnionProps,
 } from "./jscad-fns"
 import type { JSCADModule, JSCADPrimitive } from "./jscad-primitives"
-import React from "react"
 import { flattenArray } from "./utils/flattenArray"
 import { singleElementUnnest } from "./utils/singleElementUnnest"
 export function createHostConfig(jscad: JSCADModule) {
@@ -78,6 +78,9 @@ export function createHostConfig(jscad: JSCADModule) {
     if (typeof type === "function") {
       const element = type(props)
       if (element == null) return null
+      if (Array.isArray(element)) {
+        return renderChildren(element)
+      }
       return createInstance(
         element.type,
         element.props,
@@ -85,6 +88,13 @@ export function createHostConfig(jscad: JSCADModule) {
         hostContext,
         internalInstanceHandle,
       )
+    }
+
+    if (
+      type === React.Fragment ||
+      (typeof type === "symbol" && String(type).includes("react.fragment"))
+    ) {
+      return renderChildren(props.children)
     }
 
     switch (type) {
