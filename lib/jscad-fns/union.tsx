@@ -1,7 +1,11 @@
+import { withOffsetProp } from "lib/wrappers/with-offset-prop"
+
 export type UnionProps = {
   children: React.ReactNode
 }
 
-export function Union({ children }: UnionProps) {
+function UnionBase({ children }: UnionProps) {
   return <union>{children}</union>
 }
+
+export const Union = withOffsetProp(UnionBase)
