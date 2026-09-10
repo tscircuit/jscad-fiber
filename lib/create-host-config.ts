@@ -87,6 +87,11 @@ export function createHostConfig(jscad: JSCADModule) {
       )
     }
 
+    // Handle React fragments by flattening their children into geometries
+    if (typeof type === "symbol" && String(type).includes("react.fragment")) {
+      return flattenArray(renderChildren((props as any)?.children))
+    }
+
     switch (type) {
       case "cube":
         return jscad.primitives.cube({ size: (props as CubeProps).size })
