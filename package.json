@@ -19,12 +19,16 @@
     "./three": {
       "import": "./dist/three.js",
       "types": "./dist/three.d.ts"
+    },
+    "./headless": {
+      "import": "./dist/headless.js",
+      "types": "./dist/headless.d.ts"
     }
   },
   "scripts": {
     "start": "cosmos",
     "build": "npm run build:lib",
-    "build:lib": "tsup ./lib/index.tsx ./lib/three.tsx --dts --sourcemap --format esm",
+    "build:lib": "tsup ./lib/index.tsx ./lib/three.tsx ./lib/headless.ts --dts --sourcemap --format esm",
     "build:cosmos": "cosmos-export;cp -r examples cosmos-export;mv cosmos-export/examples cosmos-export/code-examples",
     "predeploy": "BUILD_FOR_GH_PAGES=1 npm run build:cosmos && touch ./cosmos-export/.nojekyll",
     "format": "bun x biome format . --write",
@@ -46,7 +50,8 @@
     }
   },
   "dependencies": {
-    "color": "^4.2.3"
+    "color": "^4.2.3",
+    "jscad-planner": "^0.0.14"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
@@ -58,7 +63,6 @@
     "@types/three": "^0.166.0",
     "@vitejs/plugin-react": "^5.0.0",
     "gh-pages": "^5.0.0",
-    "jscad-planner": "^0.0.10",
     "lucide-react": "^0.525.0",
     "react-code-blocks": "^0.1.6",
     "react-cosmos": "^6.1.1",

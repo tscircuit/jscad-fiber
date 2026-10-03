@@ -49,8 +49,8 @@ export interface JSCADModule {
     }) => any
   }
   booleans: {
-    union: (a: any, b: any) => any
-    subtract: (a: any, b: any) => any
+    union: (...geometries: any[]) => any
+    subtract: (...geometries: any[]) => any
   }
   maths: {
     slice: {
@@ -129,12 +129,8 @@ export interface JSCADModule {
     colorize: (options: [number, number, number], geometry: any) => any
   }
   hulls: {
-    hull: (options: {
-      geometries: any
-    }) => any
-    hullChain: (options: {
-      geometries: any
-    }) => any
+    hull: (...geometries: any[]) => any
+    hullChain: (...geometries: any[]) => any
   }
 }
 

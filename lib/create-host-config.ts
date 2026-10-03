@@ -18,8 +18,6 @@ import type {
   ExtrudeRectangularProps,
   ExtrudeRotateProps,
   GeodesicSphereProps,
-  HullChainProps,
-  HullProps,
   PolygonProps,
   ProjectProps,
   RectangleProps,
@@ -27,15 +25,15 @@ import type {
   RoundedCylinderProps,
   Slice,
   SphereProps,
-  SubtractProps,
   TorusProps,
-  UnionProps,
 } from "./jscad-fns"
 import type { JSCADModule, JSCADPrimitive } from "./jscad-primitives"
 import React from "react"
-import { flattenArray } from "./utils/flattenArray"
 import { singleElementUnnest } from "./utils/singleElementUnnest"
-export function createHostConfig(jscad: JSCADModule) {
+export function createHostConfig(
+  jscad: JSCADModule,
+  options: { preserveReferences?: boolean } = {},
+) {
   const createInstance = (
     type: string | ((props: any) => any),
     props: any,
@@ -43,49 +41,29 @@ export function createHostConfig(jscad: JSCADModule) {
     hostContext: any,
     internalInstanceHandle: any,
   ) => {
-    const renderChildren = (children: any): any[] => {
-      if (!children) return []
-      if (Array.isArray(children)) {
-        return flattenArray(
-          children
-            .filter(React.isValidElement)
-            .map((child) =>
-              createInstance(
-                child.type as string | ((props: any) => any),
-                child.props,
-                [],
-                hostContext,
-                internalInstanceHandle,
-              ),
-            ),
-        ).filter(Boolean)
-      }
-      if (React.isValidElement(children)) {
-        const result = createInstance(
-          children.type as string | ((props: any) => any),
-          children.props,
-          [],
-          hostContext,
-          internalInstanceHandle,
+    const renderChildren = (children: React.ReactNode): any[] => {
+      if (children == null || typeof children === "boolean") return []
+      if (Array.isArray(children)) return children.flatMap(renderChildren)
+      if (!React.isValidElement(children))
+        throw new Error(
+          "Expected JSCAD elements, not text or arbitrary objects",
         )
-        if (!result) return []
-        return Array.isArray(result) ? result : [result]
-      }
-      return []
-    }
-
-    // Handle function components
-    if (typeof type === "function") {
-      const element = type(props)
-      if (element == null) return null
-      return createInstance(
-        element.type,
-        element.props,
-        rootContainerInstance,
+      const result = createInstance(
+        children.type as any,
+        children.props,
+        [],
         hostContext,
         internalInstanceHandle,
       )
+      return Array.isArray(result)
+        ? result.flat(Infinity)
+        : result == null
+          ? []
+          : [result]
     }
+    if ((type as unknown) === React.Fragment)
+      return renderChildren(props.children)
+    if (typeof type === "function") return renderChildren(type(props))
 
     switch (type) {
       case "cube":
@@ -160,7 +138,7 @@ export function createHostConfig(jscad: JSCADModule) {
             // twistAngle: extrudeProps.twistAngle,
             // twistSteps: extrudeProps.twistSteps,
           },
-          childrenGeometry,
+          singleElementUnnest(childrenGeometry),
         )
 
         return extrudedGeometry
@@ -176,7 +154,7 @@ export function createHostConfig(jscad: JSCADModule) {
             // twistAngle: extrudeProps.twistAngle,
             // twistSteps: extrudeProps.twistSteps,
           },
-          childrenGeometry,
+          singleElementUnnest(childrenGeometry),
         )
 
         return extrudedGeometry
@@ -191,7 +169,7 @@ export function createHostConfig(jscad: JSCADModule) {
             size: extrudeProps.size,
             height: extrudeProps.height,
           },
-          childrenGeometry,
+          singleElementUnnest(childrenGeometry),
         )
 
         return extrudedGeometry
@@ -210,7 +188,7 @@ export function createHostConfig(jscad: JSCADModule) {
             endOffset: extrudeProps.endOffset || 0,
             segmetsPerRotation: extrudeProps.segmetsPerRotation || 32,
           },
-          childrenGeometry,
+          singleElementUnnest(childrenGeometry),
         )
 
         return extrudedGeometry
@@ -237,7 +215,7 @@ export function createHostConfig(jscad: JSCADModule) {
             axis: projectProps.axis,
             origin: projectProps.origin,
           },
-          childrenGeometry,
+          singleElementUnnest(childrenGeometry),
         )
 
         return projectedGeometry
@@ -250,9 +228,8 @@ export function createHostConfig(jscad: JSCADModule) {
         // Assert that color is an array
         const color = colorizeProps.color as unknown as [number, number, number]
 
-        const colorizedGeometry = jscad.colors.colorize(
-          color,
-          singleElementUnnest(childrenGeometry),
+        const colorizedGeometry = singleElementUnnest(
+          childrenGeometry.map((shape) => jscad.colors.colorize(color, shape)),
         )
 
         return colorizedGeometry
@@ -265,85 +242,34 @@ export function createHostConfig(jscad: JSCADModule) {
       }
 
       case "union": {
-        const { children } = props as UnionProps
-        if (!Array.isArray(children) || children.length < 2) {
-          throw new Error("Union must have at least two children")
-        }
-
-        const geometries = children.map((child) =>
-          createInstance(
-            child.type,
-            child.props,
-            rootContainerInstance,
-            hostContext,
-            internalInstanceHandle,
-          ),
-        )
-        return geometries.reduce((acc, curr) => jscad.booleans.union(acc, curr))
+        const geometries = renderChildren(props.children)
+        if (geometries.length === 0) return []
+        if (geometries.length === 1) return geometries[0]
+        return jscad.booleans.union(...geometries)
       }
-
       case "subtract": {
-        const { children } = props as SubtractProps
-
-        if (!children || children.length < 2) {
+        const children = React.Children.toArray(props.children)
+        if (children.length < 2)
           throw new Error(
             "Subtract must have at least one base component and one component to subtract.",
           )
-        }
-
-        // Filter to only include valid React elements
-        const validChildren = React.Children.toArray(children).filter(
-          React.isValidElement,
-        )
-
-        if (validChildren.length < 2) {
-          throw new Error(
-            "Subtract must have at least one base component and one component to subtract.",
-          )
-        }
-
-        // Convert the base component (first child) to JSCAD geometry
-        const baseGeometry = createInstance(
-          validChildren[0].type as string | ((props: any) => any),
-          validChildren[0].props,
-          rootContainerInstance,
-          hostContext,
-          internalInstanceHandle,
-        )
-
-        // Convert the rest of the valid children (subtraction components) to JSCAD geometries
-        const subtractGeometries = flattenArray(
-          validChildren
-            .slice(1)
-            .map((child) =>
-              createInstance(
-                child.type as string | ((props: any) => any),
-                child.props,
-                rootContainerInstance,
-                hostContext,
-                internalInstanceHandle,
-              ),
-            ),
-        )
-
-        // Ensure the base and subtract geometries were created successfully
-        if (!baseGeometry || subtractGeometries.some((geo) => geo == null)) {
-          throw new Error(
-            "One or more geometries could not be processed for subtraction.",
-          )
-        }
-
-        // Apply JSCAD's subtract operation across the array of subtraction geometries
-        return jscad.booleans.subtract(baseGeometry, subtractGeometries)
+        const bases = renderChildren(children[0])
+        if (bases.length !== 1)
+          throw new Error("Subtract requires exactly one solid base")
+        const cutters = children.slice(1).flatMap(renderChildren)
+        return cutters.length
+          ? jscad.booleans.subtract(bases[0], ...cutters)
+          : bases[0]
       }
 
       case "translate": {
         const { args, children } =
           props as React.JSX.IntrinsicElements["translate"]
         const childrenGeometries = renderChildren(children)
-        return jscad.transforms.translate(
-          args,
-          singleElementUnnest(childrenGeometries),
+        return singleElementUnnest(
+          childrenGeometries.map((shape) =>
+            jscad.transforms.translate(args, shape),
+          ),
         )
       }
 
@@ -353,58 +279,35 @@ export function createHostConfig(jscad: JSCADModule) {
 
         const childrenGeometries = renderChildren(children)
 
-        const rotateGeometry = jscad.transforms.rotate(
-          rotateProps.angles,
-          singleElementUnnest(childrenGeometries),
-        )
-
-        return rotateGeometry
-      }
-
-      case "hull": {
-        const { children } = props as HullProps
-
-        if (!Array.isArray(children) || children.length < 2) {
-          throw new Error("Hull must have at least two children")
-        }
-
-        const geometries: any = children.map((child) =>
-          createInstance(
-            child.type,
-            child.props,
-            rootContainerInstance,
-            hostContext,
-            internalInstanceHandle,
+        return singleElementUnnest(
+          childrenGeometries.map((shape) =>
+            jscad.transforms.rotate(rotateProps.angles, shape),
           ),
         )
-
-        return jscad.hulls.hull(geometries)
       }
 
+      case "hull":
       case "hullChain": {
-        const { children } = props as HullChainProps
-
-        if (!Array.isArray(children) || children.length < 2) {
-          throw new Error("HullChain must have at least two children")
-        }
-
-        const geometries: any = children.map((child) =>
-          createInstance(
-            child.type,
-            child.props,
-            rootContainerInstance,
-            hostContext,
-            internalInstanceHandle,
-          ),
-        )
-
-        return jscad.hulls.hullChain(geometries)
+        const geometries = renderChildren(props.children)
+        if (!geometries.length) return []
+        if (geometries.length === 1) return geometries[0]
+        return jscad.hulls[type](...geometries)
       }
 
       case "rectangle": {
-        const { size } = props as RectangleProps
-
-        return jscad.primitives.rectangle({ size })
+        const { size, name, reference } = props as RectangleProps
+        if (reference && !name?.trim())
+          throw new Error("Reference rectangles require a nonblank name")
+        if (reference && !options.preserveReferences) return []
+        const geometry = jscad.primitives.rectangle({ size })
+        return options.preserveReferences &&
+          (name !== undefined || reference !== undefined)
+          ? {
+              ...geometry,
+              ...(name !== undefined ? { name } : {}),
+              ...(reference !== undefined ? { reference } : {}),
+            }
+          : geometry
       }
 
       case "circle": {

@@ -256,3 +256,53 @@ This wrapper:
 See the [`examples` directory](./examples) for more usage examples.
 
 Pull requests welcome! Please check existing issues or create a new one to discuss major changes.
+
+## Headless plans and named reference rectangles
+
+`jscad-fiber/headless` compiles pure JSX components to serializable JSCAD operation
+JSON without importing the viewer, Three.js, or the modeling kernel. It supports
+synchronous function components, fragments, arrays, and null children. Hooks,
+async components, and raw `Custom` geometry are not supported by this compiler.
+The lowercase `jscad` namespace exposes the planner-supported component subset;
+the existing capitalized components remain available.
+
+```tsx
+import { jscad, renderToJscadPlan } from "jscad-fiber/headless"
+
+function Spacer() {
+  return <>
+    <jscad.extrudeLinear height={4}>
+      <jscad.rectangle size={[42, 42]} />
+    </jscad.extrudeLinear>
+    <jscad.rotate angles={[0, Math.PI, 0]}>
+      <jscad.rectangle name="motor" size={[42, 42]} reference />
+    </jscad.rotate>
+    <jscad.translate offset={[0, 0, 4]}>
+      <jscad.rectangle name="board" size={[42, 42]} reference />
+    </jscad.translate>
+  </>
+}
+
+const plan = renderToJscadPlan(<Spacer />)
+const json = JSON.stringify(plan)
+```
+
+A reference rectangle describes an attachment plane. It starts in local XY with
+normal +Z and in-plane X direction +X; its center is the attachment point.
+Ordinary transforms position and orient it alongside the solid. `name` must be
+nonblank and unique within the part. `reference` excludes the rectangle from
+native geometry rendering, so it cannot add material to a print.
+
+The compiler preserves reference rectangles as standard polygon operations with
+`name` and `reference` metadata. Consumers must extract references before sending
+a plan to a geometry interpreter or exporter. Use `resolveReferencePlanes` from
+a version of `jscad-planner` that provides named-reference extraction; older
+interpreters do not understand the metadata. The returned `geometry` plan can be
+executed by existing interpreters, while `referencePlanes` provides each name,
+origin, normal, and in-plane X axis. Metadata lives in the planner/fiber layer;
+no changes to `@jscad/modeling` are needed.
+
+See [the motor spacer example](./examples/motor-spacer.tsx) for a 4 mm plate,
+four hollow posts on 31 mm centers, 3.2 mm M3 clearance holes, a 30 mm center
+opening, and named `motor` and `board` reference planes. Dimensions in that
+example are millimeters.

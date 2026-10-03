@@ -1,0 +1,38 @@
+import {
+  Colorize,
+  Cube,
+  Cuboid,
+  Cylinder,
+  ExtrudeLinear,
+  ExtrudeRotate,
+  Hull,
+  HullChain,
+  Polygon,
+  Rectangle,
+  Rotate,
+  RoundedCuboid,
+  Sphere,
+  Subtract,
+  Translate,
+  Union,
+} from "./jscad-fns"
+
+/** Namespaced aliases of the existing components supported by the plan backend. */
+export const jscad = {
+  colorize: Colorize,
+  cube: Cube,
+  cuboid: Cuboid,
+  cylinder: Cylinder,
+  extrudeLinear: ExtrudeLinear,
+  extrudeRotate: ExtrudeRotate,
+  hull: Hull,
+  hullChain: HullChain,
+  polygon: Polygon,
+  rectangle: Rectangle,
+  rotate: Rotate,
+  roundedCuboid: RoundedCuboid,
+  sphere: Sphere,
+  subtract: Subtract,
+  translate: Translate,
+  union: Union,
+} as const
