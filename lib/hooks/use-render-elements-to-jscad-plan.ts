@@ -1,5 +1,5 @@
 import React from "react"
-import { createJSCADRenderer } from ".."
+import { createJSCADRenderer } from "../renderer"
 
 /**
  * Renders children and returns jscad plan JSON

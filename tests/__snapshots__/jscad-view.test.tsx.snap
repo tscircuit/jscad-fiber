@@ -8,13 +8,11 @@ exports[`lol.tsx integration test should render JsCadView with Subtract operatio
         "size": 10,
         "type": "cube",
       },
-      [
-        {
-          "radius": 6.8,
-          "segments": 32,
-          "type": "sphere",
-        },
-      ],
+      {
+        "radius": 6.8,
+        "segments": 32,
+        "type": "sphere",
+      },
     ],
     "type": "subtract",
   },
