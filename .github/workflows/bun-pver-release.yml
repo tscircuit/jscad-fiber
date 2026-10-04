@@ -16,8 +16,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.TSCIRCUIT_BOT_GITHUB_TOKEN }}
       - name: Setup bun
         uses: oven-sh/setup-bun@v2
         with:
@@ -32,4 +30,4 @@ jobs:
       - run: bun run build
       - run: pver release
         env:
-          GITHUB_TOKEN: ${{ secrets.TSCIRCUIT_BOT_GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ github.token }}
