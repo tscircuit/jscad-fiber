@@ -1,3 +1,4 @@
+import { withMaterialProp } from "../wrappers/with-material-prop"
 import { withColorProp } from "lib/wrappers/with-color-prop"
 import { withOffsetProp } from "lib/wrappers/with-offset-prop"
 
@@ -25,4 +26,6 @@ const ExtrudeLinearBase = ({
   )
 }
 
-export const ExtrudeLinear = withOffsetProp(withColorProp(ExtrudeLinearBase))
+export const ExtrudeLinear = withMaterialProp(
+  withOffsetProp(withColorProp(ExtrudeLinearBase)),
+)

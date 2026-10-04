@@ -1,3 +1,4 @@
+import { withMaterialProp } from "../wrappers/with-material-prop"
 import { withColorProp } from "lib/wrappers/with-color-prop"
 import { withOffsetProp } from "lib/wrappers/with-offset-prop"
 
@@ -33,4 +34,4 @@ const TorusBase = ({
   )
 }
 
-export const Torus = withOffsetProp(withColorProp(TorusBase))
+export const Torus = withMaterialProp(withOffsetProp(withColorProp(TorusBase)))

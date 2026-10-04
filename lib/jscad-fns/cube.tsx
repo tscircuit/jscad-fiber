@@ -1,3 +1,4 @@
+import { withMaterialProp } from "../wrappers/with-material-prop"
 import { withColorProp } from "lib/wrappers/with-color-prop"
 import { withOffsetProp } from "lib/wrappers/with-offset-prop"
 
@@ -9,4 +10,4 @@ const CubeBase = ({ size }: CubeProps) => {
   return <cube size={size} />
 }
 
-export const Cube = withOffsetProp(withColorProp(CubeBase))
+export const Cube = withMaterialProp(withOffsetProp(withColorProp(CubeBase)))

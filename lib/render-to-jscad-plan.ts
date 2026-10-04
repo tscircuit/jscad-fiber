@@ -2,6 +2,20 @@ import { Fragment, type ReactNode } from "react"
 import { jscadPlanner, type JscadOperation } from "jscad-planner"
 import { createHostConfig } from "./create-host-config"
 import type { JSCADModule } from "./jscad-primitives"
+import type { MaterialProps } from "./material"
+
+type MaterialOperation<T> = {
+  [Key in keyof T]: Key extends "shape"
+    ? MaterialOperation<T[Key]>
+    : Key extends "shapes"
+      ? T[Key] extends (infer Shape)[]
+        ? MaterialOperation<Shape>[]
+        : T[Key]
+      : T[Key]
+} & MaterialProps
+
+/** Standard planner operations with optional serializable appearance metadata. */
+export type JscadPlanOperation = MaterialOperation<JscadOperation>
 
 const planner = {
   ...jscadPlanner,
@@ -51,7 +65,7 @@ function validateSerializable(value: unknown): void {
  * Named reference rectangles remain in the plan for resolveReferencePlanes in
  * jscad-planner. Consumers must extract them before mesh generation/export.
  */
-export function renderToJscadPlan(element: ReactNode): JscadOperation {
+export function renderToJscadPlan(element: ReactNode): JscadPlanOperation {
   const result = host.createInstance(
     Fragment as unknown as string,
     { children: element },

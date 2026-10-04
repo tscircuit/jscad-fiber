@@ -30,11 +30,30 @@ import type {
 import type { JSCADModule, JSCADPrimitive } from "./jscad-primitives"
 import React from "react"
 import { singleElementUnnest } from "./utils/singleElementUnnest"
+import { preserveMaterial } from "./material"
 export function createHostConfig(
   jscad: JSCADModule,
   options: { preserveReferences?: boolean } = {},
 ) {
   const createInstance = (
+    type: string | ((props: any) => any),
+    props: any,
+    rootContainerInstance: any,
+    hostContext: any,
+    internalInstanceHandle: any,
+  ): any =>
+    preserveMaterial(
+      props,
+      createGeometry(
+        type,
+        props,
+        rootContainerInstance,
+        hostContext,
+        internalInstanceHandle,
+      ),
+    )
+
+  const createGeometry = (
     type: string | ((props: any) => any),
     props: any,
     rootContainerInstance: any,
@@ -66,6 +85,9 @@ export function createHostConfig(
     if (typeof type === "function") return renderChildren(type(props))
 
     switch (type) {
+      case "jscadMaterial":
+        // Keep a stable array instance when a material group changes shape count.
+        return renderChildren(props.children)
       case "cube":
         return jscad.primitives.cube({ size: (props as CubeProps).size })
       case "sphere":
@@ -141,7 +163,7 @@ export function createHostConfig(
           singleElementUnnest(childrenGeometry),
         )
 
-        return extrudedGeometry
+        return preserveMaterial(childrenGeometry[0] ?? {}, extrudedGeometry)
       }
       case "extrudeRotate": {
         const { children, ...extrudeProps } = props as ExtrudeRotateProps
@@ -157,7 +179,7 @@ export function createHostConfig(
           singleElementUnnest(childrenGeometry),
         )
 
-        return extrudedGeometry
+        return preserveMaterial(childrenGeometry[0] ?? {}, extrudedGeometry)
       }
       case "extrudeRectangular": {
         const { children, ...extrudeProps } = props as ExtrudeRectangularProps
@@ -172,7 +194,7 @@ export function createHostConfig(
           singleElementUnnest(childrenGeometry),
         )
 
-        return extrudedGeometry
+        return preserveMaterial(childrenGeometry[0] ?? {}, extrudedGeometry)
       }
       case "extrudeHelical": {
         const { children, ...extrudeProps } = props as ExtrudeHelicalProps
@@ -191,7 +213,7 @@ export function createHostConfig(
           singleElementUnnest(childrenGeometry),
         )
 
-        return extrudedGeometry
+        return preserveMaterial(childrenGeometry[0] ?? {}, extrudedGeometry)
       }
 
       case "extrudeFromSlices": {
@@ -218,7 +240,7 @@ export function createHostConfig(
           singleElementUnnest(childrenGeometry),
         )
 
-        return projectedGeometry
+        return preserveMaterial(childrenGeometry[0] ?? {}, projectedGeometry)
       }
       case "colorize": {
         const { children, ...colorizeProps } = props as ColorizeProps
@@ -229,7 +251,9 @@ export function createHostConfig(
         const color = colorizeProps.color as unknown as [number, number, number]
 
         const colorizedGeometry = singleElementUnnest(
-          childrenGeometry.map((shape) => jscad.colors.colorize(color, shape)),
+          childrenGeometry.map((shape) =>
+            preserveMaterial(shape, jscad.colors.colorize(color, shape)),
+          ),
         )
 
         return colorizedGeometry
@@ -257,9 +281,12 @@ export function createHostConfig(
         if (bases.length !== 1)
           throw new Error("Subtract requires exactly one solid base")
         const cutters = children.slice(1).flatMap(renderChildren)
-        return cutters.length
-          ? jscad.booleans.subtract(bases[0], ...cutters)
-          : bases[0]
+        return preserveMaterial(
+          bases[0],
+          cutters.length
+            ? jscad.booleans.subtract(bases[0], ...cutters)
+            : bases[0],
+        )
       }
 
       case "translate": {
@@ -268,7 +295,7 @@ export function createHostConfig(
         const childrenGeometries = renderChildren(children)
         return singleElementUnnest(
           childrenGeometries.map((shape) =>
-            jscad.transforms.translate(args, shape),
+            preserveMaterial(shape, jscad.transforms.translate(args, shape)),
           ),
         )
       }
@@ -281,7 +308,10 @@ export function createHostConfig(
 
         return singleElementUnnest(
           childrenGeometries.map((shape) =>
-            jscad.transforms.rotate(rotateProps.angles, shape),
+            preserveMaterial(
+              shape,
+              jscad.transforms.rotate(rotateProps.angles, shape),
+            ),
           ),
         )
       }
@@ -380,13 +410,22 @@ export function createHostConfig(
 
     commitUpdate(
       instance: JSCADPrimitive,
-      updatePayload: any,
       type: string,
       oldProps: any,
       newProps: any,
+      internalInstanceHandle: any,
     ) {
       // Re-create the instance with new props
       const newInstance = createInstance(type, newProps, instance, {}, null)
+
+      if (Array.isArray(instance)) {
+        instance.splice(
+          0,
+          instance.length,
+          ...(Array.isArray(newInstance) ? newInstance : [newInstance]),
+        )
+        return
+      }
 
       // Clear properties of the old instance
       for (const key in instance) {

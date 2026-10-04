@@ -1,3 +1,4 @@
+import { withMaterialProp } from "../wrappers/with-material-prop"
 import { withColorProp } from "lib/wrappers/with-color-prop"
 import { withOffsetProp } from "lib/wrappers/with-offset-prop"
 
@@ -9,4 +10,4 @@ const HullBase = ({ children }: HullProps) => {
   return <hull>{children}</hull>
 }
 
-export const Hull = withOffsetProp(withColorProp(HullBase))
+export const Hull = withMaterialProp(withOffsetProp(withColorProp(HullBase)))

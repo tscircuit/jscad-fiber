@@ -1,8 +1,10 @@
 import type * as FN from "./jscad-fns"
+import type { MaterialProps } from "./material"
 
-type CommonProps = { key?: any }
+type CommonProps = { key?: any } & MaterialProps
 
 export interface JscadElements {
+  jscadMaterial: MaterialProps & { children: React.ReactNode }
   project: FN.ProjectProps & CommonProps
   extrudeRectangular: FN.ExtrudeRectangularProps & CommonProps
   extrudeRotate: FN.ExtrudeRotateProps & CommonProps

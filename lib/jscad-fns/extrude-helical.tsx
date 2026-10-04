@@ -1,3 +1,4 @@
+import { withMaterialProp } from "../wrappers/with-material-prop"
 import { withColorProp } from "../wrappers/with-color-prop"
 import { withOffsetProp } from "../wrappers/with-offset-prop"
 
@@ -34,4 +35,6 @@ const ExtrudeHelicalBase = ({
   )
 }
 
-export const ExtrudeHelical = withOffsetProp(withColorProp(ExtrudeHelicalBase))
+export const ExtrudeHelical = withMaterialProp(
+  withOffsetProp(withColorProp(ExtrudeHelicalBase)),
+)

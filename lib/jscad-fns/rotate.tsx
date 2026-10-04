@@ -1,3 +1,4 @@
+import { withMaterialProp } from "../wrappers/with-material-prop"
 import { withColorProp } from "lib/wrappers/with-color-prop"
 import { withOffsetProp } from "lib/wrappers/with-offset-prop"
 import type { Point3 } from "./translate"
@@ -55,4 +56,6 @@ const RotateBase = ({ rotation, angles, children }: RotateProps) => {
   return <rotate angles={finalRotation}>{children}</rotate>
 }
 
-export const Rotate = withOffsetProp(withColorProp(RotateBase))
+export const Rotate = withMaterialProp(
+  withOffsetProp(withColorProp(RotateBase)),
+)

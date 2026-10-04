@@ -1,3 +1,4 @@
+import { withMaterialProp } from "../wrappers/with-material-prop"
 export type RectangleProps = {
   size: [number, number]
   /** Identity preserved in a headless JSCAD plan. */
@@ -6,6 +7,8 @@ export type RectangleProps = {
   reference?: boolean
 }
 
-export function Rectangle({ size, name, reference }: RectangleProps) {
+function RectangleBase({ size, name, reference }: RectangleProps) {
   return <rectangle size={size} name={name} reference={reference} />
 }
+
+export const Rectangle = withMaterialProp(RectangleBase)

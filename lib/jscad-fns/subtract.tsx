@@ -1,3 +1,4 @@
+import { withMaterialProp } from "../wrappers/with-material-prop"
 import { withColorProp } from "lib/wrappers/with-color-prop"
 import { withOffsetProp } from "lib/wrappers/with-offset-prop"
 
@@ -12,4 +13,6 @@ const SubtractBase = ({ children }: SubtractProps) => {
   return <subtract>{children}</subtract>
 }
 
-export const Subtract = withOffsetProp(withColorProp(SubtractBase))
+export const Subtract = withMaterialProp(
+  withOffsetProp(withColorProp(SubtractBase)),
+)

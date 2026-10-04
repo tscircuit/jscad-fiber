@@ -1,3 +1,4 @@
+import { withMaterialProp } from "../wrappers/with-material-prop"
 import { withColorProp } from "lib/wrappers/with-color-prop"
 import { withOffsetProp } from "lib/wrappers/with-offset-prop"
 
@@ -21,4 +22,6 @@ const ExtrudeRotateBase = ({
   )
 }
 
-export const ExtrudeRotate = withOffsetProp(withColorProp(ExtrudeRotateBase))
+export const ExtrudeRotate = withMaterialProp(
+  withOffsetProp(withColorProp(ExtrudeRotateBase)),
+)

@@ -1,3 +1,4 @@
+import { withMaterialProp } from "../wrappers/with-material-prop"
 import { withOffsetProp } from "lib/wrappers/with-offset-prop"
 import { withColorProp } from "../wrappers/with-color-prop"
 
@@ -11,4 +12,6 @@ const SphereBase = ({ radius, segments }: SphereProps) => {
   return <sphere radius={radius} segments={segments || 32} />
 }
 
-export const Sphere = withColorProp(withOffsetProp(SphereBase))
+export const Sphere = withMaterialProp(
+  withColorProp(withOffsetProp(SphereBase)),
+)
