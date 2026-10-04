@@ -1,10 +1,8 @@
-import { withMaterialProp } from "../wrappers/with-material-prop"
+import type { MaterialProps } from "../material"
 export type UnionProps = {
   children: React.ReactNode
-}
+} & MaterialProps
 
-function UnionBase({ children }: UnionProps) {
-  return <union>{children}</union>
+export function Union({ material, children }: UnionProps) {
+  return <union material={material}>{children}</union>
 }
-
-export const Union = withMaterialProp(UnionBase)

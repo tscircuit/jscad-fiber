@@ -4,7 +4,7 @@ import type { MaterialProps } from "./material"
 type CommonProps = { key?: any } & MaterialProps
 
 export interface JscadElements {
-  jscadMaterial: MaterialProps & { children: React.ReactNode }
+  applyMaterial: FN.ApplyMaterialProps
   project: FN.ProjectProps & CommonProps
   extrudeRectangular: FN.ExtrudeRectangularProps & CommonProps
   extrudeRotate: FN.ExtrudeRotateProps & CommonProps
@@ -27,6 +27,7 @@ export interface JscadElements {
     callback?: (progress: number, count: number, base: Slice) => Slice
   } & CommonProps
   sphere: FN.SphereProps & CommonProps
+  jscadSphere: FN.SphereProps & CommonProps
   cuboid: FN.CuboidProps & CommonProps
   cube: FN.CubeProps & CommonProps
   ellipsoid: FN.EllipsoidProps & CommonProps
@@ -35,6 +36,7 @@ export interface JscadElements {
   custom: FN.CustomProps & CommonProps
   union: FN.UnionProps & CommonProps
   circle: FN.CircleProps & CommonProps
+  jscadCircle: FN.CircleProps & CommonProps
   rectangle: FN.RectangleProps & CommonProps
   hull: FN.HullProps & CommonProps
   hullChain: FN.HullChainProps & CommonProps

@@ -1,13 +1,13 @@
-import { withMaterialProp } from "../wrappers/with-material-prop"
+import type { MaterialProps } from "../material"
 import { withColorProp } from "lib/wrappers/with-color-prop"
 import { withOffsetProp } from "lib/wrappers/with-offset-prop"
 
 export type HullProps = {
   children: React.ReactNode
+} & MaterialProps
+
+const HullBase = ({ material, children }: HullProps) => {
+  return <hull material={material}>{children}</hull>
 }
 
-const HullBase = ({ children }: HullProps) => {
-  return <hull>{children}</hull>
-}
-
-export const Hull = withMaterialProp(withOffsetProp(withColorProp(HullBase)))
+export const Hull = withOffsetProp(withColorProp(HullBase))

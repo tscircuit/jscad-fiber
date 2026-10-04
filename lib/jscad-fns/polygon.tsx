@@ -1,10 +1,8 @@
-import { withMaterialProp } from "../wrappers/with-material-prop"
+import type { MaterialProps } from "../material"
 export type PolygonProps = {
   points: [number, number][]
-}
+} & MaterialProps
 
-function PolygonBase({ points }: PolygonProps) {
-  return <jscadPolygon points={points} />
+export function Polygon({ material, points }: PolygonProps) {
+  return <jscadPolygon material={material} points={points} />
 }
-
-export const Polygon = withMaterialProp(PolygonBase)

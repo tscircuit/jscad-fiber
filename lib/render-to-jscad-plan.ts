@@ -2,20 +2,7 @@ import { Fragment, type ReactNode } from "react"
 import { jscadPlanner, type JscadOperation } from "jscad-planner"
 import { createHostConfig } from "./create-host-config"
 import type { JSCADModule } from "./jscad-primitives"
-import type { MaterialProps } from "./material"
-
-type MaterialOperation<T> = {
-  [Key in keyof T]: Key extends "shape"
-    ? MaterialOperation<T[Key]>
-    : Key extends "shapes"
-      ? T[Key] extends (infer Shape)[]
-        ? MaterialOperation<Shape>[]
-        : T[Key]
-      : T[Key]
-} & MaterialProps
-
-/** Standard planner operations with optional serializable appearance metadata. */
-export type JscadPlanOperation = MaterialOperation<JscadOperation>
+export type JscadPlanOperation = JscadOperation
 
 const planner = {
   ...jscadPlanner,

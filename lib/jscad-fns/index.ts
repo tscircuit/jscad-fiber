@@ -1,4 +1,6 @@
 export * from "./circle"
+export * from "./apply-material"
+export { materials } from "../material"
 export type { MaterialOptions, MaterialProps } from "../material"
 export * from "./colorize"
 export * from "./cube"

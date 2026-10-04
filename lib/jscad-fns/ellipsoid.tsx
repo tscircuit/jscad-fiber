@@ -1,15 +1,13 @@
-import { withMaterialProp } from "../wrappers/with-material-prop"
+import type { MaterialProps } from "../material"
 import { withColorProp } from "lib/wrappers/with-color-prop"
 import { withOffsetProp } from "lib/wrappers/with-offset-prop"
 
 export type EllipsoidProps = {
   radius: [number, number, number]
+} & MaterialProps
+
+const EllipsoidBase = ({ material, radius }: EllipsoidProps) => {
+  return <ellipsoid material={material} radius={radius} />
 }
 
-const EllipsoidBase = ({ radius }: EllipsoidProps) => {
-  return <ellipsoid radius={radius} />
-}
-
-export const Ellipsoid = withMaterialProp(
-  withOffsetProp(withColorProp(EllipsoidBase)),
-)
+export const Ellipsoid = withOffsetProp(withColorProp(EllipsoidBase))

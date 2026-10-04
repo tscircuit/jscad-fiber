@@ -1,4 +1,4 @@
-import { withMaterialProp } from "../wrappers/with-material-prop"
+import type { MaterialProps } from "../material"
 import { withColorProp } from "lib/wrappers/with-color-prop"
 import { withOffsetProp } from "lib/wrappers/with-offset-prop"
 
@@ -10,9 +10,10 @@ export type CylinderEllipticProps = {
   segments?: number
   startAngle?: number
   endAngle?: number
-}
+} & MaterialProps
 
 const CylinderEllipticBase = ({
+  material,
   height,
   startRadius,
   endRadius,
@@ -22,6 +23,7 @@ const CylinderEllipticBase = ({
 }: CylinderEllipticProps) => {
   return (
     <cylinderElliptic
+      material={material}
       height={height}
       startRadius={startRadius}
       endRadius={endRadius}
@@ -32,6 +34,6 @@ const CylinderEllipticBase = ({
   )
 }
 
-export const CylinderElliptic = withMaterialProp(
-  withOffsetProp(withColorProp(CylinderEllipticBase)),
+export const CylinderElliptic = withOffsetProp(
+  withColorProp(CylinderEllipticBase),
 )

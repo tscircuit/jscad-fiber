@@ -1,4 +1,5 @@
 import {
+  ApplyMaterial,
   Colorize,
   Cube,
   Cuboid,
@@ -19,6 +20,7 @@ import {
 
 /** Namespaced aliases of the existing components supported by the plan backend. */
 export const jscad = {
+  materials: { applyMaterial: ApplyMaterial },
   colorize: Colorize,
   cube: Cube,
   cuboid: Cuboid,

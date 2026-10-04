@@ -1,4 +1,4 @@
-import { withMaterialProp } from "../wrappers/with-material-prop"
+import type { MaterialProps } from "../material"
 export type Point3 =
   | [number, number, number]
   | { x: number; y: number; z: number }
@@ -20,9 +20,17 @@ export type TranslateProps = {
   y?: number
   z?: number
   children: React.ReactNode
-}
+} & MaterialProps
 
-function TranslateBase({ offset, center, x, y, z, children }: TranslateProps) {
+export function Translate({
+  material,
+  offset,
+  center,
+  x,
+  y,
+  z,
+  children,
+}: TranslateProps) {
   const offsetNorm = normalizePointToArray(offset)
   const centerNorm = normalizePointToArray(center)
 
@@ -32,7 +40,9 @@ function TranslateBase({ offset, center, x, y, z, children }: TranslateProps) {
     offsetNorm?.[2] || centerNorm?.[2] || z || 0,
   ]
 
-  return <translate args={args}>{children}</translate>
+  return (
+    <translate material={material} args={args}>
+      {children}
+    </translate>
+  )
 }
-
-export const Translate = withMaterialProp(TranslateBase)

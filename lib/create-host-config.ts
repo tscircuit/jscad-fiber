@@ -30,28 +30,40 @@ import type {
 import type { JSCADModule, JSCADPrimitive } from "./jscad-primitives"
 import React from "react"
 import { singleElementUnnest } from "./utils/singleElementUnnest"
-import { preserveMaterial } from "./material"
+import { materials, preserveMaterial, type MaterialOptions } from "./material"
 export function createHostConfig(
   jscad: JSCADModule,
   options: { preserveReferences?: boolean } = {},
 ) {
+  const applyMaterial = (material: MaterialOptions, geometry: any): any => {
+    if (Array.isArray(geometry)) {
+      return geometry.map((shape) => applyMaterial(material, shape))
+    }
+    return jscad.materials
+      ? jscad.materials.applyMaterial(material, geometry)
+      : materials.applyMaterial(material, geometry)
+  }
   const createInstance = (
     type: string | ((props: any) => any),
     props: any,
     rootContainerInstance: any,
     hostContext: any,
     internalInstanceHandle: any,
-  ): any =>
-    preserveMaterial(
+  ): any => {
+    const geometry = createGeometry(
+      type,
       props,
-      createGeometry(
-        type,
-        props,
-        rootContainerInstance,
-        hostContext,
-        internalInstanceHandle,
-      ),
+      rootContainerInstance,
+      hostContext,
+      internalInstanceHandle,
     )
+    // Components forward material to their host element. Apply it once there.
+    return typeof type === "string" &&
+      type !== "applyMaterial" &&
+      props.material
+      ? applyMaterial(props.material, geometry)
+      : geometry
+  }
 
   const createGeometry = (
     type: string | ((props: any) => any),
@@ -85,12 +97,14 @@ export function createHostConfig(
     if (typeof type === "function") return renderChildren(type(props))
 
     switch (type) {
-      case "jscadMaterial":
-        // Keep a stable array instance when a material group changes shape count.
-        return renderChildren(props.children)
+      case "applyMaterial":
+        return renderChildren(props.children).map((shape) =>
+          applyMaterial(props.material, shape),
+        )
       case "cube":
         return jscad.primitives.cube({ size: (props as CubeProps).size })
       case "sphere":
+      case "jscadSphere":
         return jscad.primitives.sphere({
           radius: (props as SphereProps).radius,
           segments: (props as SphereProps).segments,
@@ -250,10 +264,8 @@ export function createHostConfig(
         // Assert that color is an array
         const color = colorizeProps.color as unknown as [number, number, number]
 
-        const colorizedGeometry = singleElementUnnest(
-          childrenGeometry.map((shape) =>
-            preserveMaterial(shape, jscad.colors.colorize(color, shape)),
-          ),
+        const colorizedGeometry = childrenGeometry.map((shape) =>
+          preserveMaterial(shape, jscad.colors.colorize(color, shape)),
         )
 
         return colorizedGeometry
@@ -293,10 +305,8 @@ export function createHostConfig(
         const { args, children } =
           props as React.JSX.IntrinsicElements["translate"]
         const childrenGeometries = renderChildren(children)
-        return singleElementUnnest(
-          childrenGeometries.map((shape) =>
-            preserveMaterial(shape, jscad.transforms.translate(args, shape)),
-          ),
+        return childrenGeometries.map((shape) =>
+          preserveMaterial(shape, jscad.transforms.translate(args, shape)),
         )
       }
 
@@ -306,12 +316,10 @@ export function createHostConfig(
 
         const childrenGeometries = renderChildren(children)
 
-        return singleElementUnnest(
-          childrenGeometries.map((shape) =>
-            preserveMaterial(
-              shape,
-              jscad.transforms.rotate(rotateProps.angles, shape),
-            ),
+        return childrenGeometries.map((shape) =>
+          preserveMaterial(
+            shape,
+            jscad.transforms.rotate(rotateProps.angles, shape),
           ),
         )
       }
@@ -340,7 +348,8 @@ export function createHostConfig(
           : geometry
       }
 
-      case "circle": {
+      case "circle":
+      case "jscadCircle": {
         const { radius } = props as CircleProps
 
         return jscad.primitives.circle({ radius })

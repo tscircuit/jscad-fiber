@@ -1,17 +1,20 @@
-import { withMaterialProp } from "../wrappers/with-material-prop"
+import type { MaterialProps } from "../material"
 import { withOffsetProp } from "lib/wrappers/with-offset-prop"
 import { withColorProp } from "../wrappers/with-color-prop"
 
 export type SphereProps = {
   radius: number
   segments?: number
+} & MaterialProps
+
+const SphereBase = ({ material, radius, segments }: SphereProps) => {
+  return (
+    <jscadSphere
+      material={material}
+      radius={radius}
+      segments={segments || 32}
+    />
+  )
 }
 
-const SphereBase = ({ radius, segments }: SphereProps) => {
-  // @ts-ignore
-  return <sphere radius={radius} segments={segments || 32} />
-}
-
-export const Sphere = withMaterialProp(
-  withColorProp(withOffsetProp(SphereBase)),
-)
+export const Sphere = withColorProp(withOffsetProp(SphereBase))

@@ -52,66 +52,8 @@ All components support these common props:
 | Prop | Type | Description |
 |------|------|-------------|
 | `color` | `string \| [number,number,number]` | CSS color string or RGB array |
-| `material` | `MaterialOptions` | Serializable appearance settings for the Three.js viewer |
 | `center` | `[number,number,number] \| {x,y,z}` | Position in 3D space |
 | `offset` | `[number,number,number] \| {x,y,z}` | Alternative to center |
-
-### Materials
-
-All geometry components accept a `material` prop, including the `jscad` namespace
-and `Custom`. Both `JsCadView` and `JSCadThreeMesh` render these settings using
-Three.js `MeshStandardMaterial`:
-
-```tsx
-<Cube
-  size={10}
-  material={{ color: "silver", metalness: 1, roughness: 0.25 }}
-/>
-
-<Sphere
-  radius={5}
-  material={{ color: "royalblue", opacity: 0.5 }}
-/>
-```
-
-`MaterialOptions` is exported from `jscad-fiber` and `jscad-fiber/headless`.
-Pass a plain object rather than a Three.js material instance. Supported settings:
-
-| Setting | Type | Default |
-|---------|------|---------|
-| `color` | CSS string, hex number, or RGB tuple with values from 0 to 1 | Existing geometry color, or white |
-| `metalness` | Number from 0 to 1 | `0` |
-| `roughness` | Number from 0 to 1 | `1` |
-| `opacity` | Number from 0 to 1 | `1` |
-| `transparent` | Boolean | `true` when opacity is below 1 |
-| `emissive` | Same formats as `color` | Black |
-| `emissiveIntensity` | Number | `1` |
-| `flatShading` | Boolean | `false` |
-| `wireframe` | Boolean | `false` |
-
-`material.color` takes precedence over the component's `color` prop. Without
-`material.color`, geometry colors remain visible. An explicit `JsCadView`
-`wireframe` setting overrides individual materials. For 2D outlines, only color,
-opacity, and transparency apply.
-
-Materials survive translation, rotation, colorization, and extrusion. Subtraction
-retains the base shape's material unless the result has its own `material` prop.
-Unions and hulls combining multiple shapes use a material on the result; they do
-not retain separate face materials from their inputs:
-
-```tsx
-<Union material={{ color: "silver", metalness: 1, roughness: 0.25 }}>
-  <Cube size={10} />
-  <Sphere radius={6} />
-</Union>
-```
-
-Headless plans preserve `material` as metadata on standard operation nodes,
-without importing Three.js. Existing geometry interpreters can execute those
-plans, but consumers must forward the metadata to their renderer to display it.
-Materials describe appearance; they do not change solid geometry or add material
-support to geometry-only exports such as STL. Textures and physical transmission
-are not supported by this prop.
 
 ## Components
 

@@ -1,19 +1,21 @@
-import { withMaterialProp } from "../wrappers/with-material-prop"
+import type { MaterialProps } from "../material"
 import Color from "color"
 
 export type ColorizeProps = {
   color: [number, number, number] | string
   children: React.ReactNode
-}
+} & MaterialProps
 
-function ColorizeBase({ color, children }: ColorizeProps) {
+export function Colorize({ material, color, children }: ColorizeProps) {
   if (!Array.isArray(color)) {
     color = Color(color)
       .rgb()
       .array()
       .map((v) => v / 255)
   }
-  return <colorize color={color}>{children}</colorize>
+  return (
+    <colorize material={material} color={color}>
+      {children}
+    </colorize>
+  )
 }
-
-export const Colorize = withMaterialProp(ColorizeBase)

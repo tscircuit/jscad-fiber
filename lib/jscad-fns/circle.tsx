@@ -1,10 +1,8 @@
-import { withMaterialProp } from "../wrappers/with-material-prop"
+import type { MaterialProps } from "../material"
 export type CircleProps = {
   radius: number
-}
+} & MaterialProps
 
-function CircleBase({ radius }: CircleProps) {
-  return <circle radius={radius} />
+export function Circle({ material, radius }: CircleProps) {
+  return <jscadCircle material={material} radius={radius} />
 }
-
-export const Circle = withMaterialProp(CircleBase)

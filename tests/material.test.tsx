@@ -5,6 +5,7 @@ import { LineBasicMaterial, MeshStandardMaterial } from "three"
 import type { Scene } from "three"
 import { useEffect } from "react"
 import {
+  ApplyMaterial,
   Colorize,
   Cube,
   Custom,
@@ -18,6 +19,7 @@ import {
   Union,
   jscad,
   renderToJscadPlan,
+  materials,
   type MaterialOptions,
 } from "../lib/headless"
 import { createThreeMaterial } from "../lib/create-three-material"
@@ -46,6 +48,70 @@ test("material prop reaches native solids without changing geometry", () => {
   expect(createThreeMaterial(solid.material)).toBeInstanceOf(
     MeshStandardMaterial,
   )
+})
+
+test("ApplyMaterial and the materials namespace produce executable material operations", () => {
+  const plan = renderToJscadPlan(
+    <jscad.materials.applyMaterial material={silver}>
+      <jscad.cube size={2} />
+    </jscad.materials.applyMaterial>,
+  )
+  expect(plan).toEqual({
+    type: "applyMaterial",
+    material: silver,
+    shape: { type: "cube", size: 2 },
+  })
+  const geometry = executeJscadOperations(
+    modeling as any,
+    JSON.parse(JSON.stringify(plan)),
+  )
+  expect(geometry.material).toEqual(silver)
+  const source = modeling.primitives.cube({ size: 2 })
+  expect(materials.applyMaterial(silver, source).material).toEqual(silver)
+  expect(source).not.toHaveProperty("material")
+  const native = render(
+    <ApplyMaterial material={silver}>
+      <Cube size={2} />
+      <Sphere radius={1} />
+    </ApplyMaterial>,
+  )
+  expect(native).toHaveLength(2)
+  expect(native.map((shape) => shape.material)).toEqual([silver, silver])
+  expect(
+    render(
+      <ApplyMaterial material={silver}>
+        <Rectangle size={[2, 2]} reference name="hidden" />
+      </ApplyMaterial>,
+    ),
+  ).toEqual([])
+})
+
+test("async material groups update a flat renderer container", async () => {
+  const container: any[] = []
+  const root = createJSCADRenderer(modeling as any).createJSCADRoot(container)
+  const update = (element: React.ReactElement | null) =>
+    new Promise<void>((resolve) => root.render(element as any, resolve))
+  try {
+    await update(
+      <ApplyMaterial material={silver}>
+        <Cube size={2} />
+        <Sphere radius={1} />
+      </ApplyMaterial>,
+    )
+    expect(container).toHaveLength(2)
+    expect(container.map((shape) => shape.material)).toEqual([silver, silver])
+    await update(
+      <ApplyMaterial material={{ color: "blue" }}>
+        <Cube size={3} />
+      </ApplyMaterial>,
+    )
+    expect(container).toHaveLength(1)
+    expect(container[0].material).toEqual({ color: "blue" })
+    expect(modeling.measurements.measureVolume(container[0])).toBeCloseTo(27)
+  } finally {
+    await update(null)
+  }
+  expect(container).toHaveLength(0)
 })
 
 test("translation, rotation and colorization retain materials", () => {
@@ -142,6 +208,7 @@ test("headless plans preserve material metadata and stay executable", () => {
   expect(plan.shape.material).toEqual(silver)
   expect(JSON.parse(JSON.stringify(plan))).toEqual(plan)
   const solid = executeJscadOperations(modeling as any, plan)
+  expect(solid.material).toEqual(silver)
   expect(modeling.measurements.measureBoundingBox(solid) as number[][]).toEqual(
     [
       [4, -1, -1],
@@ -280,6 +347,22 @@ test("Three renderer displays materials on initial render and updates", async ()
       .material as MeshStandardMaterial
     expect(defaultMaterial.color.getHexString()).toBe("ffffff")
     expect(defaultMaterial.metalness).toBe(0)
+    const explicit = await update(
+      <jscad.materials.applyMaterial material={silver}>
+        <Cube size={2} />
+      </jscad.materials.applyMaterial>,
+    )
+    expect((explicit.children[0] as any).material.metalness).toBe(1)
+    const changed = await update(
+      <jscad.materials.applyMaterial material={{ color: "red" }}>
+        <Cube size={2} />
+        <Sphere radius={1} />
+      </jscad.materials.applyMaterial>,
+    )
+    expect(changed.children).toHaveLength(2)
+    expect((changed.children[1] as any).material.color.getHexString()).toBe(
+      "ff0000",
+    )
   } finally {
     await new Promise<void>((resolve) => root.render(null as any, resolve))
   }

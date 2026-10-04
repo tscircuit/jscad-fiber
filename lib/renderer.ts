@@ -107,8 +107,9 @@ export function createJSCADRenderer(jscad: JSCADModule) {
     onError?: (error: Error) => void,
   ) {
     const reconciler = ReactReconciler(hostConfig)
+    const reconcilerContainer: JSCADPrimitive[] = []
     const root = reconciler.createContainer(
-      container,
+      reconcilerContainer,
       0,
       null,
       false,
@@ -124,7 +125,14 @@ export function createJSCADRenderer(jscad: JSCADModule) {
       render(element: React.ReactElement, callback?: () => void) {
         if (callback) {
           // Async mode - use React reconciler
-          reconciler.updateContainer(element, root, null, callback)
+          reconciler.updateContainer(element, root, null, () => {
+            container.splice(
+              0,
+              container.length,
+              ...reconcilerContainer.flat(Infinity),
+            )
+            callback()
+          })
         } else {
           // Sync mode - use synchronous renderer
           try {

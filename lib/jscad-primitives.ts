@@ -1,7 +1,11 @@
 import type { Point3, Slice } from "./jscad-fns"
+import type { MaterialOptions } from "./material"
 
 // Define a type for the JSCAD module structure we expect
 export interface JSCADModule {
+  materials?: {
+    applyMaterial: (material: MaterialOptions, geometry: any) => any
+  }
   primitives: {
     polygon: (options: { points: [number, number][] }) => any
     cube: (options: { size: number | [number, number, number] }) => any
