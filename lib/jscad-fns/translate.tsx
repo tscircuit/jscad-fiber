@@ -1,3 +1,4 @@
+import type { MaterialProps } from "../material"
 export type Point3 =
   | [number, number, number]
   | { x: number; y: number; z: number }
@@ -19,9 +20,10 @@ export type TranslateProps = {
   y?: number
   z?: number
   children: React.ReactNode
-}
+} & MaterialProps
 
 export function Translate({
+  material,
   offset,
   center,
   x,
@@ -38,5 +40,9 @@ export function Translate({
     offsetNorm?.[2] || centerNorm?.[2] || z || 0,
   ]
 
-  return <translate args={args}>{children}</translate>
+  return (
+    <translate material={material} args={args}>
+      {children}
+    </translate>
+  )
 }

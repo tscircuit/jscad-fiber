@@ -1,3 +1,5 @@
+import { createThreeMaterial } from "../create-three-material"
+import { disposeThreeScene } from "../dispose-three-scene"
 import * as jscad from "@jscad/modeling"
 import React from "react"
 import * as THREE from "three"
@@ -76,19 +78,12 @@ export function JsCadView({
 
           if (csg.sides) {
             // 2D shape
-            const material = new THREE.LineBasicMaterial({
-              vertexColors: true,
-              linewidth: 2, // Note: linewidth > 1 only works in WebGL 2
-            })
+            const material = createThreeMaterial(csg.material, { is2D: true })
             const lineLoop = new THREE.LineLoop(geometry, material)
             scene.add(lineLoop)
           } else {
             // 3D shape
-            const material = new THREE.MeshStandardMaterial({
-              vertexColors: true,
-              wireframe: wireframe,
-              side: THREE.DoubleSide, // Ensure both sides are visible
-            })
+            const material = createThreeMaterial(csg.material, { wireframe })
             const mesh = new THREE.Mesh(geometry, material)
             scene.add(mesh)
           }
@@ -115,8 +110,9 @@ export function JsCadView({
       controls.enableZoom = true
 
       // Animation loop
+      let animationFrame: number
       function animate() {
-        requestAnimationFrame(animate)
+        animationFrame = requestAnimationFrame(animate)
         controls.update()
         renderer.render(scene, camera)
       }
@@ -124,9 +120,11 @@ export function JsCadView({
 
       // Cleanup function
       return () => {
-        scene.remove(gridHelper)
+        cancelAnimationFrame(animationFrame)
+        disposeThreeScene(scene)
         renderer.dispose()
         controls.dispose()
+        renderer.domElement.remove()
       }
     }
   }, [children, wireframe, zAxisUp, showGrid])

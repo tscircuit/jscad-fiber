@@ -51,7 +51,7 @@
   },
   "dependencies": {
     "color": "^4.2.3",
-    "jscad-planner": "^0.0.14"
+    "jscad-planner": "https://pkg.pr.new/jscad-planner@49da3c2"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",

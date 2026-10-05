@@ -1,3 +1,4 @@
+import type { MaterialProps } from "../material"
 import { withColorProp } from "lib/wrappers/with-color-prop"
 import { withOffsetProp } from "lib/wrappers/with-offset-prop"
 
@@ -9,9 +10,10 @@ export type TorusProps = {
   innerRotation?: number
   outerRotation?: number
   startAngle?: number
-}
+} & MaterialProps
 
 const TorusBase = ({
+  material,
   innerRadius,
   outerRadius,
   innerSegments = 32,
@@ -22,6 +24,7 @@ const TorusBase = ({
 }: TorusProps) => {
   return (
     <torus
+      material={material}
       innerRadius={innerRadius}
       outerRadius={outerRadius}
       innerSegments={innerSegments}

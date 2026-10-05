@@ -1,3 +1,4 @@
+import type { MaterialProps } from "../material"
 import { withColorProp } from "lib/wrappers/with-color-prop"
 import { withOffsetProp } from "lib/wrappers/with-offset-prop"
 import type { Point3 } from "./translate"
@@ -12,7 +13,7 @@ export type RotateProps = {
   rotation?: RotationValue
   angles?: RotationValue
   children: React.ReactNode
-}
+} & MaterialProps
 
 const convertToRadians = (value: string | number): number => {
   if (typeof value === "string") {
@@ -47,12 +48,16 @@ export const processRotation = (
   return [0, 0, 0]
 }
 
-const RotateBase = ({ rotation, angles, children }: RotateProps) => {
+const RotateBase = ({ material, rotation, angles, children }: RotateProps) => {
   const finalRotation = rotation
     ? processRotation(rotation)
     : processRotation(angles)
 
-  return <rotate angles={finalRotation}>{children}</rotate>
+  return (
+    <rotate material={material} angles={finalRotation}>
+      {children}
+    </rotate>
+  )
 }
 
 export const Rotate = withOffsetProp(withColorProp(RotateBase))

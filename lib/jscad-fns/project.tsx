@@ -1,12 +1,13 @@
+import type { MaterialProps } from "../material"
 export type ProjectProps = {
   axis: [number, number, number]
   origin: [number, number, number]
   children: any
-}
+} & MaterialProps
 
-export function Project({ axis, origin, children }: ProjectProps) {
+export function Project({ material, axis, origin, children }: ProjectProps) {
   return (
-    <project axis={axis} origin={origin}>
+    <project material={material} axis={axis} origin={origin}>
       {children}
     </project>
   )
