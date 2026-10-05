@@ -5,7 +5,7 @@ import { LineBasicMaterial, MeshStandardMaterial } from "three"
 import type { Scene } from "three"
 import { useEffect } from "react"
 import {
-  ApplyMaterial,
+  Material,
   Colorize,
   Cube,
   Custom,
@@ -50,11 +50,11 @@ test("material prop reaches native solids without changing geometry", () => {
   )
 })
 
-test("ApplyMaterial and the materials namespace produce executable material operations", () => {
+test("Material and jscad.material turn top-level props into executable material operations", () => {
   const plan = renderToJscadPlan(
-    <jscad.materials.applyMaterial material={silver}>
+    <jscad.material color="silver" metalness={1} roughness={0.25}>
       <jscad.cube size={2} />
-    </jscad.materials.applyMaterial>,
+    </jscad.material>,
   )
   expect(plan).toEqual({
     type: "applyMaterial",
@@ -70,18 +70,18 @@ test("ApplyMaterial and the materials namespace produce executable material oper
   expect(materials.applyMaterial(silver, source).material).toEqual(silver)
   expect(source).not.toHaveProperty("material")
   const native = render(
-    <ApplyMaterial material={silver}>
+    <Material {...silver}>
       <Cube size={2} />
       <Sphere radius={1} />
-    </ApplyMaterial>,
+    </Material>,
   )
   expect(native).toHaveLength(2)
   expect(native.map((shape) => shape.material)).toEqual([silver, silver])
   expect(
     render(
-      <ApplyMaterial material={silver}>
+      <Material {...silver}>
         <Rectangle size={[2, 2]} reference name="hidden" />
-      </ApplyMaterial>,
+      </Material>,
     ),
   ).toEqual([])
 })
@@ -93,17 +93,17 @@ test("async material groups update a flat renderer container", async () => {
     new Promise<void>((resolve) => root.render(element as any, resolve))
   try {
     await update(
-      <ApplyMaterial material={silver}>
+      <Material {...silver}>
         <Cube size={2} />
         <Sphere radius={1} />
-      </ApplyMaterial>,
+      </Material>,
     )
     expect(container).toHaveLength(2)
     expect(container.map((shape) => shape.material)).toEqual([silver, silver])
     await update(
-      <ApplyMaterial material={{ color: "blue" }}>
+      <Material color="blue">
         <Cube size={3} />
-      </ApplyMaterial>,
+      </Material>,
     )
     expect(container).toHaveLength(1)
     expect(container[0].material).toEqual({ color: "blue" })
@@ -348,16 +348,16 @@ test("Three renderer displays materials on initial render and updates", async ()
     expect(defaultMaterial.color.getHexString()).toBe("ffffff")
     expect(defaultMaterial.metalness).toBe(0)
     const explicit = await update(
-      <jscad.materials.applyMaterial material={silver}>
+      <jscad.material {...silver}>
         <Cube size={2} />
-      </jscad.materials.applyMaterial>,
+      </jscad.material>,
     )
     expect((explicit.children[0] as any).material.metalness).toBe(1)
     const changed = await update(
-      <jscad.materials.applyMaterial material={{ color: "red" }}>
+      <jscad.material color="red">
         <Cube size={2} />
         <Sphere radius={1} />
-      </jscad.materials.applyMaterial>,
+      </jscad.material>,
     )
     expect(changed.children).toHaveLength(2)
     expect((changed.children[1] as any).material.color.getHexString()).toBe(

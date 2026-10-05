@@ -1,10 +1,9 @@
 import type { MaterialOptions } from "../material"
 
-export interface ApplyMaterialProps {
-  material: MaterialOptions
+export interface MaterialComponentProps extends MaterialOptions {
   children: React.ReactNode
 }
 
-export function ApplyMaterial({ material, children }: ApplyMaterialProps) {
+export function Material({ children, ...material }: MaterialComponentProps) {
   return <applyMaterial material={material}>{children}</applyMaterial>
 }

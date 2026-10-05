@@ -2,14 +2,12 @@ import { JsCadView, jscad as p } from "../lib"
 
 export default () => (
   <JsCadView>
-    <p.materials.applyMaterial
-      material={{ color: "silver", metalness: 1, roughness: 0.2 }}
-    >
+    <p.material color="silver" metalness={1} roughness={0.2}>
       <p.subtract>
         <p.cube size={10} />
         <p.sphere radius={6} />
       </p.subtract>
-    </p.materials.applyMaterial>
+    </p.material>
     <p.sphere
       radius={4}
       center={[15, 0, 0]}

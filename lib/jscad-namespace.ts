@@ -1,5 +1,4 @@
 import {
-  ApplyMaterial,
   Colorize,
   Cube,
   Cuboid,
@@ -8,6 +7,7 @@ import {
   ExtrudeRotate,
   Hull,
   HullChain,
+  Material,
   Polygon,
   Rectangle,
   Rotate,
@@ -20,7 +20,7 @@ import {
 
 /** Namespaced aliases of the existing components supported by the plan backend. */
 export const jscad = {
-  materials: { applyMaterial: ApplyMaterial },
+  material: Material,
   colorize: Colorize,
   cube: Cube,
   cuboid: Cuboid,
