@@ -1,5 +1,6 @@
 import type { MaterialProps } from "../material"
 import { withOffsetProp } from "lib/wrappers/with-offset-prop"
+import { withRotationProp } from "lib/wrappers/with-rotation-prop"
 import { withColorProp } from "../wrappers/with-color-prop"
 
 export type SphereProps = {
@@ -17,4 +18,6 @@ const SphereBase = ({ material, radius, segments }: SphereProps) => {
   )
 }
 
-export const Sphere = withColorProp(withOffsetProp(SphereBase))
+export const Sphere = withColorProp(
+  withOffsetProp(withRotationProp(SphereBase)),
+)

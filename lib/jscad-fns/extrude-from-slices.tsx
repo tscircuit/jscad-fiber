@@ -1,6 +1,7 @@
 import type { MaterialProps } from "../material"
 import { withColorProp } from "lib/wrappers/with-color-prop"
 import { withOffsetProp } from "lib/wrappers/with-offset-prop"
+import { withRotationProp } from "lib/wrappers/with-rotation-prop"
 import type { Point3 } from "./translate"
 
 export type Slice = {
@@ -42,5 +43,5 @@ const ExtrudeFromSlicesBase = ({
 }
 
 export const ExtrudeFromSlices = withOffsetProp(
-  withColorProp(ExtrudeFromSlicesBase),
+  withColorProp(withRotationProp(ExtrudeFromSlicesBase)),
 )

@@ -1,6 +1,7 @@
 import type { MaterialProps } from "../material"
 import { withColorProp } from "lib/wrappers/with-color-prop"
 import { withOffsetProp } from "lib/wrappers/with-offset-prop"
+import { withRotationProp } from "lib/wrappers/with-rotation-prop"
 
 export type CylinderEllipticProps = {
   height: number
@@ -35,5 +36,5 @@ const CylinderEllipticBase = ({
 }
 
 export const CylinderElliptic = withOffsetProp(
-  withColorProp(CylinderEllipticBase),
+  withColorProp(withRotationProp(CylinderEllipticBase)),
 )

@@ -1,6 +1,7 @@
 import type { MaterialProps } from "../material"
 import { withColorProp } from "lib/wrappers/with-color-prop"
 import { withOffsetProp } from "lib/wrappers/with-offset-prop"
+import { withRotationProp } from "lib/wrappers/with-rotation-prop"
 
 export type ExtrudeLinearProps = {
   height: number
@@ -28,4 +29,6 @@ const ExtrudeLinearBase = ({
   )
 }
 
-export const ExtrudeLinear = withOffsetProp(withColorProp(ExtrudeLinearBase))
+export const ExtrudeLinear = withOffsetProp(
+  withColorProp(withRotationProp(ExtrudeLinearBase)),
+)
