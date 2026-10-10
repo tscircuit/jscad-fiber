@@ -10,6 +10,7 @@ This package allows you to create 3D CAD objects with React and JSCAD.
 - [Common Props](#common-props)
 - [Components](#components)
   - [Basic Shapes](#basic-shapes)
+  - [Text](#text)
   - [Boolean Operations](#boolean-operations)
   - [Transformations](#transformations)
   - [Extrusions](#extrusions)
@@ -108,6 +109,23 @@ All components support these common props:
   innerSegments={32}
   outerSegments={32}
 />
+```
+
+### Text
+
+Stroke-font 3D text using `@jscad/modeling` `vectorText` (Hershey simplex, ASCII). Each glyph stroke becomes a cuboid, so the same host that renders cubes can render labels without a planner text op.
+
+| Prop | Type | Description |
+|------|------|-------------|
+| `children` / `text` | `string` | ASCII string to render |
+| `fontSize` | `number` | Uppercase glyph height (default: 4) |
+| `height` | `number` | Extrusion depth along Z (default: 1) |
+| `lineWidth` | `number` | Stroke width (default: fontSize / 8) |
+| `align` | `"left" \| "center" \| "right"` | Multi-line alignment |
+
+```tsx
+<Text fontSize={4} height={1} color="orange">Hello</Text>
+<Text text="JSCAD" fontSize={8} height={2} align="center" />
 ```
 
 ### Boolean Operations
@@ -210,6 +228,7 @@ All components support these common props:
 | Component | Props | Description |
 |-----------|-------|-------------|
 | Cube | `size: number \| [number,number,number]` | Size in each dimension |
+| Text | `text` / `children`, `fontSize?`, `height?`, `lineWidth?`, `align?` | 3D stroke-font labels |
 | Sphere | `radius: number`, `segments?: number` | Radius and detail level |
 | Cylinder | `radius: number`, `height: number` | Basic cylinder dimensions |
 | Torus | `innerRadius: number`, `outerRadius: number`, `segments?: number` | Ring dimensions |
