@@ -1,6 +1,8 @@
 export * from "./jscad-fns"
 export * from "./hooks/use-render-elements-to-jscad-plan"
 export * from "./components/jscad-view"
+export * from "./components/jscad-fixture"
+export * from "./components/jscad-three-mesh"
 export * from "./renderer"
 export * from "./render-to-jscad-plan"
 export { jscad } from "./jscad-namespace"
