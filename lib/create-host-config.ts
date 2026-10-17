@@ -9,6 +9,7 @@ import type {
   ColorizeProps,
   CubeProps,
   CuboidProps,
+  CustomProps,
   CylinderEllipticProps,
   CylinderProps,
   EllipsoidProps,
@@ -27,6 +28,7 @@ import type {
   SphereProps,
   TorusProps,
 } from "./jscad-fns"
+import { evalJscadCode } from "./jscad-fns"
 import type { JSCADModule, JSCADPrimitive } from "./jscad-primitives"
 import React from "react"
 import { singleElementUnnest } from "./utils/singleElementUnnest"
@@ -272,8 +274,10 @@ export function createHostConfig(
       }
 
       case "custom": {
-        const { geometry } = props as { geometry: Geom3 }
-
+        const { geometry, code, params } = props as CustomProps
+        if (typeof code === "string") {
+          return evalJscadCode(code, jscad, params)
+        }
         return geometry
       }
 
