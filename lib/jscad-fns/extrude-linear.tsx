@@ -1,11 +1,14 @@
 import type { MaterialProps } from "../material"
+import type { Distance } from "../utils/convert-distance"
 import { withColorProp } from "lib/wrappers/with-color-prop"
 import { withOffsetProp } from "lib/wrappers/with-offset-prop"
+import { withRotationProp } from "lib/wrappers/with-rotation-prop"
 
 export type ExtrudeLinearProps = {
-  height: number
+  height: Distance
   twistAngle?: number
   twistSteps?: number
+  minimal?: boolean
   children: any
 } & MaterialProps
 
@@ -14,6 +17,7 @@ const ExtrudeLinearBase = ({
   height,
   twistAngle,
   twistSteps,
+  minimal,
   children,
 }: ExtrudeLinearProps) => {
   return (
@@ -22,10 +26,13 @@ const ExtrudeLinearBase = ({
       height={height}
       twistAngle={twistAngle}
       twistSteps={twistSteps}
+      minimal={minimal}
     >
       {children}
     </extrudeLinear>
   )
 }
 
-export const ExtrudeLinear = withOffsetProp(withColorProp(ExtrudeLinearBase))
+export const ExtrudeLinear = withOffsetProp(
+  withColorProp(withRotationProp(ExtrudeLinearBase)),
+)

@@ -4,6 +4,7 @@ import type { MaterialOptions, MaterialProps } from "./material"
 type CommonProps = { key?: any } & MaterialProps
 
 export interface JscadElements {
+  minimalMode: { minimal?: boolean; children: React.ReactNode }
   applyMaterial: { material: MaterialOptions; children: React.ReactNode }
   project: FN.ProjectProps & CommonProps
   extrudeRectangular: FN.ExtrudeRectangularProps & CommonProps

@@ -31,9 +31,18 @@ import type { JSCADModule, JSCADPrimitive } from "./jscad-primitives"
 import React from "react"
 import { singleElementUnnest } from "./utils/singleElementUnnest"
 import { materials, preserveMaterial, type MaterialOptions } from "./material"
+import { isMinimalModeActive, withMinimalMode } from "./minimal-mode"
+import {
+  resolveDistance,
+  resolveDistanceTuple2,
+  resolveDistanceTuple3,
+  resolveOptionalDistance,
+  resolveSize3D,
+} from "./utils/convert-distance"
+
 export function createHostConfig(
   jscad: JSCADModule,
-  options: { preserveReferences?: boolean } = {},
+  options: { preserveReferences?: boolean; minimal?: boolean } = {},
 ) {
   const applyMaterial = (material: MaterialOptions, geometry: any): any => {
     if (Array.isArray(geometry)) {
@@ -60,6 +69,7 @@ export function createHostConfig(
     // Components forward material to their host element. Apply it once there.
     return typeof type === "string" &&
       type !== "applyMaterial" &&
+      type !== "minimalMode" &&
       props.material
       ? applyMaterial(props.material, geometry)
       : geometry
@@ -94,69 +104,134 @@ export function createHostConfig(
     }
     if ((type as unknown) === React.Fragment)
       return renderChildren(props.children)
-    if (typeof type === "function") return renderChildren(type(props))
+    if (typeof type === "function") {
+      const activeMinimal = isMinimalModeActive(
+        props?.minimal ?? options.minimal,
+      )
+      return withMinimalMode(activeMinimal, () => renderChildren(type(props)))
+    }
+
+    const isMinimal = isMinimalModeActive(props?.minimal ?? options.minimal)
+    const centerOption =
+      isMinimal && props?.center !== undefined ? { center: props.center } : {}
 
     switch (type) {
+      case "minimalMode":
+        return withMinimalMode(props.minimal ?? true, () =>
+          renderChildren(props.children),
+        )
       case "applyMaterial":
         return renderChildren(props.children).map((shape) =>
           applyMaterial(props.material, shape),
         )
       case "cube":
-        return jscad.primitives.cube({ size: (props as CubeProps).size })
+        return jscad.primitives.cube({
+          size: resolveSize3D((props as CubeProps).size, isMinimal),
+          ...centerOption,
+        } as any)
       case "sphere":
       case "jscadSphere":
         return jscad.primitives.sphere({
-          radius: (props as SphereProps).radius,
+          radius: resolveDistance((props as SphereProps).radius, isMinimal),
           segments: (props as SphereProps).segments,
-        })
+          ...centerOption,
+        } as any)
       case "cuboid":
         return jscad.primitives.cuboid({
-          size: (props as CuboidProps).size,
-        })
+          size: resolveSize3D((props as CuboidProps).size, isMinimal),
+          ...centerOption,
+        } as any)
       case "roundedCuboid":
         return jscad.primitives.roundedCuboid({
-          size: (props as RoundedCuboidProps).size,
-          roundRadius: (props as RoundedCuboidProps).roundRadius,
-        })
+          size: resolveSize3D((props as RoundedCuboidProps).size, isMinimal),
+          roundRadius: resolveDistance(
+            (props as RoundedCuboidProps).roundRadius,
+            isMinimal,
+          ),
+          ...centerOption,
+        } as any)
       case "geodesicSphere":
         return jscad.primitives.geodesicSphere({
-          radius: (props as GeodesicSphereProps).radius,
+          radius: resolveDistance(
+            (props as GeodesicSphereProps).radius,
+            isMinimal,
+          ),
           frequency: (props as GeodesicSphereProps).frequency,
-        })
+          ...centerOption,
+        } as any)
       case "ellipsoid":
         return jscad.primitives.ellipsoid({
-          radius: (props as EllipsoidProps).radius,
-        })
+          radius: resolveDistanceTuple3(
+            (props as EllipsoidProps).radius,
+            isMinimal,
+          ),
+          ...centerOption,
+        } as any)
       case "cylinder":
         return jscad.primitives.cylinder({
-          radius: (props as CylinderProps).radius,
-          height: (props as CylinderProps).height,
-        })
+          radius: resolveDistance((props as CylinderProps).radius, isMinimal),
+          height: resolveDistance((props as CylinderProps).height, isMinimal),
+          ...centerOption,
+        } as any)
       case "roundedCylinder":
         return jscad.primitives.roundedCylinder({
-          radius: (props as RoundedCylinderProps).radius,
-          height: (props as RoundedCylinderProps).height,
-          roundRadius: (props as RoundedCylinderProps).roundRadius,
-        })
+          radius: resolveDistance(
+            (props as RoundedCylinderProps).radius,
+            isMinimal,
+          ),
+          height: resolveDistance(
+            (props as RoundedCylinderProps).height,
+            isMinimal,
+          ),
+          roundRadius: resolveDistance(
+            (props as RoundedCylinderProps).roundRadius,
+            isMinimal,
+          ),
+          ...centerOption,
+        } as any)
       case "cylinderElliptic":
         return jscad.primitives.cylinderElliptic({
-          radius: (props as CylinderEllipticProps).radius,
-          height: (props as CylinderEllipticProps).height,
-          startRadius: (props as CylinderEllipticProps).startRadius,
-          endRadius: (props as CylinderEllipticProps).endRadius,
+          radius: resolveOptionalDistance(
+            (props as CylinderEllipticProps).radius,
+            isMinimal,
+          ),
+          height: resolveDistance(
+            (props as CylinderEllipticProps).height,
+            isMinimal,
+          ),
+          startRadius: (props as CylinderEllipticProps).startRadius
+            ? resolveDistanceTuple2(
+                (props as CylinderEllipticProps).startRadius,
+                isMinimal,
+              )
+            : undefined,
+          endRadius: (props as CylinderEllipticProps).endRadius
+            ? resolveDistanceTuple2(
+                (props as CylinderEllipticProps).endRadius,
+                isMinimal,
+              )
+            : undefined,
           startAngle: (props as CylinderEllipticProps).startAngle,
           endAngle: (props as CylinderEllipticProps).endAngle,
-        })
+          ...centerOption,
+        } as any)
       case "torus":
         return jscad.primitives.torus({
-          innerRadius: (props as TorusProps).innerRadius,
-          outerRadius: (props as TorusProps).outerRadius,
+          innerRadius: resolveDistance(
+            (props as TorusProps).innerRadius,
+            isMinimal,
+          ),
+          outerRadius: resolveDistance(
+            (props as TorusProps).outerRadius,
+            isMinimal,
+          ),
           innerSegments: (props as TorusProps).innerSegments,
           outerSegments: (props as TorusProps).outerSegments,
           innerRotation: (props as TorusProps).innerRotation,
           outerRotation: (props as TorusProps).outerRotation,
           startAngle: (props as TorusProps).startAngle,
-        })
+          ...centerOption,
+        } as any)
       case "jscadPolygon": {
         return jscad.primitives.polygon({
           points: (props as PolygonProps).points,
@@ -170,7 +245,7 @@ export function createHostConfig(
 
         const extrudedGeometry = jscad.extrusions.extrudeLinear(
           {
-            height: extrudeProps.height,
+            height: resolveDistance(extrudeProps.height, isMinimal),
             // twistAngle: extrudeProps.twistAngle,
             // twistSteps: extrudeProps.twistSteps,
           },
@@ -202,8 +277,8 @@ export function createHostConfig(
 
         const extrudedGeometry = jscad.extrusions.extrudeRectangular(
           {
-            size: extrudeProps.size,
-            height: extrudeProps.height,
+            size: resolveDistance(extrudeProps.size, isMinimal),
+            height: resolveDistance(extrudeProps.height, isMinimal),
           },
           singleElementUnnest(childrenGeometry),
         )
@@ -217,11 +292,17 @@ export function createHostConfig(
 
         const extrudedGeometry = jscad.extrusions.extrudeHelical(
           {
-            height: extrudeProps.height,
+            height: resolveDistance(extrudeProps.height, isMinimal),
             angle: extrudeProps.angle,
             startAngle: extrudeProps.startAngle || 0,
-            pitch: extrudeProps.pitch || 0,
-            endOffset: extrudeProps.endOffset || 0,
+            pitch:
+              extrudeProps.pitch !== undefined
+                ? resolveDistance(extrudeProps.pitch, isMinimal)
+                : 0,
+            endOffset:
+              extrudeProps.endOffset !== undefined
+                ? resolveDistance(extrudeProps.endOffset, isMinimal)
+                : 0,
             segmetsPerRotation: extrudeProps.segmetsPerRotation || 32,
           },
           singleElementUnnest(childrenGeometry),
@@ -337,7 +418,11 @@ export function createHostConfig(
         if (reference && !name?.trim())
           throw new Error("Reference rectangles require a nonblank name")
         if (reference && !options.preserveReferences) return []
-        const geometry = jscad.primitives.rectangle({ size })
+        const resolvedSize = resolveDistanceTuple2(size, isMinimal)
+        const geometry = jscad.primitives.rectangle({
+          size: resolvedSize,
+          ...centerOption,
+        } as any)
         return options.preserveReferences &&
           (name !== undefined || reference !== undefined)
           ? {
@@ -352,7 +437,10 @@ export function createHostConfig(
       case "jscadCircle": {
         const { radius } = props as CircleProps
 
-        return jscad.primitives.circle({ radius })
+        return jscad.primitives.circle({
+          radius: resolveDistance(radius, isMinimal),
+          ...centerOption,
+        } as any)
       }
 
       default:
