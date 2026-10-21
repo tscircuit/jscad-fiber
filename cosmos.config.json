@@ -1,5 +1,6 @@
 {
   "plugins": ["react-cosmos-plugin-vite"],
   "globalImports": ["src/main.css"],
-  "ignore": ["**/cosmos-export/**"]
+  "ignore": ["**/cosmos-export/**"],
+  "fixtureDir": "examples"
 }
