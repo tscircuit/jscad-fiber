@@ -1,10 +1,21 @@
 import type { MaterialProps } from "../material"
-import type { Geom3 } from "@jscad/modeling/src/geometries/types"
+import type { NativeGeometry } from "../model-types"
 
 export type CustomProps = {
-  geometry: Geom3
+  geometry: NativeGeometry
+  /** A stable model-local feature name collected by renderToJscadModel. */
+  name?: string
+  /** Construction geometry: collected by name, excluded from solid rendering. */
+  reference?: boolean
 } & MaterialProps
 
-export function Custom({ material, geometry }: CustomProps) {
-  return <custom material={material} geometry={geometry} />
+export function Custom({ material, geometry, name, reference }: CustomProps) {
+  return (
+    <custom
+      material={material}
+      geometry={geometry}
+      name={name}
+      reference={reference}
+    />
+  )
 }

@@ -1,4 +1,3 @@
-import type { Geom3 } from "@jscad/modeling/src/geometries/types"
 import type ReactReconciler from "react-reconciler"
 import {
   DefaultEventPriority,
@@ -9,6 +8,7 @@ import type {
   ColorizeProps,
   CubeProps,
   CuboidProps,
+  CustomProps,
   CylinderEllipticProps,
   CylinderProps,
   EllipsoidProps,
@@ -31,9 +31,26 @@ import type { JSCADModule, JSCADPrimitive } from "./jscad-primitives"
 import React from "react"
 import { singleElementUnnest } from "./utils/singleElementUnnest"
 import { materials, preserveMaterial, type MaterialOptions } from "./material"
+import type { NativeGeometry } from "./model-types"
+const identityReferenceMatrix = () => [
+  1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1,
+]
+
 export function createHostConfig(
   jscad: JSCADModule,
-  options: { preserveReferences?: boolean } = {},
+  options: {
+    preserveReferences?: boolean
+    collectFeature?: (
+      name: string,
+      geometry: NativeGeometry,
+      matrix: number[],
+    ) => void
+    transformFeatureMatrix?: (
+      matrix: number[],
+      type: "translate" | "rotate",
+      vector: [number, number, number],
+    ) => number[]
+  } = {},
 ) {
   const applyMaterial = (material: MaterialOptions, geometry: any): any => {
     if (Array.isArray(geometry)) {
@@ -49,6 +66,7 @@ export function createHostConfig(
     rootContainerInstance: any,
     hostContext: any,
     internalInstanceHandle: any,
+    referenceMatrix = identityReferenceMatrix(),
   ): any => {
     const geometry = createGeometry(
       type,
@@ -56,6 +74,7 @@ export function createHostConfig(
       rootContainerInstance,
       hostContext,
       internalInstanceHandle,
+      referenceMatrix,
     )
     // Components forward material to their host element. Apply it once there.
     return typeof type === "string" &&
@@ -71,10 +90,15 @@ export function createHostConfig(
     rootContainerInstance: any,
     hostContext: any,
     internalInstanceHandle: any,
+    referenceMatrix: number[],
   ) => {
-    const renderChildren = (children: React.ReactNode): any[] => {
+    const renderChildren = (
+      children: React.ReactNode,
+      matrix = referenceMatrix,
+    ): any[] => {
       if (children == null || typeof children === "boolean") return []
-      if (Array.isArray(children)) return children.flatMap(renderChildren)
+      if (Array.isArray(children))
+        return children.flatMap((child) => renderChildren(child, matrix))
       if (!React.isValidElement(children))
         throw new Error(
           "Expected JSCAD elements, not text or arbitrary objects",
@@ -85,6 +109,7 @@ export function createHostConfig(
         [],
         hostContext,
         internalInstanceHandle,
+        matrix,
       )
       return Array.isArray(result)
         ? result.flat(Infinity)
@@ -272,8 +297,21 @@ export function createHostConfig(
       }
 
       case "custom": {
-        const { geometry } = props as { geometry: Geom3 }
-
+        const { geometry, name, reference } = props as CustomProps
+        if (options.preserveReferences)
+          throw new Error(
+            "Raw Custom geometry is not supported by the plan compiler; use renderToJscadModel with a native kernel",
+          )
+        if (
+          (name !== undefined && (typeof name !== "string" || !name.trim())) ||
+          (reference && name === undefined)
+        )
+          throw new Error(
+            "Named and reference Custom geometry require a nonblank name",
+          )
+        if (name !== undefined)
+          options.collectFeature?.(name, geometry, referenceMatrix)
+        if (reference) return []
         return geometry
       }
 
@@ -284,15 +322,14 @@ export function createHostConfig(
         return jscad.booleans.union(...geometries)
       }
       case "subtract": {
-        const children = React.Children.toArray(props.children)
-        if (children.length < 2)
-          throw new Error(
-            "Subtract must have at least one base component and one component to subtract.",
-          )
-        const bases = renderChildren(children[0])
+        const groups = React.Children.toArray(props.children)
+          .map((child) => renderChildren(child))
+          .filter((group) => group.length)
+        if (!groups.length) return []
+        const [bases, ...remaining] = groups
         if (bases.length !== 1)
           throw new Error("Subtract requires exactly one solid base")
-        const cutters = children.slice(1).flatMap(renderChildren)
+        const cutters = remaining.flat()
         return preserveMaterial(
           bases[0],
           cutters.length
@@ -304,7 +341,13 @@ export function createHostConfig(
       case "translate": {
         const { args, children } =
           props as React.JSX.IntrinsicElements["translate"]
-        const childrenGeometries = renderChildren(children)
+        const matrix =
+          options.transformFeatureMatrix?.(
+            referenceMatrix,
+            "translate",
+            args,
+          ) ?? referenceMatrix
+        const childrenGeometries = renderChildren(children, matrix)
         return childrenGeometries.map((shape) =>
           preserveMaterial(shape, jscad.transforms.translate(args, shape)),
         )
@@ -314,7 +357,13 @@ export function createHostConfig(
         const { children, ...rotateProps } =
           props as React.JSX.IntrinsicElements["rotate"]
 
-        const childrenGeometries = renderChildren(children)
+        const matrix =
+          options.transformFeatureMatrix?.(
+            referenceMatrix,
+            "rotate",
+            rotateProps.angles,
+          ) ?? referenceMatrix
+        const childrenGeometries = renderChildren(children, matrix)
 
         return childrenGeometries.map((shape) =>
           preserveMaterial(
@@ -336,8 +385,15 @@ export function createHostConfig(
         const { size, name, reference } = props as RectangleProps
         if (reference && !name?.trim())
           throw new Error("Reference rectangles require a nonblank name")
-        if (reference && !options.preserveReferences) return []
+        if (reference && !options.preserveReferences && !options.collectFeature)
+          return []
         const geometry = jscad.primitives.rectangle({ size })
+        if (name !== undefined && options.collectFeature) {
+          if (typeof name !== "string" || !name.trim())
+            throw new Error("Named rectangles require a nonblank name")
+          options.collectFeature(name, geometry, referenceMatrix)
+        }
+        if (reference && !options.preserveReferences) return []
         return options.preserveReferences &&
           (name !== undefined || reference !== undefined)
           ? {
