@@ -42,7 +42,9 @@ test("subtraction repair preserves native outlines", () => {
   )
   const unchanged = renderToJscadModel(tube(), modeling)
   expect(
-    modeling.geometries.geom3.toPolygons(unchanged.geometries[0] as typeof native),
+    modeling.geometries.geom3.toPolygons(
+      unchanged.geometries[0] as typeof native,
+    ),
   ).toEqual(modeling.geometries.geom3.toPolygons(native))
   const repaired = renderToJscadModel(tube(true), modeling)
   const solid = repaired.geometries[0] as typeof native
@@ -78,8 +80,6 @@ test("subtraction repair preserves native outlines", () => {
     modeling,
   )
   expect(
-    modeling.geometries.geom3.toPolygons(
-      empty.geometries[0] as typeof native,
-    ),
+    modeling.geometries.geom3.toPolygons(empty.geometries[0] as typeof native),
   ).toHaveLength(0)
 })

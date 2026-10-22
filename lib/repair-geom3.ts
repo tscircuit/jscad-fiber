@@ -20,9 +20,11 @@ export function repairGeom3(kernel: typeof Modeling, geometry: Geom3): Geom3 {
       polygon.vertices.map((point) => {
         if (!point.every(Number.isFinite))
           throw new Error("Subtract repair requires finite coordinates")
-        return point.map(
-          (value) => Math.round(value / epsilon) * epsilon,
-        ) as [number, number, number]
+        return point.map((value) => Math.round(value / epsilon) * epsilon) as [
+          number,
+          number,
+          number,
+        ]
       }),
     ),
   )

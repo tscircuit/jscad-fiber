@@ -349,6 +349,13 @@ compose into each feature's placement. `ExtrudeLinear` forwards `twistAngle` and
 extrusion scale or start option; transforms already present in the native
 profile are retained.
 
+For solid boolean joins, `<Subtract repair>` explicitly welds neighboring
+floating-point coordinates before kernel triangulation. It applies only to that
+subtraction; other boolean results retain their existing behavior. The native
+repair uses a tolerance of `max(modelExtent * 1e-10, 1e-12)` mm and verifies the
+result with the kernel's solid validator. Empty results remain empty. Plans
+retain `repair: true` metadata; native evaluation performs the normalization.
+
 The outlines are construction features of that extrusion before later booleans.
 In the tube example, the outer and inner extrusion profiles are independently
 named before subtraction. Names do not promise automatic topology tracking after
