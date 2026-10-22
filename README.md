@@ -307,38 +307,27 @@ four hollow posts on 31 mm centers, 3.2 mm M3 clearance holes, a 30 mm center
 opening, and named `motor` and `board` reference planes. Dimensions in that
 example are millimeters.
 
-## Native models with named features
+## Native models with named extrusion outlines
 
-Declare native features directly in model JSX with the existing `name` and
-`reference` props. `Custom` accepts native JSCAD `Geom2`, `Path2`, and `Geom3`
-geometry. A reference node declares construction geometry and is excluded from
-normal rendering and CSG, including when it appears before a subtraction base.
+Name the ends of an extrusion directly in normal construction JSX:
 
 ```tsx
 import modeling from "@jscad/modeling"
 import {
-  Custom, ExtrudeLinear, Subtract, Translate, renderToJscadModel,
+  ExtrudeLinear, Rectangle, Subtract, Translate, renderToJscadModel,
 } from "jscad-fiber/model"
 
 function Tube() {
-  const outer = modeling.primitives.roundedRectangle({
-    size: [40, 20], roundRadius: 3, segments: 64,
-  })
-  const inner = modeling.primitives.rectangle({ size: [34, 14] })
-  const sides = modeling.geometries.geom2.toSides(outer)
-  const topY = Math.max(...sides.flat().map((point) => point[1]))
-  const topSide = sides.find(([a, b]) => a[1] === topY && b[1] === topY)!
-  const topPath = modeling.geometries.path2.fromPoints({ closed: false }, topSide)
-  return <>
-    <ExtrudeLinear height={80}>
-      <Subtract>
-        <Custom geometry={outer} />
-        <Custom geometry={inner} />
-      </Subtract>
+  return <Subtract>
+    <ExtrudeLinear height={80}
+      topOutlineName="outer_top" bottomOutlineName="outer_bottom">
+      <Rectangle size={[40, 20]} />
     </ExtrudeLinear>
-    <Custom geometry={outer} name="outer_profile" reference />
-    <Custom geometry={topPath} name="outer_top" reference />
-  </>
+    <ExtrudeLinear height={80}
+      topOutlineName="inner_top" bottomOutlineName="inner_bottom">
+      <Rectangle size={[34, 14]} />
+    </ExtrudeLinear>
+  </Subtract>
 }
 
 const model = renderToJscadModel(
@@ -346,41 +335,65 @@ const model = renderToJscadModel(
   modeling,
 )
 const top = model.referenceFeatures.outer_top
-// top.geometry is the actual native Path2 queried from the extrusion profile.
-// Its length is 34 mm; the complete outer_profile spans 40 mm.
+// top.geometry is the actual native closed profile; its width is 40 mm.
+// top.matrix places it at the outer extrusion's end in model coordinates.
 ```
 
+`topOutlineName` and `bottomOutlineName` refer to the complete native input
+profile. Bottom means the authored start at local Z=0; top means the extrusion
+endpoint at local Z=`height`, including the full final `twistAngle` in radians.
+These names retain start/end meaning for negative heights and after rotation.
+The existing `center`/`offset` wrapper and ancestor `Translate`/`Rotate` operations
+compose into each feature's placement. `ExtrudeLinear` forwards `twistAngle` and
+`twistSteps` to the same kernel that creates the solid. There is no separate
+extrusion scale or start option; transforms already present in the native
+profile are retained.
+
+The outlines are construction features of that extrusion before later booleans.
+In the tube example, the outer and inner extrusion profiles are independently
+named before subtraction. Names do not promise automatic topology tracking after
+later cuts, and do not come from mesh indices or inferred dimension presets.
+
 `renderToJscadModel(element, kernel)` returns
-`{ geometries, referenceFeatures }`, where each named feature contains
-`{ geometry, matrix }`. Names are nonblank, preserved as authored, and unique
-within one model evaluation. Duplicate names and unnamed references throw.
-Names belong to each CAD part; separate instances can both define `outer_top`.
-A `Custom` node with a name but without `reference` is collected while also
-participating in ordinary geometry. Existing named `Rectangle` declarations
-are collected too, including transformed reference-plane markers. Rectangles
-and custom features share the same name namespace.
+`{ geometries, referenceFeatures }`. Each feature contains
+`{ geometry, matrix }`: the actual native profile plus a 16-number,
+column-major local-to-model matrix. Read points through the native JSCAD reader
+first, then apply the matrix to every point. This preserves closed and curved
+profiles, pending native profile transforms, and profiles rotated outside XY.
+The caller applies any later CAD instance placement.
 
-Features retain their native geometry, including curve samples, contour closure,
-and any pending native geometry transforms. The separate 16-number, column-major
-matrix composes the existing JSX `Translate`/`Rotate` ancestor stack into model
-coordinates. Read the geometry through its native JSCAD reader first, then apply
-this matrix to every point. This preserves planar features rotated outside XY.
-The caller applies any later CAD instance placement before using drawing
-annotations. Neither the native geometry nor this runtime collection becomes a
-Circuit JSON edge definition.
+Names must be nonblank and unique within one model evaluation; top and bottom
+share the namespace with other named features. Names are preserved as authored.
+Separate CAD part instances can each define `outer_top`. Named extrusions
+require one evaluated geometric profile; use an explicit profile boolean when
+appropriate rather than supplying multiple independent profiles under one name.
+A `Geom2` with holes retains every contour, and a closed `Path2` retains its
+closure. Readers may reject multi-contour outlines when a single edge is
+required; they must not silently select one loop or flatten holes into a fake
+connected path.
 
-Declarations identify authored native features. They do not infer stable names
-from mesh indices or automatically track how later booleans alter topology.
-A model author should query the actual geometry used to construct the model.
-Readers can support different feature kinds: a drawing edge reader may accept a
-single `Geom2` contour or `Path2`, while rejecting an unsupported `Geom3` feature.
+When either outline name is supplied, height and optional twist angle must be
+finite, and optional twist steps must be a positive integer. An empty
+construction-only input produces no solid or phantom outlines. Outline naming
+does not add material to the extrusion.
 
-The `jscad-fiber/model` entry includes the native renderer, components and
+The viewer-free `jscad-fiber/model` entry exports the renderer, components and
 `NativeGeometry`, `JscadReferenceFeature`, and `JscadModel` types. It requires
-the caller-supplied modeling kernel and imports no viewer or Three.js. It evaluates
-pure synchronous components without hooks. Native `Custom` geometry remains
-unsupported by `renderToJscadPlan`: use the native model entry for this API,
-and use the existing reference rectangle API for serializable attachment planes.
+a caller-supplied modeling kernel and evaluates pure synchronous components
+without hooks. It imports no viewer or Three.js.
 
-See the [rectangular tube example in jscad-electronics](https://github.com/tscircuit/jscad-electronics/pull/504)
-and its [dimension drawing exporter](https://github.com/tscircuit/circuit-json-to-drawing/pull/3).
+`renderToJscadPlan` preserves `topOutlineName`/`bottomOutlineName` as metadata
+on the standard serializable `extrudeLinear` operation, alongside its ordinary
+options and profile. Existing interpreters continue to execute the same solid;
+native outline extraction is provided by `renderToJscadModel`, not by the plan
+interpreter. No native geometry is serialized into Circuit JSON.
+
+Existing named `Rectangle` reference planes are collected in the same native
+feature collection. Lower-level native integrations can still use `Custom`
+with `Geom2`, `Path2` or `Geom3`, `name`, and `reference`; reference nodes
+are omitted before CSG and normal rendering, while named ordinary nodes remain
+geometry. Raw native `Custom` values remain unsupported by the serializable
+plan compiler.
+
+See the [rectangular tube construction and visual snapshots](https://github.com/tscircuit/jscad-electronics/pull/504)
+and the [dimension drawing exporter](https://github.com/tscircuit/circuit-json-to-drawing/pull/3).

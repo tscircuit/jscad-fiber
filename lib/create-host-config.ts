@@ -45,6 +45,14 @@ export function createHostConfig(
       geometry: NativeGeometry,
       matrix: number[],
     ) => void
+    collectExtrusionOutlines?: (
+      geometry: NativeGeometry,
+      extrusion: Pick<
+        ExtrudeLinearProps,
+        "height" | "twistAngle" | "topOutlineName" | "bottomOutlineName"
+      >,
+      matrix: number[],
+    ) => void
     transformFeatureMatrix?: (
       matrix: number[],
       type: "translate" | "rotate",
@@ -190,20 +198,69 @@ export function createHostConfig(
 
       case "extrudeLinear": {
         const { children, ...extrudeProps } = props as ExtrudeLinearProps
+        const { topOutlineName, bottomOutlineName } = extrudeProps
+        const named =
+          topOutlineName !== undefined || bottomOutlineName !== undefined
+        for (const name of [topOutlineName, bottomOutlineName])
+          if (name !== undefined && (typeof name !== "string" || !name.trim()))
+            throw new Error("Extrusion outline names must be nonblank")
 
+        if (named) {
+          if (
+            !Number.isFinite(extrudeProps.height) ||
+            (extrudeProps.twistAngle !== undefined &&
+              !Number.isFinite(extrudeProps.twistAngle))
+          )
+            throw new Error(
+              "Named extrusion outlines require finite height and twistAngle",
+            )
+          if (
+            extrudeProps.twistSteps !== undefined &&
+            (!Number.isInteger(extrudeProps.twistSteps) ||
+              extrudeProps.twistSteps < 1)
+          )
+            throw new Error(
+              "Named extrusion outlines require positive integer twistSteps",
+            )
+        }
         const childrenGeometry = renderChildren(children)
         if (!childrenGeometry.length) return []
+        if (named && childrenGeometry.length !== 1)
+          throw new Error(
+            "Named extrusion outlines require exactly one profile",
+          )
 
         const extrudedGeometry = jscad.extrusions.extrudeLinear(
           {
             height: extrudeProps.height,
-            // twistAngle: extrudeProps.twistAngle,
-            // twistSteps: extrudeProps.twistSteps,
+            ...(extrudeProps.twistAngle !== undefined
+              ? { twistAngle: extrudeProps.twistAngle }
+              : {}),
+            ...(extrudeProps.twistSteps !== undefined
+              ? { twistSteps: extrudeProps.twistSteps }
+              : {}),
           },
           singleElementUnnest(childrenGeometry),
         )
-
-        return preserveMaterial(childrenGeometry[0] ?? {}, extrudedGeometry)
+        if (named)
+          options.collectExtrusionOutlines?.(
+            childrenGeometry[0],
+            extrudeProps,
+            referenceMatrix,
+          )
+        const geometry = preserveMaterial(
+          childrenGeometry[0] ?? {},
+          extrudedGeometry,
+        )
+        // The JSON compiler retains intent on the ordinary extrusion operation.
+        // Native cap extraction is performed by renderToJscadModel, not a plan interpreter.
+        return options.preserveReferences && named
+          ? {
+              ...geometry,
+              ...(topOutlineName !== undefined ? { topOutlineName } : {}),
+              ...(bottomOutlineName !== undefined ? { bottomOutlineName } : {}),
+            }
+          : geometry
       }
       case "extrudeRotate": {
         const { children, ...extrudeProps } = props as ExtrudeRotateProps
