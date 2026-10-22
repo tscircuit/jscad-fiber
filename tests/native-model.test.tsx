@@ -2,6 +2,12 @@ import { expect, test } from "bun:test"
 import modeling from "@jscad/modeling"
 import {
   Custom,
+  Cube,
+  Union,
+  ExtrudeHelical,
+  ExtrudeRotate,
+  ExtrudeRectangular,
+  Project,
   ExtrudeLinear,
   Rotate,
   Rectangle,
@@ -146,6 +152,39 @@ test("native JSX features share model geometry and retain full ancestor placemen
     ).geometries,
   ).toEqual([])
   expect(renderToJscadModel(null, modeling).referenceFeatures).toEqual({})
+  const datum = <Custom geometry={top} name="construction_only" reference />
+  const branches = [
+    <ExtrudeLinear height={10}>{datum}</ExtrudeLinear>,
+    <ExtrudeRotate angle={Math.PI}>{datum}</ExtrudeRotate>,
+    <ExtrudeRectangular height={10} size={1}>
+      {datum}
+    </ExtrudeRectangular>,
+    <ExtrudeHelical height={10} angle={Math.PI}>
+      {datum}
+    </ExtrudeHelical>,
+    <Project axis={[0, 0, 1]} origin={[0, 0, 0]}>
+      {datum}
+    </Project>,
+  ]
+  for (const branch of branches) {
+    const scene = (
+      <Union>
+        <Cube size={2} />
+        {branch}
+      </Union>
+    )
+    const collected = renderToJscadModel(scene, modeling)
+    expect(collected.geometries).toHaveLength(1)
+    expect(
+      modeling.measurements.measureVolume(collected.geometries[0]),
+    ).toBeCloseTo(8)
+    expect(collected.referenceFeatures.construction_only.geometry).toBe(top)
+    const ordinary: any[] = []
+    createJSCADRenderer(modeling as any)
+      .createJSCADRoot(ordinary)
+      .render(scene)
+    expect(modeling.measurements.measureVolume(ordinary[0])).toBeCloseTo(8)
+  }
   const second = renderToJscadModel(
     <Translate z={8}>
       <Custom geometry={top} name="outer_top" reference />

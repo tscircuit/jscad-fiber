@@ -192,6 +192,7 @@ export function createHostConfig(
         const { children, ...extrudeProps } = props as ExtrudeLinearProps
 
         const childrenGeometry = renderChildren(children)
+        if (!childrenGeometry.length) return []
 
         const extrudedGeometry = jscad.extrusions.extrudeLinear(
           {
@@ -208,6 +209,7 @@ export function createHostConfig(
         const { children, ...extrudeProps } = props as ExtrudeRotateProps
 
         const childrenGeometry = renderChildren(children)
+        if (!childrenGeometry.length) return []
 
         const extrudedGeometry = jscad.extrusions.extrudeRotate(
           {
@@ -224,6 +226,7 @@ export function createHostConfig(
         const { children, ...extrudeProps } = props as ExtrudeRectangularProps
 
         const childrenGeometry = renderChildren(children)
+        if (!childrenGeometry.length) return []
 
         const extrudedGeometry = jscad.extrusions.extrudeRectangular(
           {
@@ -239,6 +242,7 @@ export function createHostConfig(
         const { children, ...extrudeProps } = props as ExtrudeHelicalProps
 
         const childrenGeometry = renderChildren(children)
+        if (!childrenGeometry.length) return []
 
         const extrudedGeometry = jscad.extrusions.extrudeHelical(
           {
@@ -270,6 +274,7 @@ export function createHostConfig(
         const { children, ...projectProps } = props as ProjectProps
 
         const childrenGeometry = renderChildren(children)
+        if (!childrenGeometry.length) return []
 
         const projectedGeometry = jscad.extrusions.project(
           {
