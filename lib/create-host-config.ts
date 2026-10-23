@@ -1,4 +1,3 @@
-import { repairGeom3 } from "./repair-geom3"
 import type ReactReconciler from "react-reconciler"
 import {
   DefaultEventPriority,
@@ -321,15 +320,7 @@ export function createHostConfig(
         const difference = cutters.length
           ? jscad.booleans.subtract(bases[0], ...cutters)
           : bases[0]
-        const geometry = props.repair
-          ? options.preserveReferences
-            ? { ...difference, repair: true }
-            : repairGeom3(
-                jscad as unknown as Parameters<typeof repairGeom3>[0],
-                difference,
-              )
-          : difference
-        return preserveMaterial(bases[0], geometry)
+        return preserveMaterial(bases[0], difference)
       }
 
       case "translate": {

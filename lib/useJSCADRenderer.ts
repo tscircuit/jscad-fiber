@@ -1,3 +1,4 @@
+import { withReferences } from "@tscircuit/jscad"
 import { createThreeMaterial } from "./create-three-material"
 import * as jscad from "@jscad/modeling"
 import { useEffect, useMemo, useState } from "react"
@@ -7,7 +8,10 @@ import convertCSGToThreeGeom from "./convert-csg-to-three-geom"
 import { createHostConfig } from "./create-host-config"
 import { disposeThreeScene } from "./dispose-three-scene"
 
-const hostConfig = createHostConfig(jscad as any)
+const hostConfig = createHostConfig({
+  ...jscad,
+  booleans: withReferences(jscad).booleans,
+} as any)
 const reconciler = ReactReconciler(hostConfig)
 
 /**

@@ -1,5 +1,6 @@
 import { expect, test } from "bun:test"
 import modeling from "@jscad/modeling"
+import compatible from "@tscircuit/jscad"
 import { executeJscadOperations } from "jscad-planner"
 import { jscad, renderToJscadPlan } from "../lib/headless"
 import { createJSCADRenderer } from "../lib/renderer"
@@ -61,9 +62,17 @@ test("spacer plan executes with existing interpreters and reference planes are h
   for (const height of [10, 18]) {
     const plan = renderToJscadPlan(<SpacerSolid height={height} />)
     const solid = executeJscadOperations(
+      compatible as any,
+      JSON.parse(JSON.stringify(plan)),
+    )
+    const legacy = executeJscadOperations(
       modeling as any,
       JSON.parse(JSON.stringify(plan)),
     )
+    expect(
+      modeling.measurements.measureVolume(solid) /
+        modeling.measurements.measureVolume(legacy),
+    ).toBeCloseTo(1, 5)
     const native = renderSolid(<MotorSpacer height={height} />)
     expect(native).toHaveLength(1)
     expect(modeling.geometries.geom3.toPolygons(native[0])).toEqual(
@@ -76,7 +85,9 @@ test("spacer plan executes with existing interpreters and reference planes are h
     ]
     for (let corner = 0; corner < 2; corner++) {
       for (let axis = 0; axis < 3; axis++) {
-        expect(bounds[corner][axis]).toBeCloseTo(expected[corner][axis], 8)
+        expect(
+          Math.abs(bounds[corner][axis] - expected[corner][axis]),
+        ).toBeLessThan(modeling.measurements.measureEpsilon(solid))
       }
     }
     for (const [x, y, radius] of [

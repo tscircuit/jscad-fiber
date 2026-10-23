@@ -1,3 +1,5 @@
+import { withReferences } from "@tscircuit/jscad"
+import type * as Modeling from "@jscad/modeling"
 import ReactReconciler from "react-reconciler"
 import { createHostConfig } from "./create-host-config"
 import type { JSCADModule, JSCADPrimitive } from "./jscad-primitives"
@@ -5,6 +7,12 @@ import React from "react"
 
 // Create a function that returns the reconciler and root creation function
 export function createJSCADRenderer(jscad: JSCADModule) {
+  const native = jscad as unknown as Partial<typeof Modeling>
+  if (typeof native.geometries?.geom3?.isA === "function")
+    jscad = {
+      ...jscad,
+      booleans: withReferences(native as typeof Modeling).booleans,
+    }
   const hostConfig = createHostConfig(jscad)
 
   // Synchronous renderer that directly processes React elements
