@@ -32,33 +32,10 @@ import type { JSCADModule, JSCADPrimitive } from "./jscad-primitives"
 import React from "react"
 import { singleElementUnnest } from "./utils/singleElementUnnest"
 import { materials, preserveMaterial, type MaterialOptions } from "./material"
-import type { NativeGeometry } from "./model-types"
-const identityReferenceMatrix = () => [
-  1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1,
-]
-
 export function createHostConfig(
   jscad: JSCADModule,
   options: {
     preserveReferences?: boolean
-    collectFeature?: (
-      name: string,
-      geometry: NativeGeometry,
-      matrix: number[],
-    ) => void
-    collectExtrusionOutlines?: (
-      geometry: NativeGeometry,
-      extrusion: Pick<
-        ExtrudeLinearProps,
-        "height" | "twistAngle" | "topOutlineName" | "bottomOutlineName"
-      >,
-      matrix: number[],
-    ) => void
-    transformFeatureMatrix?: (
-      matrix: number[],
-      type: "translate" | "rotate",
-      vector: [number, number, number],
-    ) => number[]
   } = {},
 ) {
   const applyMaterial = (material: MaterialOptions, geometry: any): any => {
@@ -75,7 +52,6 @@ export function createHostConfig(
     rootContainerInstance: any,
     hostContext: any,
     internalInstanceHandle: any,
-    referenceMatrix = identityReferenceMatrix(),
   ): any => {
     const geometry = createGeometry(
       type,
@@ -83,7 +59,6 @@ export function createHostConfig(
       rootContainerInstance,
       hostContext,
       internalInstanceHandle,
-      referenceMatrix,
     )
     // Components forward material to their host element. Apply it once there.
     return typeof type === "string" &&
@@ -99,15 +74,11 @@ export function createHostConfig(
     rootContainerInstance: any,
     hostContext: any,
     internalInstanceHandle: any,
-    referenceMatrix: number[],
   ) => {
-    const renderChildren = (
-      children: React.ReactNode,
-      matrix = referenceMatrix,
-    ): any[] => {
+    const renderChildren = (children: React.ReactNode): any[] => {
       if (children == null || typeof children === "boolean") return []
       if (Array.isArray(children))
-        return children.flatMap((child) => renderChildren(child, matrix))
+        return children.flatMap((child) => renderChildren(child))
       if (!React.isValidElement(children))
         throw new Error(
           "Expected JSCAD elements, not text or arbitrary objects",
@@ -118,7 +89,6 @@ export function createHostConfig(
         [],
         hostContext,
         internalInstanceHandle,
-        matrix,
       )
       return Array.isArray(result)
         ? result.flat(Infinity)
@@ -206,24 +176,6 @@ export function createHostConfig(
           if (name !== undefined && (typeof name !== "string" || !name.trim()))
             throw new Error("Extrusion outline names must be nonblank")
 
-        if (named) {
-          if (
-            !Number.isFinite(extrudeProps.height) ||
-            (extrudeProps.twistAngle !== undefined &&
-              !Number.isFinite(extrudeProps.twistAngle))
-          )
-            throw new Error(
-              "Named extrusion outlines require finite height and twistAngle",
-            )
-          if (
-            extrudeProps.twistSteps !== undefined &&
-            (!Number.isInteger(extrudeProps.twistSteps) ||
-              extrudeProps.twistSteps < 1)
-          )
-            throw new Error(
-              "Named extrusion outlines require positive integer twistSteps",
-            )
-        }
         const childrenGeometry = renderChildren(children)
         if (!childrenGeometry.length) return []
         if (named && childrenGeometry.length !== 1)
@@ -234,6 +186,8 @@ export function createHostConfig(
         const extrudedGeometry = jscad.extrusions.extrudeLinear(
           {
             height: extrudeProps.height,
+            ...(topOutlineName !== undefined ? { topOutlineName } : {}),
+            ...(bottomOutlineName !== undefined ? { bottomOutlineName } : {}),
             ...(extrudeProps.twistAngle !== undefined
               ? { twistAngle: extrudeProps.twistAngle }
               : {}),
@@ -243,25 +197,7 @@ export function createHostConfig(
           },
           singleElementUnnest(childrenGeometry),
         )
-        if (named)
-          options.collectExtrusionOutlines?.(
-            childrenGeometry[0],
-            extrudeProps,
-            referenceMatrix,
-          )
-        const geometry = preserveMaterial(
-          childrenGeometry[0] ?? {},
-          extrudedGeometry,
-        )
-        // The JSON compiler retains intent on the ordinary extrusion operation.
-        // Native cap extraction is performed by renderToJscadModel, not a plan interpreter.
-        return options.preserveReferences && named
-          ? {
-              ...geometry,
-              ...(topOutlineName !== undefined ? { topOutlineName } : {}),
-              ...(bottomOutlineName !== undefined ? { bottomOutlineName } : {}),
-            }
-          : geometry
+        return preserveMaterial(childrenGeometry[0] ?? {}, extrudedGeometry)
       }
       case "extrudeRotate": {
         const { children, ...extrudeProps } = props as ExtrudeRotateProps
@@ -360,22 +296,11 @@ export function createHostConfig(
       }
 
       case "custom": {
-        const { geometry, name, reference } = props as CustomProps
         if (options.preserveReferences)
           throw new Error(
             "Raw Custom geometry is not supported by the plan compiler; use renderToJscadModel with a native kernel",
           )
-        if (
-          (name !== undefined && (typeof name !== "string" || !name.trim())) ||
-          (reference && name === undefined)
-        )
-          throw new Error(
-            "Named and reference Custom geometry require a nonblank name",
-          )
-        if (name !== undefined)
-          options.collectFeature?.(name, geometry, referenceMatrix)
-        if (reference) return []
-        return geometry
+        return (props as CustomProps).geometry
       }
 
       case "union": {
@@ -410,13 +335,7 @@ export function createHostConfig(
       case "translate": {
         const { args, children } =
           props as React.JSX.IntrinsicElements["translate"]
-        const matrix =
-          options.transformFeatureMatrix?.(
-            referenceMatrix,
-            "translate",
-            args,
-          ) ?? referenceMatrix
-        const childrenGeometries = renderChildren(children, matrix)
+        const childrenGeometries = renderChildren(children)
         return childrenGeometries.map((shape) =>
           preserveMaterial(shape, jscad.transforms.translate(args, shape)),
         )
@@ -426,13 +345,7 @@ export function createHostConfig(
         const { children, ...rotateProps } =
           props as React.JSX.IntrinsicElements["rotate"]
 
-        const matrix =
-          options.transformFeatureMatrix?.(
-            referenceMatrix,
-            "rotate",
-            rotateProps.angles,
-          ) ?? referenceMatrix
-        const childrenGeometries = renderChildren(children, matrix)
+        const childrenGeometries = renderChildren(children)
 
         return childrenGeometries.map((shape) =>
           preserveMaterial(
@@ -454,23 +367,25 @@ export function createHostConfig(
         const { size, name, reference } = props as RectangleProps
         if (reference && !name?.trim())
           throw new Error("Reference rectangles require a nonblank name")
-        if (reference && !options.preserveReferences && !options.collectFeature)
+        if (name !== undefined && (typeof name !== "string" || !name.trim()))
+          throw new Error("Named rectangles require a nonblank name")
+        if (
+          reference &&
+          !options.preserveReferences &&
+          !jscad.references?.reference
+        )
           return []
         const geometry = jscad.primitives.rectangle({ size })
-        if (name !== undefined && options.collectFeature) {
-          if (typeof name !== "string" || !name.trim())
-            throw new Error("Named rectangles require a nonblank name")
-          options.collectFeature(name, geometry, referenceMatrix)
-        }
-        if (reference && !options.preserveReferences) return []
-        return options.preserveReferences &&
-          (name !== undefined || reference !== undefined)
-          ? {
-              ...geometry,
-              ...(name !== undefined ? { name } : {}),
-              ...(reference !== undefined ? { reference } : {}),
-            }
-          : geometry
+        if (options.preserveReferences)
+          return {
+            ...geometry,
+            ...(name !== undefined ? { name } : {}),
+            ...(reference !== undefined ? { reference } : {}),
+          }
+        if (name === undefined) return geometry
+        return reference
+          ? jscad.references!.reference!(name, geometry)
+          : (jscad.references?.name(name, geometry) ?? geometry)
       }
 
       case "circle":

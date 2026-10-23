@@ -1,103 +1,46 @@
 import { expect, test } from "bun:test"
 import modeling from "@jscad/modeling"
 import {
-  Custom,
-  Rotate,
+  ExtrudeLinear,
   Rectangle,
-  Subtract,
   Translate,
   renderToJscadModel,
 } from "../lib/model"
-import { renderToJscadPlan } from "../lib/headless"
 
-test("model feature names and native-only evaluation reject ambiguous or unsupported input", () => {
-  const solid = modeling.primitives.cuboid({ size: [2, 2, 2] })
-  const path = modeling.geometries.path2.fromPoints({ closed: false }, [
-    [0, 0],
-    [1, 0],
-  ])
-  for (const element of [
-    <Custom geometry={path} reference />,
-    <Custom geometry={path} name="" reference />,
-    <Custom geometry={path} name=" " />,
-  ])
-    expect(() => renderToJscadModel(element, modeling)).toThrow("nonblank")
+test("native reference collection rejects duplicate and invalid names", () => {
   expect(() =>
     renderToJscadModel(
       <>
-        <Custom geometry={path} name="edge" reference />
-        <Custom geometry={solid} name="edge" />
+        <Rectangle name="same" size={[2, 3]} reference />
+        <Rectangle name="same" size={[4, 5]} reference />
       </>,
       modeling,
     ),
   ).toThrow("Duplicate")
   expect(() =>
     renderToJscadModel(
-      <Custom geometry={{} as any} name="bad" reference />,
+      <Rectangle name=" " size={[2, 3]} reference />,
       modeling,
     ),
-  ).toThrow("native")
+  ).toThrow("nonblank")
   expect(() =>
-    renderToJscadModel(
-      <Translate offset={[Infinity, 0, 0]}>
-        <Custom geometry={path} name="edge" reference />
-      </Translate>,
-      modeling,
-    ),
-  ).toThrow("finite")
-  expect(() =>
-    renderToJscadModel(
-      <Rotate angles={[0, NaN, 0]}>
-        <Custom geometry={path} name="edge" reference />
-      </Rotate>,
-      modeling,
-    ),
-  ).toThrow("finite")
-  expect(() =>
-    renderToJscadModel(
-      <Subtract>
-        <>
-          <Custom geometry={solid} />
-          <Custom geometry={solid} />
-        </>
-        <Custom geometry={solid} />
-      </Subtract>,
-      modeling,
-    ),
-  ).toThrow("exactly one")
+    renderToJscadModel(<Rectangle name="" size={[2, 3]} />, modeling),
+  ).toThrow("nonblank")
+  const node = (
+    <Translate offset={[1, 2, 3]}>
+      <ExtrudeLinear height={4} topOutlineName="top">
+        <Rectangle size={[2, 3]} />
+      </ExtrudeLinear>
+    </Translate>
+  )
+  const first = renderToJscadModel(node, modeling)
+  first.referenceFeatures.top.matrix[12] = 1000
+  const second = renderToJscadModel(node, modeling)
+  expect(second.referenceFeatures.top.matrix[12]).toBe(1)
   expect(
-    renderToJscadModel(
-      <Subtract>
-        <Custom geometry={path} name="reference_only" reference />
-        <Custom geometry={path} name="other_reference" reference />
-      </Subtract>,
-      modeling,
-    ).geometries,
-  ).toEqual([])
-  expect(() => renderToJscadPlan(<Custom geometry={solid} />)).toThrow("Custom")
-  expect(() =>
-    renderToJscadPlan(<Custom geometry={path} name="edge" reference />),
-  ).toThrow("Custom")
-  expect(() =>
-    renderToJscadModel(
-      <>
-        <Rectangle name="shared" size={[2, 2]} reference />
-        <Custom geometry={path} name="shared" reference />
-      </>,
-      modeling,
-    ),
-  ).toThrow("Duplicate")
-  const featureModel = renderToJscadModel(
-    <Custom geometry={solid} name="__proto__" reference />,
-    modeling,
+    modeling.geometries.geom2.isA(second.referenceFeatures.top.geometry),
+  ).toBe(true)
+  expect(() => renderToJscadModel("invalid", modeling)).toThrow(
+    "Expected JSCAD elements",
   )
-  expect(Object.hasOwn(featureModel.referenceFeatures, "__proto__")).toBe(true)
-  expect(featureModel.referenceFeatures.__proto__.geometry).toBe(solid)
-  const quarterTurn = renderToJscadModel(
-    <Rotate angles={[0, Math.PI / 2, 0]}>
-      <Custom geometry={path} name="edge" reference />
-    </Rotate>,
-    modeling,
-  )
-  expect(quarterTurn.referenceFeatures.edge.matrix[0]).toBe(0)
 })

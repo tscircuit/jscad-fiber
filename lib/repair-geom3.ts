@@ -34,5 +34,6 @@ export function repairGeom3(kernel: typeof Modeling, geometry: Geom3): Geom3 {
   ) => Geom3
   const repaired = generalize({ snap: false, triangulate: true }, welded)
   kernel.geometries.geom3.validate(repaired)
-  return repaired
+  // Rebuilt polygons keep authored metadata, including kernel reference symbols.
+  return { ...geometry, ...repaired }
 }

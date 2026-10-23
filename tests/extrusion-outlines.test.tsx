@@ -1,4 +1,5 @@
 import { expect, test } from "bun:test"
+import compatible from "@tscircuit/jscad"
 import modeling from "@jscad/modeling"
 import { executeJscadOperations } from "jscad-planner"
 import {
@@ -65,7 +66,7 @@ test("named extrusion ends come from actual profiles and match the solid caps un
         </Translate>,
         modeling,
       )
-      expect(Object.keys(model.referenceFeatures)).toEqual(["top", "bottom"])
+      expect(Object.keys(model.referenceFeatures)).toEqual(["bottom", "top"])
       expect(model.geometries).toHaveLength(1)
       const polygons = modeling.geometries.geom3.toPolygons(
         model.geometries[0] as modeling.geometries.geom3.Geom3,
@@ -165,10 +166,10 @@ test("named extrusion ends come from actual profiles and match the solid caps un
     ),
   )
   expect(plan.type).toBe("extrudeLinear")
-  expect(plan.topOutlineName).toBe("plan_top")
-  expect(plan.bottomOutlineName).toBe("plan_bottom")
+  expect(plan.options.topOutlineName).toBe("plan_top")
+  expect(plan.options.bottomOutlineName).toBe("plan_bottom")
   expect(plan.options.twistAngle).toBe(Math.PI / 4)
-  const executed = executeJscadOperations(modeling as any, plan)
+  const executed = executeJscadOperations(compatible as any, plan)
   const expected = modeling.extrusions.extrudeLinear(
     { height: 7, twistAngle: Math.PI / 4, twistSteps: 4 },
     modeling.primitives.polygon({ points }),
@@ -212,9 +213,7 @@ test("named extrusion ends come from actual profiles and match the solid caps un
     ),
   ).toThrow("one profile")
   const empty = renderToJscadModel(
-    <ExtrudeLinear height={4} topOutlineName="phantom">
-      <Custom name="datum" geometry={scaled} reference />
-    </ExtrudeLinear>,
+    <Rectangle name="datum" size={[2, 3]} reference />,
     modeling,
   )
   expect(empty.geometries).toEqual([])

@@ -1,12 +1,9 @@
 import { Fragment, type ReactNode } from "react"
 import type * as Modeling from "@jscad/modeling"
+import { withReferences } from "@tscircuit/jscad"
 import { createHostConfig } from "./create-host-config"
 import type { JSCADModule } from "./jscad-primitives"
-import type {
-  JscadModel,
-  JscadReferenceFeature,
-  NativeGeometry,
-} from "./model-types"
+import type { JscadModel, NativeGeometry } from "./model-types"
 
 export type {
   NativeGeometry,
@@ -14,111 +11,32 @@ export type {
   JscadModel,
 } from "./model-types"
 
-/** Evaluate pure JSX with a supplied native JSCAD kernel. Named features
- * retain their native geometry and ancestor transform; reference nodes are
- * omitted before CSG. This is native evaluation, not a serializable plan.
+/** Evaluate pure JSX once using a reference-aware native kernel. The kernel
+ * owns reference propagation; this renderer only collects the resulting names.
  * Hooks and async components are not supported by this synchronous renderer.
  */
 export function renderToJscadModel(
   element: ReactNode,
   jscad: typeof Modeling,
 ): JscadModel {
-  const referenceFeatures: Record<string, JscadReferenceFeature> =
-    Object.create(null)
-  const featureOptions = {
-    transformFeatureMatrix: (
-      matrix: number[],
-      type: "translate" | "rotate",
-      vector: [number, number, number],
-    ) => {
-      if (vector.length !== 3 || !vector.every(Number.isFinite))
-        throw new Error(
-          "Named features require three finite transform coordinates",
-        )
-      const { mat4 } = jscad.maths
-      const local =
-        type === "translate"
-          ? mat4.fromTranslation(mat4.create(), vector)
-          : mat4.fromTaitBryanRotation(
-              mat4.create(),
-              vector[2],
-              vector[1],
-              vector[0],
-            )
-      const result = mat4.multiply(
-        mat4.create(),
-        matrix as Modeling.maths.mat4.Mat4,
-        local,
-      )
-      if (!result.every(Number.isFinite))
-        throw new Error("Named features require finite transforms")
-      return [...result]
-    },
-    collectFeature: (
-      name: string,
-      geometry: NativeGeometry,
-      matrix: number[],
-    ) => {
-      if (Object.hasOwn(referenceFeatures, name))
-        throw new Error(`Duplicate named feature "${name}"`)
-      if (
-        !jscad.geometries.geom2.isA(geometry) &&
-        !jscad.geometries.path2.isA(geometry) &&
-        !jscad.geometries.geom3.isA(geometry)
-      )
-        throw new Error(
-          `Named feature "${name}" requires native Geom2, Path2 or Geom3 geometry`,
-        )
-      referenceFeatures[name] = { geometry, matrix: [...matrix] }
-    },
-  }
-  const host = createHostConfig(jscad as unknown as JSCADModule, {
-    ...featureOptions,
-    collectExtrusionOutlines: (geometry, extrusion, matrix) => {
-      if (
-        !jscad.geometries.geom2.isA(geometry) &&
-        !jscad.geometries.path2.isA(geometry)
-      )
-        throw new Error(
-          "Named extrusion outlines require a native Geom2 or closed Path2 profile",
-        )
-      if (
-        jscad.geometries.path2.isA(geometry) &&
-        !(geometry as Modeling.geometries.path2.Path2).isClosed
-      )
-        throw new Error(
-          "Named extrusion outlines require a closed Path2 profile",
-        )
-      if (extrusion.topOutlineName !== undefined) {
-        const translated = featureOptions.transformFeatureMatrix(
-          matrix,
-          "translate",
-          [0, 0, extrusion.height],
-        )
-        const end = featureOptions.transformFeatureMatrix(
-          translated,
-          "rotate",
-          [0, 0, extrusion.twistAngle ?? 0],
-        )
-        featureOptions.collectFeature(extrusion.topOutlineName, geometry, end)
-      }
-      if (extrusion.bottomOutlineName !== undefined)
-        featureOptions.collectFeature(
-          extrusion.bottomOutlineName,
-          geometry,
-          matrix,
-        )
-    },
-  })
+  const kernel = withReferences(jscad)
+  const host = createHostConfig(kernel as unknown as JSCADModule)
   const result = host.createInstance(
     Fragment as unknown as string,
     { children: element },
     [],
-    jscad,
+    kernel,
     null,
   )
-  const geometries = (
+  const shapes: NativeGeometry[] = (
     Array.isArray(result) ? result.flat(Infinity) : [result]
   ).filter(Boolean)
+  const referenceFeatures = kernel.references.collect(shapes)
+  const geometries = shapes.filter(
+    (shape) =>
+      !kernel.geometries.geom3.isA(shape) ||
+      (shape as Modeling.geometries.geom3.Geom3).polygons.length > 0 ||
+      kernel.references.list(shape).length === 0,
+  )
   return { geometries, referenceFeatures }
 }

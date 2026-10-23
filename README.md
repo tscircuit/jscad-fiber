@@ -309,98 +309,55 @@ example are millimeters.
 
 ## Native models with named extrusion outlines
 
-Name the ends of an extrusion directly in normal construction JSX:
-
 ```tsx
 import modeling from "@jscad/modeling"
-import {
-  ExtrudeLinear, Rectangle, Subtract, Translate, renderToJscadModel,
-} from "jscad-fiber/model"
-
-function Tube() {
-  return <Subtract>
-    <ExtrudeLinear height={80}
-      topOutlineName="outer_top" bottomOutlineName="outer_bottom">
-      <Rectangle size={[40, 20]} />
-    </ExtrudeLinear>
-    <ExtrudeLinear height={80}
-      topOutlineName="inner_top" bottomOutlineName="inner_bottom">
-      <Rectangle size={[34, 14]} />
-    </ExtrudeLinear>
-  </Subtract>
-}
+import { ExtrudeLinear, Rectangle, Subtract, Translate, renderToJscadModel } from "jscad-fiber/model"
 
 const model = renderToJscadModel(
-  <Translate offset={[10, 20, 30]}><Tube /></Translate>,
+  <Translate offset={[10, 20, 30]}>
+    <ExtrudeLinear height={80} topOutlineName="top" bottomOutlineName="bottom">
+      <Subtract>
+        <Rectangle size={[40, 20]} />
+        <Rectangle size={[34, 14]} />
+      </Subtract>
+    </ExtrudeLinear>
+  </Translate>,
   modeling,
 )
-const top = model.referenceFeatures.outer_top
-// top.geometry is the actual native closed profile; its width is 40 mm.
-// top.matrix places it at the outer extrusion's end in model coordinates.
+const top = model.referenceFeatures.top
+// Native Geom2 containing both boundaries, plus its model-space matrix.
 ```
 
-`topOutlineName` and `bottomOutlineName` refer to the complete native input
-profile. Bottom means the authored start at local Z=0; top means the extrusion
-endpoint at local Z=`height`, including the full final `twistAngle` in radians.
-These names retain start/end meaning for negative heights and after rotation.
-The existing `center`/`offset` wrapper and ancestor `Translate`/`Rotate` operations
-compose into each feature's placement. `ExtrudeLinear` forwards `twistAngle` and
-`twistSteps` to the same kernel that creates the solid. There is no separate
-extrusion scale or start option; transforms already present in the native
-profile are retained.
+`renderToJscadModel` wraps the supplied native kernel using `@tscircuit/jscad` and
+evaluates the existing host once. The kernel owns naming, cap construction and
+reference propagation through transforms and CSG. Fiber collects names from the
+resulting geometry; it has no separate ancestor-matrix traversal or cap collector.
 
-For solid boolean joins, `<Subtract repair>` explicitly welds neighboring
-floating-point coordinates before kernel triangulation. It applies only to that
-subtraction; other boolean results retain their existing behavior. The native
-repair uses a tolerance of `max(modelExtent * 1e-10, 1e-12)` mm and verifies the
-result with the kernel's solid validator. Empty results remain empty. Plans
-retain `repair: true` metadata; native evaluation performs the normalization.
+`topOutlineName` refers to the full native profile at signed `height`, after the
+final `twistAngle` in radians. `bottomOutlineName` refers to local Z=0. Read native
+planar points first, then apply the returned full model-space matrix to `[x,y,0]`.
+Names preserve the profile's native Geom2/closed Path2 representation, including
+holes. Names are unique within the model and nonblank. Named caps require exactly
+one profile. The compatibility package also provides `references.nameOutlines`
+for naming individual output boundaries in native JSCAD authoring.
 
-The outlines are construction features of that extrusion before later booleans.
-In the tube example, the outer and inner extrusion profiles are independently
-named before subtraction. Names do not promise automatic topology tracking after
-later cuts, and do not come from mesh indices or inferred dimension presets.
+References describe authored construction geometry. A subsequent cut retains
+those references without guessing which surviving B-rep edge inherits a name.
+They remain valid after JSCAD readers bake the solid's transforms.
 
-`renderToJscadModel(element, kernel)` returns
-`{ geometries, referenceFeatures }`. Each feature contains
-`{ geometry, matrix }`: the actual native profile plus a 16-number,
-column-major local-to-model matrix. Read points through the native JSCAD reader
-first, then apply the matrix to every point. This preserves closed and curved
-profiles, pending native profile transforms, and profiles rotated outside XY.
-The caller applies any later CAD instance placement.
+Named `Rectangle` nodes use the same kernel mechanism. A `reference` rectangle
+becomes an empty native geometry carrier, so it contributes no polygons while
+following transforms and CSG. A model containing only datums returns an empty
+`geometries` array with its `referenceFeatures`. Ordinary `Custom` geometry remains
+supported; no special Custom naming API is introduced.
 
-Names must be nonblank and unique within one model evaluation; top and bottom
-share the namespace with other named features. Names are preserved as authored.
-Separate CAD part instances can each define `outer_top`. Named extrusions
-require one evaluated geometric profile; use an explicit profile boolean when
-appropriate rather than supplying multiple independent profiles under one name.
-A `Geom2` with holes retains every contour, and a closed `Path2` retains its
-closure. Readers may reject multi-contour outlines when a single edge is
-required; they must not silently select one loop or flatten holes into a fake
-connected path.
+The `/model` entry is synchronous and viewer-free. It supports pure function
+components, fragments, null/conditional children, and the normal native host
+operations. Hooks and async components are unsupported. Return values remain
+`{ geometries, referenceFeatures }`, with native planar `geometry` and full
+column-major `matrix` on each reference.
 
-When either outline name is supplied, height and optional twist angle must be
-finite, and optional twist steps must be a positive integer. An empty
-construction-only input produces no solid or phantom outlines. Outline naming
-does not add material to the extrusion.
-
-The viewer-free `jscad-fiber/model` entry exports the renderer, components and
-`NativeGeometry`, `JscadReferenceFeature`, and `JscadModel` types. It requires
-a caller-supplied modeling kernel and evaluates pure synchronous components
-without hooks. It imports no viewer or Three.js.
-
-`renderToJscadPlan` preserves `topOutlineName`/`bottomOutlineName` as metadata
-on the standard serializable `extrudeLinear` operation, alongside its ordinary
-options and profile. Existing interpreters continue to execute the same solid;
-native outline extraction is provided by `renderToJscadModel`, not by the plan
-interpreter. No native geometry is serialized into Circuit JSON.
-
-Existing named `Rectangle` reference planes are collected in the same native
-feature collection. Lower-level native integrations can still use `Custom`
-with `Geom2`, `Path2` or `Geom3`, `name`, and `reference`; reference nodes
-are omitted before CSG and normal rendering, while named ordinary nodes remain
-geometry. Raw native `Custom` values remain unsupported by the serializable
-plan compiler.
-
-See the [rectangular tube construction and visual snapshots](https://github.com/tscircuit/jscad-electronics/pull/504)
-and the [dimension drawing exporter](https://github.com/tscircuit/circuit-json-to-drawing/pull/3).
+`renderToJscadPlan` stores cap names in the standard extrusion **options**, ready
+for the paired planner support. Execute named-cap plans with `@tscircuit/jscad`;
+a legacy kernel throws explicitly instead of discarding the requested names.
+Existing attachment-plane extraction via `resolveReferencePlanes` is unchanged.
