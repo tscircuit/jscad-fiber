@@ -85,9 +85,7 @@ test("spacer plan executes with existing interpreters and reference planes are h
     ]
     for (let corner = 0; corner < 2; corner++) {
       for (let axis = 0; axis < 3; axis++) {
-        expect(
-          Math.abs(bounds[corner][axis] - expected[corner][axis]),
-        ).toBeLessThan(modeling.measurements.measureEpsilon(solid))
+        expect(bounds[corner][axis]).toBeCloseTo(expected[corner][axis], 8)
       }
     }
     for (const [x, y, radius] of [
