@@ -6,6 +6,10 @@ export type ExtrudeLinearProps = {
   height: number
   twistAngle?: number
   twistSteps?: number
+  /** Name the complete native profile at the signed extrusion endpoint. */
+  topOutlineName?: string
+  /** Name the complete native profile at the authored start (local Z=0). */
+  bottomOutlineName?: string
   children: any
 } & MaterialProps
 
@@ -14,6 +18,8 @@ const ExtrudeLinearBase = ({
   height,
   twistAngle,
   twistSteps,
+  topOutlineName,
+  bottomOutlineName,
   children,
 }: ExtrudeLinearProps) => {
   return (
@@ -22,6 +28,8 @@ const ExtrudeLinearBase = ({
       height={height}
       twistAngle={twistAngle}
       twistSteps={twistSteps}
+      topOutlineName={topOutlineName}
+      bottomOutlineName={bottomOutlineName}
     >
       {children}
     </extrudeLinear>

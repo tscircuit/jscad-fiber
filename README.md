@@ -306,3 +306,58 @@ See [the motor spacer example](./examples/motor-spacer.tsx) for a 4 mm plate,
 four hollow posts on 31 mm centers, 3.2 mm M3 clearance holes, a 30 mm center
 opening, and named `motor` and `board` reference planes. Dimensions in that
 example are millimeters.
+
+## Native models with named extrusion outlines
+
+```tsx
+import modeling from "@jscad/modeling"
+import { ExtrudeLinear, Rectangle, Subtract, Translate, renderToJscadModel } from "jscad-fiber/model"
+
+const model = renderToJscadModel(
+  <Translate offset={[10, 20, 30]}>
+    <ExtrudeLinear height={80} topOutlineName="top" bottomOutlineName="bottom">
+      <Subtract>
+        <Rectangle size={[40, 20]} />
+        <Rectangle size={[34, 14]} />
+      </Subtract>
+    </ExtrudeLinear>
+  </Translate>,
+  modeling,
+)
+const top = model.referenceFeatures.top
+// Native Geom2 containing both boundaries, plus its model-space matrix.
+```
+
+`renderToJscadModel` wraps the supplied native kernel using `@tscircuit/jscad` and
+evaluates the existing host once. The kernel owns naming, cap construction and
+reference propagation through transforms and CSG. Fiber collects names from the
+resulting geometry; it has no separate ancestor-matrix traversal or cap collector.
+
+`topOutlineName` refers to the full native profile at signed `height`, after the
+final `twistAngle` in radians. `bottomOutlineName` refers to local Z=0. Read native
+planar points first, then apply the returned full model-space matrix to `[x,y,0]`.
+Names preserve the profile's native Geom2/closed Path2 representation, including
+holes. Names are unique within the model and nonblank. Named caps require exactly
+one profile. The compatibility package also provides `references.nameOutlines`
+for naming individual output boundaries in native JSCAD authoring.
+
+References describe authored construction geometry. A subsequent cut retains
+those references without guessing which surviving B-rep edge inherits a name.
+They remain valid after JSCAD readers bake the solid's transforms.
+
+Named `Rectangle` nodes use the same kernel mechanism. A `reference` rectangle
+becomes an empty native geometry carrier, so it contributes no polygons while
+following transforms and CSG. A model containing only datums returns an empty
+`geometries` array with its `referenceFeatures`. Ordinary `Custom` geometry remains
+supported; no special Custom naming API is introduced.
+
+The `/model` entry is synchronous and viewer-free. It supports pure function
+components, fragments, null/conditional children, and the normal native host
+operations. Hooks and async components are unsupported. Return values remain
+`{ geometries, referenceFeatures }`, with native planar `geometry` and full
+column-major `matrix` on each reference.
+
+`renderToJscadPlan` stores cap names in the standard extrusion **options**, ready
+for the paired planner support. Execute named-cap plans with `@tscircuit/jscad`;
+a legacy kernel throws explicitly instead of discarding the requested names.
+Existing attachment-plane extraction via `resolveReferencePlanes` is unchanged.

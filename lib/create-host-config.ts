@@ -1,4 +1,4 @@
-import type { Geom3 } from "@jscad/modeling/src/geometries/types"
+import { repairGeom3 } from "./repair-geom3"
 import type ReactReconciler from "react-reconciler"
 import {
   DefaultEventPriority,
@@ -9,6 +9,7 @@ import type {
   ColorizeProps,
   CubeProps,
   CuboidProps,
+  CustomProps,
   CylinderEllipticProps,
   CylinderProps,
   EllipsoidProps,
@@ -33,7 +34,9 @@ import { singleElementUnnest } from "./utils/singleElementUnnest"
 import { materials, preserveMaterial, type MaterialOptions } from "./material"
 export function createHostConfig(
   jscad: JSCADModule,
-  options: { preserveReferences?: boolean } = {},
+  options: {
+    preserveReferences?: boolean
+  } = {},
 ) {
   const applyMaterial = (material: MaterialOptions, geometry: any): any => {
     if (Array.isArray(geometry)) {
@@ -74,7 +77,8 @@ export function createHostConfig(
   ) => {
     const renderChildren = (children: React.ReactNode): any[] => {
       if (children == null || typeof children === "boolean") return []
-      if (Array.isArray(children)) return children.flatMap(renderChildren)
+      if (Array.isArray(children))
+        return children.flatMap((child) => renderChildren(child))
       if (!React.isValidElement(children))
         throw new Error(
           "Expected JSCAD elements, not text or arbitrary objects",
@@ -165,24 +169,41 @@ export function createHostConfig(
 
       case "extrudeLinear": {
         const { children, ...extrudeProps } = props as ExtrudeLinearProps
+        const { topOutlineName, bottomOutlineName } = extrudeProps
+        const named =
+          topOutlineName !== undefined || bottomOutlineName !== undefined
+        for (const name of [topOutlineName, bottomOutlineName])
+          if (name !== undefined && (typeof name !== "string" || !name.trim()))
+            throw new Error("Extrusion outline names must be nonblank")
 
         const childrenGeometry = renderChildren(children)
+        if (!childrenGeometry.length) return []
+        if (named && childrenGeometry.length !== 1)
+          throw new Error(
+            "Named extrusion outlines require exactly one profile",
+          )
 
         const extrudedGeometry = jscad.extrusions.extrudeLinear(
           {
             height: extrudeProps.height,
-            // twistAngle: extrudeProps.twistAngle,
-            // twistSteps: extrudeProps.twistSteps,
+            ...(topOutlineName !== undefined ? { topOutlineName } : {}),
+            ...(bottomOutlineName !== undefined ? { bottomOutlineName } : {}),
+            ...(extrudeProps.twistAngle !== undefined
+              ? { twistAngle: extrudeProps.twistAngle }
+              : {}),
+            ...(extrudeProps.twistSteps !== undefined
+              ? { twistSteps: extrudeProps.twistSteps }
+              : {}),
           },
           singleElementUnnest(childrenGeometry),
         )
-
         return preserveMaterial(childrenGeometry[0] ?? {}, extrudedGeometry)
       }
       case "extrudeRotate": {
         const { children, ...extrudeProps } = props as ExtrudeRotateProps
 
         const childrenGeometry = renderChildren(children)
+        if (!childrenGeometry.length) return []
 
         const extrudedGeometry = jscad.extrusions.extrudeRotate(
           {
@@ -199,6 +220,7 @@ export function createHostConfig(
         const { children, ...extrudeProps } = props as ExtrudeRectangularProps
 
         const childrenGeometry = renderChildren(children)
+        if (!childrenGeometry.length) return []
 
         const extrudedGeometry = jscad.extrusions.extrudeRectangular(
           {
@@ -214,6 +236,7 @@ export function createHostConfig(
         const { children, ...extrudeProps } = props as ExtrudeHelicalProps
 
         const childrenGeometry = renderChildren(children)
+        if (!childrenGeometry.length) return []
 
         const extrudedGeometry = jscad.extrusions.extrudeHelical(
           {
@@ -245,6 +268,7 @@ export function createHostConfig(
         const { children, ...projectProps } = props as ProjectProps
 
         const childrenGeometry = renderChildren(children)
+        if (!childrenGeometry.length) return []
 
         const projectedGeometry = jscad.extrusions.project(
           {
@@ -272,9 +296,11 @@ export function createHostConfig(
       }
 
       case "custom": {
-        const { geometry } = props as { geometry: Geom3 }
-
-        return geometry
+        if (options.preserveReferences)
+          throw new Error(
+            "Raw Custom geometry is not supported by the plan compiler; use renderToJscadModel with a native kernel",
+          )
+        return (props as CustomProps).geometry
       }
 
       case "union": {
@@ -284,21 +310,26 @@ export function createHostConfig(
         return jscad.booleans.union(...geometries)
       }
       case "subtract": {
-        const children = React.Children.toArray(props.children)
-        if (children.length < 2)
-          throw new Error(
-            "Subtract must have at least one base component and one component to subtract.",
-          )
-        const bases = renderChildren(children[0])
+        const groups = React.Children.toArray(props.children)
+          .map((child) => renderChildren(child))
+          .filter((group) => group.length)
+        if (!groups.length) return []
+        const [bases, ...remaining] = groups
         if (bases.length !== 1)
           throw new Error("Subtract requires exactly one solid base")
-        const cutters = children.slice(1).flatMap(renderChildren)
-        return preserveMaterial(
-          bases[0],
-          cutters.length
-            ? jscad.booleans.subtract(bases[0], ...cutters)
-            : bases[0],
-        )
+        const cutters = remaining.flat()
+        const difference = cutters.length
+          ? jscad.booleans.subtract(bases[0], ...cutters)
+          : bases[0]
+        const geometry = props.repair
+          ? options.preserveReferences
+            ? { ...difference, repair: true }
+            : repairGeom3(
+                jscad as unknown as Parameters<typeof repairGeom3>[0],
+                difference,
+              )
+          : difference
+        return preserveMaterial(bases[0], geometry)
       }
 
       case "translate": {
@@ -336,16 +367,25 @@ export function createHostConfig(
         const { size, name, reference } = props as RectangleProps
         if (reference && !name?.trim())
           throw new Error("Reference rectangles require a nonblank name")
-        if (reference && !options.preserveReferences) return []
+        if (name !== undefined && (typeof name !== "string" || !name.trim()))
+          throw new Error("Named rectangles require a nonblank name")
+        if (
+          reference &&
+          !options.preserveReferences &&
+          !jscad.references?.reference
+        )
+          return []
         const geometry = jscad.primitives.rectangle({ size })
-        return options.preserveReferences &&
-          (name !== undefined || reference !== undefined)
-          ? {
-              ...geometry,
-              ...(name !== undefined ? { name } : {}),
-              ...(reference !== undefined ? { reference } : {}),
-            }
-          : geometry
+        if (options.preserveReferences)
+          return {
+            ...geometry,
+            ...(name !== undefined ? { name } : {}),
+            ...(reference !== undefined ? { reference } : {}),
+          }
+        if (name === undefined) return geometry
+        return reference
+          ? jscad.references!.reference!(name, geometry)
+          : (jscad.references?.name(name, geometry) ?? geometry)
       }
 
       case "circle":

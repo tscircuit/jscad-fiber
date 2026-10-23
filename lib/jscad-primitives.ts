@@ -3,6 +3,10 @@ import type { MaterialOptions } from "./material"
 
 // Define a type for the JSCAD module structure we expect
 export interface JSCADModule {
+  references?: {
+    name: (name: string, geometry: any) => any
+    reference?: (name: string, geometry: any) => any
+  }
   materials?: {
     applyMaterial: (material: MaterialOptions, geometry: any) => any
   }
@@ -79,6 +83,8 @@ export interface JSCADModule {
     extrudeLinear: (
       options: {
         height: number
+        topOutlineName?: string
+        bottomOutlineName?: string
         twistAngle?: number
         twistSteps?: number
       },
