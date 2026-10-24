@@ -361,8 +361,3 @@ column-major `matrix` on each reference.
 for the paired planner support. Execute named-cap plans with `@tscircuit/jscad`;
 a legacy kernel throws explicitly instead of discarding the requested names.
 Existing attachment-plane extraction via `resolveReferencePlanes` is unchanged.
-
-Native `<Subtract>` automatically normalizes floating-point joins through the
-compatibility kernel. There is no `repair` prop and no renderer-owned repair
-algorithm. Serialized plans contain ordinary subtraction operations; native
-execution receives automatic cleanup when using `@tscircuit/jscad`.
