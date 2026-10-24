@@ -7,9 +7,10 @@ import {
   Subtract,
   renderToJscadModel,
 } from "../lib/model"
+import { createJSCADRenderer } from "../lib/renderer"
 import { renderToJscadPlan } from "../lib/headless"
 
-test("subtraction repair preserves native outlines", () => {
+test("subtraction automatically cleans native joins without a repair prop", () => {
   const profilePoints = (width: number, height: number, radius: number) =>
     modeling.geometries.geom2.toOutlines(
       modeling.primitives.roundedRectangle({
@@ -20,8 +21,8 @@ test("subtraction repair preserves native outlines", () => {
     )[0] as [number, number][]
   const outerPoints = profilePoints(40, 20, 4)
   const innerPoints = profilePoints(36, 16, 2)
-  const tube = (repair = false) => (
-    <Subtract repair={repair}>
+  const tube = () => (
+    <Subtract>
       <ExtrudeLinear height={60} topOutlineName="outer_top">
         <Polygon points={outerPoints} />
       </ExtrudeLinear>
@@ -40,13 +41,16 @@ test("subtraction repair preserves native outlines", () => {
       modeling.primitives.polygon({ points: innerPoints }),
     ),
   )
-  const unchanged = renderToJscadModel(tube(), modeling)
-  expect(
-    modeling.geometries.geom3.toPolygons(
-      unchanged.geometries[0] as typeof native,
-    ),
-  ).toEqual(modeling.geometries.geom3.toPolygons(native))
-  const repaired = renderToJscadModel(tube(true), modeling)
+  expect(() => modeling.geometries.geom3.validate(native)).toThrow(
+    "non-manifold",
+  )
+  const rendered: any[] = []
+  createJSCADRenderer(modeling as any)
+    .createJSCADRoot(rendered)
+    .render(tube())
+  expect(rendered).toHaveLength(1)
+  expect(() => modeling.geometries.geom3.validate(rendered[0])).not.toThrow()
+  const repaired = renderToJscadModel(tube(), modeling)
   const solid = repaired.geometries[0] as typeof native
   expect(() => modeling.geometries.geom3.validate(solid)).not.toThrow()
   modeling.measurements.measureDimensions(solid).forEach((value, axis) => {
@@ -70,10 +74,10 @@ test("subtraction repair preserves native outlines", () => {
   ])
   expect(repaired.referenceFeatures.outer_top.matrix[14]).toBe(60)
   expect(repaired.referenceFeatures.inner_top.matrix[14]).toBe(60)
-  const plan = renderToJscadPlan(tube(true))
-  expect((plan as unknown as { repair: boolean }).repair).toBe(true)
+  const plan = renderToJscadPlan(tube())
+  expect(plan).not.toHaveProperty("repair")
   const empty = renderToJscadModel(
-    <Subtract repair>
+    <Subtract>
       <Cuboid size={[2, 2, 2]} />
       <Cuboid size={[2, 2, 2]} />
     </Subtract>,
