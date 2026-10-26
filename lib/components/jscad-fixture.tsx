@@ -4,8 +4,8 @@ import * as jscad from "@jscad/modeling"
 import React from "react"
 import * as THREE from "three"
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js"
-import { Cube, Sphere, createJSCADRenderer } from "../../lib"
-import convertCSGToThreeGeom from "../../lib/convert-csg-to-three-geom"
+import { createJSCADRenderer } from "../renderer"
+import convertCSGToThreeGeom from "../convert-csg-to-three-geom"
 
 const { createJSCADRoot } = createJSCADRenderer(jscad as any)
 
@@ -13,12 +13,14 @@ export function JsCadFixture({
   children,
   wireframe,
   zAxisUp = false,
-  showGrid = false,
+  showGrid = true,
+  backgroundColor = "#ffffff",
 }: {
   children: any
   wireframe?: boolean
   zAxisUp?: boolean
   showGrid?: boolean
+  backgroundColor?: THREE.ColorRepresentation
 }) {
   const containerRef = React.useRef<HTMLDivElement>(null)
   const sceneRef = React.useRef<THREE.Scene | null>(null)
@@ -31,6 +33,7 @@ export function JsCadFixture({
       root.render(children)
 
       const scene = new THREE.Scene()
+      scene.background = new THREE.Color(backgroundColor)
       sceneRef.current = scene
       if (zAxisUp) {
         scene.rotation.x = -Math.PI / 2
@@ -135,6 +138,13 @@ export function JsCadFixture({
       gridRef.current.visible = showGrid
     }
   }, [showGrid])
+
+  // Update background color when backgroundColor prop changes
+  React.useEffect(() => {
+    if (sceneRef.current) {
+      sceneRef.current.background = new THREE.Color(backgroundColor)
+    }
+  }, [backgroundColor])
 
   return (
     <div ref={containerRef} style={{ width: "100%", minHeight: "400px" }} />
