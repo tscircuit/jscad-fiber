@@ -56,7 +56,7 @@
   "dependencies": {
     "color": "^4.2.3",
     "jscad-planner": "https://pkg.pr.new/jscad-planner@31ab47d",
-    "@tscircuit/jscad": "https://jscdn.tscircuit.com/@tscircuit/jscad/0.0.2.tgz"
+    "@tscircuit/jscad": "https://pkg.pr.new/tscircuit/jscad/@tscircuit/jscad@abc44a1"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
