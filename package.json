@@ -55,12 +55,12 @@
   },
   "dependencies": {
     "color": "^4.2.3",
-    "jscad-planner": "https://pkg.pr.new/jscad-planner@31ab47d",
-    "@tscircuit/jscad": "https://pkg.pr.new/tscircuit/jscad/@tscircuit/jscad@abc44a1"
+    "jscad-planner": "^0.0.21",
+    "@tscircuit/jscad": "https://jscdn.tscircuit.com/@tscircuit/jscad/0.0.3.tgz"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
-    "@jscad/modeling": "^2.12.2",
+    "@jscad/modeling": "2.13.0",
     "@react-three/drei": "10.6.1",
     "@react-three/fiber": "9.3.0",
     "@types/bun": "^1.1.14",
