@@ -2,6 +2,7 @@ import { Fragment, type ReactNode } from "react"
 import { jscadPlanner, type JscadOperation } from "jscad-planner"
 import { createHostConfig } from "./create-host-config"
 import type { JSCADModule } from "./jscad-primitives"
+import { withMinimalMode } from "./minimal-mode"
 export type JscadPlanOperation = JscadOperation
 
 const planner = {
@@ -52,13 +53,18 @@ function validateSerializable(value: unknown): void {
  * Named reference rectangles remain in the plan for resolveReferencePlanes in
  * jscad-planner. Consumers must extract them before mesh generation/export.
  */
-export function renderToJscadPlan(element: ReactNode): JscadPlanOperation {
-  const result = host.createInstance(
-    Fragment as unknown as string,
-    { children: element },
-    [],
-    planner,
-    null,
+export function renderToJscadPlan(
+  element: ReactNode,
+  options: { minimal?: boolean } = {},
+): JscadPlanOperation {
+  const result = withMinimalMode(Boolean(options.minimal), () =>
+    host.createInstance(
+      Fragment as unknown as string,
+      { children: element },
+      [],
+      planner,
+      null,
+    ),
   )
   const roots = (
     Array.isArray(result) ? result.flat(Infinity) : [result]
