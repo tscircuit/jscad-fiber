@@ -1,27 +1,32 @@
 import { Colorize } from "../jscad-fns/colorize"
+import { isMinimalModeActive } from "../minimal-mode"
 
 export interface ColorProps {
   color?: string
+  minimal?: boolean
 }
 
 export function withColorProp<P extends object>(
   WrappedComponent: React.ComponentType<P>,
 ): React.ComponentType<P & ColorProps> {
-  // Create a new component that includes the color prop
   const WithColor: React.ComponentType<P & ColorProps> = (props) => {
-    const { color, ...restProps } = props
-    if (!color) {
-      return <WrappedComponent {...(restProps as P)} />
+    const { color, minimal, ...restProps } = props
+    const forwardedProps = {
+      ...restProps,
+      ...(minimal !== undefined ? { minimal } : {}),
+    } as unknown as P
+
+    if (!color || isMinimalModeActive(minimal)) {
+      return <WrappedComponent {...forwardedProps} />
     }
 
     return (
       <Colorize color={color}>
-        <WrappedComponent {...(restProps as P)} />
+        <WrappedComponent {...forwardedProps} />
       </Colorize>
     )
   }
 
-  // Set the display name for easier debugging
   WithColor.displayName = `WithColor(${
     WrappedComponent.displayName || WrappedComponent.name || "Component"
   })`

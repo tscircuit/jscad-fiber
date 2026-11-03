@@ -1,14 +1,17 @@
 import type { MaterialProps } from "../material"
+import type { Distance } from "../utils/convert-distance"
 import { withColorProp } from "../wrappers/with-color-prop"
 import { withOffsetProp } from "../wrappers/with-offset-prop"
+import { withRotationProp } from "../wrappers/with-rotation-prop"
 
 export type ExtrudeHelicalProps = {
-  height: number
+  height: Distance
   angle: number
   startAngle?: number
-  pitch?: number
-  endOffset?: number
+  pitch?: Distance
+  endOffset?: Distance
   segmetsPerRotation?: number
+  minimal?: boolean
   children: any
 } & MaterialProps
 
@@ -20,6 +23,7 @@ const ExtrudeHelicalBase = ({
   pitch,
   endOffset,
   segmetsPerRotation,
+  minimal,
   children,
 }: ExtrudeHelicalProps) => {
   return (
@@ -31,10 +35,13 @@ const ExtrudeHelicalBase = ({
       pitch={pitch}
       endOffset={endOffset}
       segmetsPerRotation={segmetsPerRotation}
+      minimal={minimal}
     >
       {children}
     </extrudeHelical>
   )
 }
 
-export const ExtrudeHelical = withOffsetProp(withColorProp(ExtrudeHelicalBase))
+export const ExtrudeHelical = withOffsetProp(
+  withColorProp(withRotationProp(ExtrudeHelicalBase)),
+)

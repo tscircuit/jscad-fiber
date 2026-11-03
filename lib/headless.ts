@@ -1,3 +1,5 @@
 export * from "./jscad-fns"
 export * from "./render-to-jscad-plan"
+export * from "./minimal-mode"
+export * from "./utils/convert-distance"
 export { jscad } from "./jscad-namespace"
