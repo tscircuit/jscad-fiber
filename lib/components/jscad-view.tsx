@@ -1,43 +1,69 @@
-import { createThreeMaterial } from "../create-three-material"
-import { disposeThreeScene } from "../dispose-three-scene"
 import * as jscad from "@jscad/modeling"
 import React from "react"
 import * as THREE from "three"
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js"
-import { createJSCADRenderer } from "../renderer"
 import convertCSGToThreeGeom from "../convert-csg-to-three-geom"
+import { createThreeMaterial } from "../create-three-material"
+import { disposeThreeScene } from "../dispose-three-scene"
+import { createJSCADRenderer } from "../renderer"
 
 const { createJSCADRoot } = createJSCADRenderer(jscad as any)
+
+export interface JsCadViewProps {
+  children: any
+  wireframe?: boolean
+  zAxisUp?: boolean
+  showGrid?: boolean
+  backgroundColor?: THREE.ColorRepresentation
+  cameraPosition?: [number, number, number]
+  width?: number | string
+  height?: number | string
+  style?: React.CSSProperties
+}
 
 export function JsCadView({
   children,
   wireframe,
   zAxisUp = false,
   showGrid = false,
-}: {
-  children: any
-  wireframe?: boolean
-  zAxisUp?: boolean
-  showGrid?: boolean
-}) {
+  backgroundColor,
+  cameraPosition = [20, 20, 20],
+  width = "100%",
+  height,
+  style,
+}: JsCadViewProps) {
   const containerRef = React.useRef<HTMLDivElement>(null)
   const sceneRef = React.useRef<THREE.Scene | null>(null)
   const gridRef = React.useRef<THREE.GridHelper | null>(null)
+  const [camX, camY, camZ] = cameraPosition
 
   React.useEffect(() => {
     if (containerRef.current) {
+      const containerEl = containerRef.current
+      const viewWidth =
+        typeof width === "number"
+          ? width
+          : containerEl.clientWidth || window.innerWidth
+      const viewHeight =
+        typeof height === "number"
+          ? height
+          : containerEl.clientHeight || window.innerHeight
+
       const jscadGeoms: any[] = []
       const root = createJSCADRoot(jscadGeoms)
       root.render(children)
 
       const scene = new THREE.Scene()
+      if (backgroundColor !== undefined) {
+        scene.background = new THREE.Color(backgroundColor)
+      }
       sceneRef.current = scene
       if (zAxisUp) {
         scene.rotation.x = -Math.PI / 2
       }
       const camera = new THREE.PerspectiveCamera(
         75,
-        window.innerWidth / window.innerHeight,
+        viewWidth / viewHeight,
         0.1,
         1000,
       )
@@ -94,14 +120,14 @@ export function JsCadView({
         processCGS(csg)
       }
 
-      camera.position.x = 20
-      camera.position.y = 20
-      camera.position.z = 20
+      camera.position.x = camX
+      camera.position.y = camY
+      camera.position.z = camZ
 
       const renderer = new THREE.WebGLRenderer()
-      renderer.setSize(window.innerWidth, window.innerHeight)
+      renderer.setSize(viewWidth, viewHeight)
 
-      containerRef.current.appendChild(renderer.domElement)
+      containerEl.appendChild(renderer.domElement)
 
       // Add OrbitControls
       const controls = new OrbitControls(camera, renderer.domElement)
@@ -127,7 +153,18 @@ export function JsCadView({
         renderer.domElement.remove()
       }
     }
-  }, [children, wireframe, zAxisUp, showGrid])
+  }, [
+    children,
+    wireframe,
+    zAxisUp,
+    showGrid,
+    backgroundColor,
+    camX,
+    camY,
+    camZ,
+    width,
+    height,
+  ])
 
   // Update grid visibility when showGrid prop changes
   React.useEffect(() => {
@@ -137,6 +174,14 @@ export function JsCadView({
   }, [showGrid])
 
   return (
-    <div ref={containerRef} style={{ width: "100%", minHeight: "400px" }} />
+    <div
+      ref={containerRef}
+      style={{
+        width,
+        height,
+        minHeight: height === undefined ? "400px" : undefined,
+        ...style,
+      }}
+    />
   )
 }
