@@ -1,0 +1,30 @@
+// Bun Snapshot v1, https://bun.sh/docs/test/snapshots
+
+exports[`Text renders a single-stroke glyph to the jscad planner 1`] = `
+[
+  {
+    "shape": {
+      "angles": [
+        0,
+        0,
+        -1.5707963267948966,
+      ],
+      "shape": {
+        "size": [
+          6.5,
+          0.5,
+          1,
+        ],
+        "type": "cuboid",
+      },
+      "type": "rotate",
+    },
+    "type": "translate",
+    "vector": [
+      1.1428571428571428,
+      3,
+      0.5,
+    ],
+  },
+]
+`;
