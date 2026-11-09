@@ -1,11 +1,15 @@
 import type { MaterialProps } from "../material"
+import type { Distance } from "../utils/convert-distance"
 import { withColorProp } from "lib/wrappers/with-color-prop"
 import { withOffsetProp } from "lib/wrappers/with-offset-prop"
+import { withRotationProp } from "lib/wrappers/with-rotation-prop"
 
 export type RoundedCylinderProps = {
-  radius: number
-  height: number
-  roundRadius: number
+  radius: Distance
+  height: Distance
+  roundRadius: Distance
+  center?: [number, number, number]
+  minimal?: boolean
 } & MaterialProps
 
 const RoundedCylinderBase = ({
@@ -13,6 +17,8 @@ const RoundedCylinderBase = ({
   radius,
   height,
   roundRadius,
+  center,
+  minimal,
 }: RoundedCylinderProps) => {
   return (
     <roundedCylinder
@@ -20,10 +26,12 @@ const RoundedCylinderBase = ({
       radius={radius}
       height={height}
       roundRadius={roundRadius}
+      center={center}
+      minimal={minimal}
     />
   )
 }
 
 export const RoundedCylinder = withOffsetProp(
-  withColorProp(RoundedCylinderBase),
+  withColorProp(withRotationProp(RoundedCylinderBase)),
 )

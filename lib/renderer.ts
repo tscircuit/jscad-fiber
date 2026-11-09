@@ -3,17 +3,21 @@ import type * as Modeling from "@jscad/modeling"
 import ReactReconciler from "react-reconciler"
 import { createHostConfig } from "./create-host-config"
 import type { JSCADModule, JSCADPrimitive } from "./jscad-primitives"
+import { isMinimalModeActive, withMinimalMode } from "./minimal-mode"
 import React from "react"
 
 // Create a function that returns the reconciler and root creation function
-export function createJSCADRenderer(jscad: JSCADModule) {
+export function createJSCADRenderer(
+  jscad: JSCADModule,
+  options: { minimal?: boolean } = {},
+) {
   const native = jscad as unknown as Partial<typeof Modeling>
   if (typeof native.geometries?.geom3?.isA === "function")
     jscad = {
       ...jscad,
       booleans: withReferences(native as typeof Modeling).booleans,
     }
-  const hostConfig = createHostConfig(jscad)
+  const hostConfig = createHostConfig(jscad, options)
 
   // Synchronous renderer that directly processes React elements
   function renderElementSync(
@@ -61,10 +65,13 @@ export function createJSCADRenderer(jscad: JSCADModule) {
           }
 
           try {
+            const activeMinimal = isMinimalModeActive(
+              (props as any)?.minimal ?? options.minimal,
+            )
             // @ts-ignore
-            const result = type(props)
+            const result = withMinimalMode(activeMinimal, () => type(props))
             console.error = originalError
-            return processElement(result)
+            return withMinimalMode(activeMinimal, () => processElement(result))
           } finally {
             console.error = originalError
           }
@@ -98,7 +105,9 @@ export function createJSCADRenderer(jscad: JSCADModule) {
     }
 
     try {
-      const result = processElement(element)
+      const result = withMinimalMode(Boolean(options.minimal), () =>
+        processElement(element),
+      )
       if (Array.isArray(result)) {
         if (result.length > 0) container.push(...result)
       } else if (result) {
@@ -133,13 +142,15 @@ export function createJSCADRenderer(jscad: JSCADModule) {
       render(element: React.ReactElement, callback?: () => void) {
         if (callback) {
           // Async mode - use React reconciler
-          reconciler.updateContainer(element, root, null, () => {
-            container.splice(
-              0,
-              container.length,
-              ...reconcilerContainer.flat(Infinity),
-            )
-            callback()
+          withMinimalMode(Boolean(options.minimal), () => {
+            reconciler.updateContainer(element, root, null, () => {
+              container.splice(
+                0,
+                container.length,
+                ...reconcilerContainer.flat(Infinity),
+              )
+              callback()
+            })
           })
         } else {
           // Sync mode - use synchronous renderer

@@ -14,11 +14,13 @@ export function JsCadView({
   wireframe,
   zAxisUp = false,
   showGrid = false,
+  minimal = false,
 }: {
   children: any
   wireframe?: boolean
   zAxisUp?: boolean
   showGrid?: boolean
+  minimal?: boolean
 }) {
   const containerRef = React.useRef<HTMLDivElement>(null)
   const sceneRef = React.useRef<THREE.Scene | null>(null)
@@ -27,7 +29,10 @@ export function JsCadView({
   React.useEffect(() => {
     if (containerRef.current) {
       const jscadGeoms: any[] = []
-      const root = createJSCADRoot(jscadGeoms)
+      const { createJSCADRoot: createRoot } = minimal
+        ? createJSCADRenderer(jscad as any, { minimal: true })
+        : { createJSCADRoot }
+      const root = createRoot(jscadGeoms)
       root.render(children)
 
       const scene = new THREE.Scene()
