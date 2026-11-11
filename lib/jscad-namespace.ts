@@ -14,6 +14,7 @@ import {
   RoundedCuboid,
   Sphere,
   Subtract,
+  Text,
   Translate,
   Union,
 } from "./jscad-fns"
@@ -35,6 +36,7 @@ export const jscad = {
   roundedCuboid: RoundedCuboid,
   sphere: Sphere,
   subtract: Subtract,
+  text: Text,
   translate: Translate,
   union: Union,
 } as const
