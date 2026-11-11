@@ -13,12 +13,14 @@ export function JsCadView({
   children,
   wireframe,
   zAxisUp = false,
-  showGrid = false,
+  showGrid = true,
+  backgroundColor = "#ffffff",
 }: {
   children: any
   wireframe?: boolean
   zAxisUp?: boolean
   showGrid?: boolean
+  backgroundColor?: THREE.ColorRepresentation
 }) {
   const containerRef = React.useRef<HTMLDivElement>(null)
   const sceneRef = React.useRef<THREE.Scene | null>(null)
@@ -31,6 +33,7 @@ export function JsCadView({
       root.render(children)
 
       const scene = new THREE.Scene()
+      scene.background = new THREE.Color(backgroundColor)
       sceneRef.current = scene
       if (zAxisUp) {
         scene.rotation.x = -Math.PI / 2
@@ -135,6 +138,13 @@ export function JsCadView({
       gridRef.current.visible = showGrid
     }
   }, [showGrid])
+
+  // Update background color when backgroundColor prop changes
+  React.useEffect(() => {
+    if (sceneRef.current) {
+      sceneRef.current.background = new THREE.Color(backgroundColor)
+    }
+  }, [backgroundColor])
 
   return (
     <div ref={containerRef} style={{ width: "100%", minHeight: "400px" }} />
