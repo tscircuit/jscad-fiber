@@ -27,6 +27,7 @@ import type {
   SphereProps,
   TorusProps,
 } from "./jscad-fns"
+import { evalJscadCode } from "./jscad-fns"
 import type { JSCADModule, JSCADPrimitive } from "./jscad-primitives"
 import React from "react"
 import { singleElementUnnest } from "./utils/singleElementUnnest"
@@ -295,11 +296,15 @@ export function createHostConfig(
       }
 
       case "custom": {
+        const { geometry, code, params } = props as CustomProps
+        if (typeof code === "string") {
+          return evalJscadCode(code, jscad, params)
+        }
         if (options.preserveReferences)
           throw new Error(
             "Raw Custom geometry is not supported by the plan compiler; use renderToJscadModel with a native kernel",
           )
-        return (props as CustomProps).geometry
+        return geometry
       }
 
       case "union": {
