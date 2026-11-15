@@ -170,9 +170,15 @@ All components support these common props:
 | Prop | Type | Description |
 |------|------|-------------|
 | `angles` | `[number,number,number]` | Rotation angles in radians [x,y,z] |
+| `axis` | `"x" \| "y" \| "z" \| "-x" \| "-y" \| "-z"` | Axis for single-axis rotation shorthand |
+| `angle` | `number \| string` | Rotation angle for `axis` (degrees such as `90` / `"90deg"` or radians) |
 
 ```tsx
 <Rotate angles={[x,y,z]}>
+  <Cube size={10} />
+</Rotate>
+
+<Rotate axis="z" angle={90}>
   <Cube size={10} />
 </Rotate>
 ```

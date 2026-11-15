@@ -9,9 +9,13 @@ export type RotationValue =
   | string
   | number
 
+export type RotateAxis = "x" | "y" | "z" | "-x" | "-y" | "-z"
+
 export type RotateProps = {
   rotation?: RotationValue
   angles?: RotationValue
+  axis?: RotateAxis
+  angle?: string | number
   children: React.ReactNode
 } & MaterialProps
 
@@ -28,6 +32,20 @@ const convertToRadians = (value: string | number): number => {
     throw new Error(`Invalid rotation value: ${value}`)
   }
   return value
+}
+
+const convertAxisAngleToRadians = (value: string | number): number => {
+  if (typeof value === "string" && value.toLowerCase().includes("rad")) {
+    return convertToRadians(value)
+  }
+  const parsed = convertToRadians(value)
+  if (
+    !(typeof value === "string" && value.toLowerCase().includes("deg")) &&
+    Math.abs(parsed) > Math.PI * 2
+  ) {
+    return (parsed * Math.PI) / 180
+  }
+  return parsed
 }
 
 export const processRotation = (
@@ -48,10 +66,46 @@ export const processRotation = (
   return [0, 0, 0]
 }
 
-const RotateBase = ({ material, rotation, angles, children }: RotateProps) => {
-  const finalRotation = rotation
-    ? processRotation(rotation)
-    : processRotation(angles)
+const processAxisAngle = (
+  axis: RotateProps["axis"],
+  angle: RotateProps["angle"],
+): [number, number, number] | null => {
+  if (axis === undefined && angle === undefined) return null
+
+  const resolvedAngle =
+    angle !== undefined ? convertAxisAngleToRadians(angle) : 0
+
+  switch (axis ?? "z") {
+    case "x":
+      return [resolvedAngle, 0, 0]
+    case "-x":
+      return [-resolvedAngle, 0, 0]
+    case "y":
+      return [0, resolvedAngle, 0]
+    case "-y":
+      return [0, -resolvedAngle, 0]
+    case "z":
+      return [0, 0, resolvedAngle]
+    case "-z":
+      return [0, 0, -resolvedAngle]
+    default:
+      throw new Error(`Invalid rotation axis: ${axis}`)
+  }
+}
+
+const RotateBase = ({
+  material,
+  rotation,
+  angles,
+  axis,
+  angle,
+  children,
+}: RotateProps) => {
+  const finalRotation =
+    processAxisAngle(axis, angle) ??
+    (rotation !== undefined
+      ? processRotation(rotation)
+      : processRotation(angles))
 
   return (
     <rotate material={material} angles={finalRotation}>
