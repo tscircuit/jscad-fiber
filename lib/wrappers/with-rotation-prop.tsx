@@ -7,7 +7,7 @@ export interface RotationProps {
 export function withRotationProp<P extends object>(
   WrappedComponent: React.ComponentType<P>,
 ): React.ComponentType<P & RotationProps> {
-  // Create a new component that includes the color prop
+  // Create a new component that includes the rotation prop
   const WithRotation: React.ComponentType<P & RotationProps> = (props) => {
     const { rotation, ...restProps } = props
     if (!rotation) {

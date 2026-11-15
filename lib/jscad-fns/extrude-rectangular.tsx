@@ -1,6 +1,7 @@
 import type { MaterialProps } from "../material"
 import { withColorProp } from "lib/wrappers/with-color-prop"
 import { withOffsetProp } from "lib/wrappers/with-offset-prop"
+import { withRotationProp } from "lib/wrappers/with-rotation-prop"
 
 export type ExtrudeRectangularProps = {
   size: number
@@ -22,5 +23,5 @@ const ExtrudeRectangularBase = ({
 }
 
 export const ExtrudeRectangular = withOffsetProp(
-  withColorProp(ExtrudeRectangularBase),
+  withColorProp(withRotationProp(ExtrudeRectangularBase)),
 )

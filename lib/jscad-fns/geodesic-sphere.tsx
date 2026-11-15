@@ -1,6 +1,7 @@
 import type { MaterialProps } from "../material"
 import { withColorProp } from "lib/wrappers/with-color-prop"
 import { withOffsetProp } from "lib/wrappers/with-offset-prop"
+import { withRotationProp } from "lib/wrappers/with-rotation-prop"
 
 export type GeodesicSphereProps = {
   radius: number
@@ -17,4 +18,6 @@ const GeodesicSphereBase = ({
   )
 }
 
-export const GeodesicSphere = withOffsetProp(withColorProp(GeodesicSphereBase))
+export const GeodesicSphere = withOffsetProp(
+  withColorProp(withRotationProp(GeodesicSphereBase)),
+)
