@@ -35,7 +35,7 @@ function faceColours(solids: Geom3[]) {
   )
 }
 
-// Orthographic view of the actual output polygons. Both columns use the same
+// Orthographic top view of the actual output polygons. Both columns use the same
 // projection and painter order; grey is used only when no colour is present.
 // Input is model-local XYZ in mm, Z up; output is SVG pixels, Y down.
 function projectSolids(solids: Geom3[], offsetX: number) {
@@ -43,20 +43,15 @@ function projectSolids(solids: Geom3[], offsetX: number) {
     modeling.geometries.geom3.toPolygons(solid).map((polygon) => {
       const colour = polygon.color ?? solid.color ?? [0.65, 0.65, 0.65]
       const points = polygon.vertices
-        .map(([x, y, z]) =>
-          [
-            offsetX + 6 * (0.8 * x + 0.6 * y),
-            230 + 6 * (0.36 * x - 0.48 * y - 0.8 * z),
-          ]
+        .map(([x, y]) =>
+          [offsetX + 5.5 * (0.8 * x + 0.6 * y), 230 + 5.5 * (0.6 * x - 0.8 * y)]
             .map((value) => value.toFixed(2))
             .join(","),
         )
         .join(" ")
       const depth =
-        polygon.vertices.reduce(
-          (sum, [x, y, z]) => sum + 0.48 * x - 0.64 * y + 0.6 * z,
-          0,
-        ) / polygon.vertices.length
+        polygon.vertices.reduce((sum, [, , z]) => sum + z, 0) /
+        polygon.vertices.length
       const fill = colour
         .slice(0, 3)
         .map((channel) => Math.round(channel * 255))
@@ -107,7 +102,7 @@ beforeAll(async () => {
 </g>
 ${projectSolids(nativeSolids, 250)}
 ${projectSolids(headlessSolids, 750)}
-<text x="500" y="395" text-anchor="middle" font-family="sans-serif" font-size="16" fill="#172c3a">Same JSX model, dimensions and positions; no explicit union in the source.</text>
+<text x="500" y="395" text-anchor="middle" font-family="sans-serif" font-size="16" fill="#172c3a">Top views of the same JSX model; no explicit union in the source.</text>
 </svg>
 `
   const snapshot = Bun.file(
