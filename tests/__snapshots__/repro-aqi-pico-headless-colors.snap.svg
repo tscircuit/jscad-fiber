@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="420" viewBox="0 0 1000 420">
+<rect width="1000" height="420" fill="#edf2f5"/>
+<g font-family="sans-serif" fill="#172c3a" text-anchor="middle">
+<text x="500" y="30" font-size="20">AQI meter U_PICO: headless compilation loses part colours</text>
+<text x="250" y="65" font-size="18">Direct renderer: three authored colours</text>
+<text x="750" y="65" font-size="18">Headless plan: all colours missing</text>
+</g>
+<polygon points="119.65,307.55 287.95,83.15 380.35,152.45 212.05,376.85" fill="rgb(20,102,74)" stroke="#22313a" stroke-width="0.5"/>
+<polygon points="119.65,307.55 119.65,307.55 287.95,83.15 287.95,83.15" fill="rgb(20,102,74)" stroke="#22313a" stroke-width="0.5"/>
+<polygon points="212.05,376.85 380.35,152.45 380.35,152.45 212.05,376.85" fill="rgb(20,102,74)" stroke="#22313a" stroke-width="0.5"/>
+<polygon points="119.65,307.55 212.05,376.85 212.05,376.85 119.65,307.55" fill="rgb(20,102,74)" stroke="#22313a" stroke-width="0.5"/>
+<polygon points="287.95,83.15 287.95,83.15 380.35,152.45 380.35,152.45" fill="rgb(20,102,74)" stroke="#22313a" stroke-width="0.5"/>
+<polygon points="119.65,307.55 212.05,376.85 380.35,152.45 287.95,83.15" fill="rgb(20,102,74)" stroke="#22313a" stroke-width="0.5"/>
+<polygon points="223.05,233.85 246.15,203.05 276.95,226.15 253.85,256.95" fill="rgb(32,36,42)" stroke="#22313a" stroke-width="0.5"/>
+<polygon points="298.40,128.80 318.20,102.40 353.40,128.80 333.60,155.20" fill="rgb(170,174,177)" stroke="#22313a" stroke-width="0.5"/>
+<polygon points="223.05,233.85 223.05,233.85 246.15,203.05 246.15,203.05" fill="rgb(32,36,42)" stroke="#22313a" stroke-width="0.5"/>
+<polygon points="253.85,256.95 276.95,226.15 276.95,226.15 253.85,256.95" fill="rgb(32,36,42)" stroke="#22313a" stroke-width="0.5"/>
+<polygon points="223.05,233.85 253.85,256.95 253.85,256.95 223.05,233.85" fill="rgb(32,36,42)" stroke="#22313a" stroke-width="0.5"/>
+<polygon points="246.15,203.05 246.15,203.05 276.95,226.15 276.95,226.15" fill="rgb(32,36,42)" stroke="#22313a" stroke-width="0.5"/>
+<polygon points="223.05,233.85 253.85,256.95 276.95,226.15 246.15,203.05" fill="rgb(32,36,42)" stroke="#22313a" stroke-width="0.5"/>
+<polygon points="298.40,128.80 298.40,128.80 318.20,102.40 318.20,102.40" fill="rgb(170,174,177)" stroke="#22313a" stroke-width="0.5"/>
+<polygon points="333.60,155.20 353.40,128.80 353.40,128.80 333.60,155.20" fill="rgb(170,174,177)" stroke="#22313a" stroke-width="0.5"/>
+<polygon points="298.40,128.80 333.60,155.20 333.60,155.20 298.40,128.80" fill="rgb(170,174,177)" stroke="#22313a" stroke-width="0.5"/>
+<polygon points="318.20,102.40 318.20,102.40 353.40,128.80 353.40,128.80" fill="rgb(170,174,177)" stroke="#22313a" stroke-width="0.5"/>
+<polygon points="298.40,128.80 333.60,155.20 353.40,128.80 318.20,102.40" fill="rgb(170,174,177)" stroke="#22313a" stroke-width="0.5"/>
+<polygon points="619.65,307.55 787.95,83.15 880.35,152.45 712.05,376.85" fill="rgb(166,166,166)" stroke="#22313a" stroke-width="0.5"/>
+<polygon points="619.65,307.55 619.65,307.55 787.95,83.15 787.95,83.15" fill="rgb(166,166,166)" stroke="#22313a" stroke-width="0.5"/>
+<polygon points="712.05,376.85 880.35,152.45 880.35,152.45 712.05,376.85" fill="rgb(166,166,166)" stroke="#22313a" stroke-width="0.5"/>
+<polygon points="619.65,307.55 712.05,376.85 712.05,376.85 619.65,307.55" fill="rgb(166,166,166)" stroke="#22313a" stroke-width="0.5"/>
+<polygon points="787.95,83.15 787.95,83.15 880.35,152.45 880.35,152.45" fill="rgb(166,166,166)" stroke="#22313a" stroke-width="0.5"/>
+<polygon points="816.55,104.60 818.20,102.40 853.40,128.80 851.75,131.00" fill="rgb(166,166,166)" stroke="#22313a" stroke-width="0.5"/>
+<polygon points="851.75,131.00 833.60,155.20 862.20,176.65 880.35,152.45" fill="rgb(166,166,166)" stroke="#22313a" stroke-width="0.5"/>
+<polygon points="787.95,83.15 769.80,107.35 798.40,128.80 816.55,104.60" fill="rgb(166,166,166)" stroke="#22313a" stroke-width="0.5"/>
+<polygon points="769.80,107.35 715.35,179.95 807.75,249.25 862.20,176.65" fill="rgb(166,166,166)" stroke="#22313a" stroke-width="0.5"/>
+<polygon points="776.95,226.15 753.85,256.95 784.65,280.05 807.75,249.25" fill="rgb(166,166,166)" stroke="#22313a" stroke-width="0.5"/>
+<polygon points="715.35,179.95 692.25,210.75 723.05,233.85 746.15,203.05" fill="rgb(166,166,166)" stroke="#22313a" stroke-width="0.5"/>
+<polygon points="692.25,210.75 619.65,307.55 712.05,376.85 784.65,280.05" fill="rgb(166,166,166)" stroke="#22313a" stroke-width="0.5"/>
+<polygon points="723.05,233.85 723.05,233.85 746.15,203.05 746.15,203.05" fill="rgb(166,166,166)" stroke="#22313a" stroke-width="0.5"/>
+<polygon points="753.85,256.95 776.95,226.15 776.95,226.15 753.85,256.95" fill="rgb(166,166,166)" stroke="#22313a" stroke-width="0.5"/>
+<polygon points="723.05,233.85 753.85,256.95 753.85,256.95 723.05,233.85" fill="rgb(166,166,166)" stroke="#22313a" stroke-width="0.5"/>
+<polygon points="746.15,203.05 746.15,203.05 776.95,226.15 776.95,226.15" fill="rgb(166,166,166)" stroke="#22313a" stroke-width="0.5"/>
+<polygon points="723.05,233.85 753.85,256.95 776.95,226.15 746.15,203.05" fill="rgb(166,166,166)" stroke="#22313a" stroke-width="0.5"/>
+<polygon points="798.40,128.80 798.40,128.80 818.20,102.40 818.20,102.40" fill="rgb(166,166,166)" stroke="#22313a" stroke-width="0.5"/>
+<polygon points="833.60,155.20 853.40,128.80 853.40,128.80 833.60,155.20" fill="rgb(166,166,166)" stroke="#22313a" stroke-width="0.5"/>
+<polygon points="798.40,128.80 833.60,155.20 833.60,155.20 798.40,128.80" fill="rgb(166,166,166)" stroke="#22313a" stroke-width="0.5"/>
+<polygon points="818.20,102.40 818.20,102.40 853.40,128.80 853.40,128.80" fill="rgb(166,166,166)" stroke="#22313a" stroke-width="0.5"/>
+<polygon points="798.40,128.80 833.60,155.20 853.40,128.80 818.20,102.40" fill="rgb(166,166,166)" stroke="#22313a" stroke-width="0.5"/>
+<text x="500" y="395" text-anchor="middle" font-family="sans-serif" font-size="16" fill="#172c3a">Top views of the same JSX model; no explicit union in the source.</text>
+</svg>
