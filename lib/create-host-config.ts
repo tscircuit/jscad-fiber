@@ -244,7 +244,7 @@ export function createHostConfig(
             startAngle: extrudeProps.startAngle || 0,
             pitch: extrudeProps.pitch || 0,
             endOffset: extrudeProps.endOffset || 0,
-            segmetsPerRotation: extrudeProps.segmetsPerRotation || 32,
+            segmentsPerRotation: extrudeProps.segmetsPerRotation || 32,
           },
           singleElementUnnest(childrenGeometry),
         )
