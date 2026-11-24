@@ -94,7 +94,7 @@ export interface JSCADModule {
       options: {
         angle: number
         pitch?: number
-        segmetsPerRotation?: number
+        segmentsPerRotation?: number
         startAngle?: number
         height?: number
         endOffset?: number
